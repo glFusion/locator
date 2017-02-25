@@ -77,6 +77,7 @@ class Marker
 
         case 'lat':
         case 'lng':
+            $value = str_replace(',', '.', $value);
             $this->properties[$key] = (float)$value;
             break;
 
@@ -268,7 +269,7 @@ class Marker
             lat = '$lat',
             lng = '$lng',
             keywords = '" . DB_escapeString($this->keywords) . "',
-            url = '" . DB_escapeString(COM_sanitizeUrl($A['url'])) . "',
+            url = '" . DB_escapeString($A['url']) . "',
             is_origin = '{$this->is_origin}',
             owner_id = '{$this->owner_id}',
             group_id = '{$this->group_id}',
