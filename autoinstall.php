@@ -3,10 +3,10 @@
 *   Automatic installation routine for the Locator plugin
 *
 *   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009 Lee Garner <lee@leegarner.com>
+*   @copyright  Copyright (c) 2009-2017 Lee Garner <lee@leegarner.com>
 *   @package    locator
-*   @version    0.1.1
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
+*   @version    1.1.1
+*   @license    http://opensource.org/licenses/gpl-2.0.php
 *               GNU Public License v2 or later
 *   @filesource
 */
@@ -86,9 +86,9 @@ $INSTALL_plugin['locator'] = array(
             'log' => 'Adding feature to the admin group'),
 
     array('type' => 'mapping', 
-            'group' => 'admin_group_id', 
+            'findgroup' => 'All Users', 
             'feature' => 'view_feature_id',
-            'log' => 'Adding feature to the admin group'),
+            'log' => 'Adding feature to the All Users group'),
 
     array('type' => 'mapping', 
             'group' => 'admin_group_id', 
@@ -114,9 +114,7 @@ function plugin_install_locator()
     COM_errorLog("Attempting to install the $pi_display_name plugin", 1);
 
     $ret = INSTALLER_install($INSTALL_plugin[$pi_name]);
-    if ($ret > 0) {
-        return false;
-    }
+    return $ret == 0 ? true : false;
 }
 
 
@@ -137,6 +135,5 @@ function plugin_load_configuration_locator()
 
     return plugin_initconfig_locator($group_id);
 }
-
 
 ?>

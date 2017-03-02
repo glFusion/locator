@@ -1,5 +1,5 @@
 <div class="locform">
-<form action="{action_url}" method="post">
+<form action="{action_url}" method="get">
 <fieldset><legend>{$LANG_GEO['select_origin']}</legend>
 <label for="origin">{$LANG_GEO['origin']}: </label>
 {!if origin_select}

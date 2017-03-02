@@ -76,7 +76,7 @@ $LANG_GEO= array(
 'menu_hlp'					=> array(
     'userloc' => '<ul><li>Bearbeiten oder Löschen von Benutzer-Standorten.</li><li>Dabei handelt es sich um Standorte, die als "Wohnort" im Profil eingetragen wurden bzw. um Orte aus der Standort-Suche.</li></ul>',
     ),
-
+'back'      => 'Back',
 );
 
 

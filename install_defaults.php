@@ -35,7 +35,7 @@ $_GEO_DEFAULT['show_map'] = true;      // Key no longer required for map
 $_GEO_DEFAULT['distance_unit'] = 'miles';  // 'km' for kilometers, else = miles
 $_GEO_DEFAULT['submission'] = true;     // use submission queue
 $_GEO_DEFAULT['anon_submit'] = false;   // allow anon submissions
-$_GEO_DEFAULT['user_submit'] = true;    // allow anon submissions
+$_GEO_DEFAULT['user_submit'] = true;    // allow non-admin submissions
 $_GEO_DEFAULT['displayblocks'] = 3;     // show left & right blocks
 $_GEO_DEFAULT['purge_userlocs'] = 14;   // Days to keep user-entered origins
 $_GEO_DEFAULT['usermenu_option'] = 1;   // Show link on the user menu?

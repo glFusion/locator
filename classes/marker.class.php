@@ -444,7 +444,7 @@ class Marker
     *   @param  string  $origin Optional origin ID, used to create directions
     *   @return string  HTML displaying location with map
     */
-    public function Detail($origin='')
+    public function Detail($origin='', $back_url='')
     {
         global $_CONF, $_CONF_GEO;
 
@@ -489,6 +489,7 @@ class Marker
                                     array('target' => '_new')),
             'lat'               => number_format($this->lat, 8, '.', ''),
             'lng'               => number_format($this->lng, 8, '.', ''),
+            'back_url'          => $back_url,
         ) );
         /*if ($origin != '')
             $T->set_var('origin_addr', 

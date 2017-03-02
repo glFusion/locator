@@ -539,50 +539,8 @@ function GEO_errorMsg($msg='', $type='info', $hdr='')
 */
 function plugin_upgrade_locator() 
 {
-    global $_TABLES, $_CONF_GEO;
-
-    $pi_name = $_CONF_GEO['pi_name'];
-
-    // Get the current version, compare to the version in the plugin code
-    $current_ver = DB_getItem($_TABLES['plugins'], 'pi_version',
-        "pi_name = '$pi_name'");
-    if (!$current_ver) {
-        COM_errorLog("Error getting the $pi_name Plugin version",1);
-        return '3';
-    }
-
-    // if we're at the current version, what are we doing here?
-    if ($current_ver >= $_CONF_GEO['pi_version']) {
-        COM_errorLog("Current version $current_ver is already up to date");
-        return '6';
-    }
-
-    // If we're still here, import the upgrade functions.
-    USES_locator_upgrade();
-    $error = locator_do_upgrade($current_ver);
-    if ($error) {
-        COM_errorLog("Error updating the $pi_name Plugin version",1);
-        return '4';
-    }
-
-    // now update the current version number.
-    DB_query("UPDATE
-        {$_TABLES['plugins']}
-    SET
-        pi_version = '{$_CONF_GEO['pi_version']}',
-        pi_gl_version = '{$_CONF_GEO['gl_version']}',
-        pi_homepage = '{$_CONF_GEO['pi_url']}'
-    WHERE
-        pi_name = '$pi_name';
-    ");
-
-    if (DB_error()) {
-        COM_errorLog("Error updating the $pi_name Plugin version",1);
-        return '5';
-    }
-
-    COM_errorLog("Succesfully updated the $pi_name Plugin!",1);
-    return true;
+    require_once dirname(__FILE__) . '/upgrade.inc.php';
+    return locator_do_upgrade();
 }
 
 
@@ -1281,6 +1239,7 @@ function service_optionList_locator($args, &$output, &$svc_msg)
 {
     global $_TABLES;
 
+    $sel = isset($args['selected']) ? $args['selected'] : '';
     $output = GEO_optionList($sel);
     return PLG_RET_OK;
 }
@@ -1298,8 +1257,8 @@ function service_optionList_locator($args, &$output, &$svc_msg)
 function service_getInfo_locator($args, &$output, &$svc_msg)
 {
     $id = $args['id'];
-    $single = isset($args['single']) && $args['single'] == 1 ? true : false;
-    $output = GEO_getInfo($id, $singleAddress = false);
+    $single = isset($args['single']) && $args['single'] ? true : false;
+    $output = GEO_getInfo($id, $single);
     if ($output !== false)
         return PLG_RET_OK;
     else

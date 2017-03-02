@@ -4,6 +4,9 @@
 {admin_options}
 </div>
 {!endif}
+{!if back_url}
+<br /><a href="{back_url}">{$LANG_GEO['back']}</a>
+{!endif}
 <p>&nbsp;</p>
 <table border="0" width="90%" align="center">
 <tr>

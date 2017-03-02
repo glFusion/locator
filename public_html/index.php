@@ -56,6 +56,16 @@ foreach($expected as $provided) {
 if ($action == 'mode') {
     $action = $actionval;
 }
+$radius = isset($_REQUEST['radius']) ? (int)$_REQUEST['radius'] : 0;
+$keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
+if (isset($_REQUEST['units']) && 
+    in_array($_REQUEST['units'], array('km', 'miles'))
+) {
+    $units = $_REQUEST['units'];
+} else {
+    $units = $_CONF_GEO['distance_unit'];
+}
+$address = isset($_REQUEST['address']) ? trim($_REQUEST['address']) : '';
 $origin = isset($_REQUEST['origin']) ? COM_sanitizeID($_REQUEST['origin']) : '';
 $id = isset($_REQUEST['id']) ? COM_sanitizeID($_REQUEST['id']) : '';
 $view = isset($_REQUEST['view']) ? $_REQUEST['view'] : $action;
@@ -109,24 +119,19 @@ case 'myorigins':
 case 'detail':
     USES_locator_class_marker();
     $M = new Marker($id);
-    $content .= $M->Detail($origin);
+    $back_url = LOCATOR_URL . '/index.php?localist=x' .
+            '&origin=' . urlencode($origin) .
+            '&radius=' . (int)$radius .
+            '&units=' . urlencode($units) .
+            '&keywords=' . urlencode($keywords) .
+            '&address=' . urlencode($address);
+    $content .= $M->Detail($origin, $back_url);
     break;
 
 case 'loclist':
 default:
-    $radius = isset($_REQUEST['radius']) ? (int)$_REQUEST['radius'] : 0;
-    $keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : '';
-    if (isset($_REQUEST['units']) && 
-        in_array($_REQUEST['units'], array('km', 'miles'))
-    ) {
-        $units = $_REQUEST['units'];
-    } else {
-        $units = $_CONF_GEO['distance_unit'];
-    }
-    $address = isset($_REQUEST['address']) ? trim($_REQUEST['address']) : '';
     $content .= GEO_showLocations($origin, $radius, $units, $keywords, $address);
     break;
-
 }
 
 $display .= GEO_siteHeader();

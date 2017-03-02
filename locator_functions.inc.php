@@ -33,6 +33,12 @@ function GEO_showLocations($id, $radius=0, $units='', $keywords='', $address='')
     if ($radius == 0)
         $radius = $_CONF_GEO['default_radius'];
 
+    $url_opts = '&origin=' . urlencode($origin).
+        '&radius=' . (int)$radius.
+        '&units=' . urlencode($units).
+        '&keywords=' . urlencode($keywords).
+        '&address=' . urlencode($address);
+
     $T = new Template($_CONF['path'] . 'plugins/locator/templates');
     $T->set_file('page', 'loclist.thtml');
 
@@ -107,9 +113,10 @@ function GEO_showLocations($id, $radius=0, $units='', $keywords='', $address='')
                 'loc_distance' => sprintf("%4.2f", $locations[$i]['distance']),
                 'loc_info_url' => LOCATOR_URL . 
                                 '/index.php?detail=x&id=' . 
-                                $locations[$i]['id'] . '&origin=' . $id,
+                                $locations[$i]['id'] . $url_opts,
                 'loc_lat'   => $locations[$i]['lat'],
                 'loc_lng'   => $locations[$i]['lng'],
+                'url_opts'  => $url_opts,
             ) );
             if ($locations[$i]['is_origin'] == 1 || 
                     $locations[$i]['userOrigin'] != NULL) {
