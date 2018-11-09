@@ -1,42 +1,44 @@
 <?php
 /**
-*   User location class for the Locator plugin.
-*   The UserLoc class handles user locations based on each user's profile.
-*   The UserOrigin class is for addresses entered by users as search origins,
-*   and are subject to being purged after some time.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2011 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.0.2
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * User location class for the Locator plugin.
+ * The UserLoc class handles user locations based on each user's profile.
+ * The UserOrigin class is for addresses entered by users as search origins,
+ * and are subject to being purged after some time.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2011 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     1.0.2
+ * @license     http://opensource.org/licenses/gpl-2.0.php 
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 namespace Locator;
 
 /**
-*   Class to handle the user's location from the glFusion profile
-*   @package locator
-*/
+ * Class to handle the user's location from the glFusion profile.
+ * @package locator
+ */
 class UserLoc
 {
-    /** Properties
-    *   @var array */
+    /**
+     * Properties.
+     * Accessed via `__set()` and `__get()` functions
+     * @var array */
     var $properties = array();
 
 
     /**
-    *   Constructor.
-    *   Set variables, and read from the database if a location id
-    *   is passed in.
-    *
-    *   @uses   readFromDB()
-    *   @uses   getCoords()
-    *   @uses   saveToDB()
-    *   @param  integer $location   Location ID to read from DB (optional)
-    *   @param  integer $type       Type of record. 0=user profile, 1=ad-hoc
-    */
+     * Constructor.
+     * Set variables, and read from the database if a location id
+     * is passed in.
+     *
+     * @uses   self::readFromDB()
+     * @uses   self::getCoords()
+     * @uses   self::saveToDB()
+     * @param  integer  $location   Location ID to read from DB (optional)
+     * @param  integer  $uid        Optional User ID, current user by default
+     */
     public function __construct($location = '', $uid = 0)
     {
         global $_USER;
@@ -68,12 +70,12 @@ class UserLoc
 
 
     /**
-    *   Magic setter function.
-    *   Sets the property value for the named key.
-    *
-    *   @param  string  $key    Name of property to store
-    *   @param  mixed   $value  Value to save for property
-    */
+     * Magic setter function.
+     * Sets the property value for the named key.
+     *
+     * @param   string  $key    Name of property to store
+     * @param   mixed   $value  Value to save for property
+     */
     public function __set($key, $value)
     {
         switch ($key) {
@@ -96,12 +98,12 @@ class UserLoc
 
 
     /**
-    *   Magic getter function.
-    *   Returns the property associated with the provided key.
-    *
-    *   @param  string  $key    Name of property to return
-    *   @return mixed           Value of named property, or NULL if undefined
-    */
+     * Magic getter function.
+     * Returns the property associated with the provided key.
+     *
+     * @param   string  $key    Name of property to return
+     * @return  mixed           Value of named property, or NULL if undefined
+     */
     public function __get($key)
     {
         if (array_key_exists($key, $this->properties)) {
@@ -113,11 +115,11 @@ class UserLoc
 
 
     /**
-    *   Read the current user's location from the database.
-    *   There is only one profile location per user.
-    *
-    *   @return boolean     True on success, False on failure or not found
-    */
+     * Read the current user's location from the database.
+     * There is only one profile location per user.
+     *
+     * @return  boolean     True on success, False on failure or not found
+     */
     public function readFromDB()
     {
         global $_TABLES, $_USER;
@@ -141,10 +143,10 @@ class UserLoc
 
 
     /**
-    *   Save the current variables to the database.
-    *   The update portion is here for completeness and future use,
-    *   but should not currently be needed as there is no editing function.
-    */
+     * Save the current variables to the database.
+     * The update portion is here for completeness and future use,
+     * but should not currently be needed as there is no editing function.
+     */
     public function saveToDB()
     {
         global $_TABLES, $_USER;
@@ -181,12 +183,12 @@ class UserLoc
 
 
     /**
-    *   Retrieve the coordinates for the current location.
-    *   Sets the local $lat and $lng variables
-    *
-    *   @uses   Marker::geoCode()
-    *   @return integer Google return code, or false for failure.
-    */
+     * Retrieve the coordinates for the current location.
+     * Sets the local $lat and $lng variables
+     *
+     * @uses    Marker::geoCode()
+     * @return  integer Google return code, or false for failure.
+     */
     public function getCoords()
     {
         global $_CONF_GEO;

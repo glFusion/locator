@@ -31,7 +31,7 @@ $_TABLES['locator_submission']  = $_GEO_table_prefix . 'locator_submission';
 $_TABLES['locator_userloc']     = $_GEO_table_prefix . 'locator_userloc';
 $_TABLES['locator_cache']       = $_GEO_table_prefix . 'locator_cache';
 
-$_CONF_GEO['pi_version']        = '1.2.0';
+$_CONF_GEO['pi_version']        = '1.2.1';
 $_CONF_GEO['pi_name']           = 'locator';
 $_CONF_GEO['pi_display_name']   = 'Geo Locator';
 $_CONF_GEO['gl_version']        = '1.7.0';

@@ -14,28 +14,50 @@
 namespace Locator\Mappers;
 
 /**
-*   Class to handle the general location markers
-*   @package    locator
-*/
+ * Class to handle the general location markers.
+ * @package locator
+ */
 class google extends \Locator\Mapper
 {
+    /** ISO language identifier.
+     * @var string */
     private $_lang;
+
+    /** API Key for Mapping Javascript API.
+     * @var string */
     private $js_key = NULL;
+
+    /** API Key for Geocoding API.
+     * @var string */
     private $geocode_key = NULL;
+
+    /** Indicate that this service provides mapping.
+     * @var boolean */
     protected $is_mapper = true;
+
+    /** Indicate that this service provides geocoding.
+     * @var boolean */
     protected $is_geocoder = true;
+
+    /** Display name for this service.
+     * @var string */
     protected $display_name = 'Google';
+
+    /** Internal name for this service.
+     * @var string */
     protected $name = 'google';
-    // URL to maps javascript
+
+    /** URL to maps javascript. */
     const GEO_MAP_URL = 'https://maps.google.com/maps/api/js?key=%s';
-    // Geocoding url, address will be appended to this
+
+    /** Geocoding url, address will be appended to this. */
     const GEO_GOOG_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
 
     /**
-    *   Constructor
-    *
-    *   @param  string  $id     Optional ID of a location to load
-    */
+     * Constructor
+     *
+     * @param   string  $id     Optional ID of a location to load
+     */
     public function __construct($id = '')
     {
         global $_CONF_GEO;
@@ -79,7 +101,6 @@ class google extends \Locator\Mapper
      * @param   float   $lat    Latitude
      * @param   float   $lng    Longitude
      * @param   string  $text   Optional text for marker
-     * @param   string  $tpl    Template base name (large or small)
      * @return  string          HTML to generate the map
      */
     public function showMap($lat, $lng, $text = '')

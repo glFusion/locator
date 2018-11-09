@@ -15,21 +15,33 @@
 namespace Locator\Mappers;
 
 /**
-*   Class to handle the general location markers
-*   @package    locator
-*/
+ * Provides geocoding service from the U.S. Census. Does not provide mapping.
+ * @since   version 1.2.0
+ * @package locator
+ */
 class uscensus extends \Locator\Mapper
 {
+    /** Indicate that this service provides geocoding.
+     * @var boolean */
     protected $is_geocoder = true;
+
+    /** Display name for this service.
+     * @var string */
     protected $display_name = 'US Census';
+
+    /** Class name for this service.
+     * @var string */
     protected $name = 'uscensus';
+
+    /** Geocoding URL for this service.
+     * @const string */
     const GEOCODE_URL = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?benchmark=9&format=json&address=%s';
 
     /**
-    *   Constructor
-    *
-    *   @param  string  $id     Optional ID of a location to load
-    */
+     * Constructor. Nothing to do for this mapper.
+     *
+     * @param   string  $id     Optional ID of a location to load
+     */
     public function __construct($id = '')
     {
     }

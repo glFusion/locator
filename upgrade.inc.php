@@ -1,15 +1,15 @@
 <?php
 /**
-*   Upgrade the plugin
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.1.4
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Upgrade the plugin
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version    1.1.4
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 global $_CONF, $_CONF_GEO, $_DB_dbms, $_SQL_UPGRADE;
 
@@ -17,11 +17,12 @@ global $_CONF, $_CONF_GEO, $_DB_dbms, $_SQL_UPGRADE;
 require_once dirname(__FILE__) . '/sql/mysql_install.php';
 
 /**
-*   Sequentially perform version upgrades.
-*   If any step fails, immediately return False.
-*
-*   @return boolean     True on success, False on failure
-*/
+ * Sequentially perform version upgrades.
+ * If any step fails, immediately return False.
+ *
+ * @param   boolean $dvlp   True to ignore errors and continue
+ * @return  boolean     True on success, False on failure
+ */
 function locator_do_upgrade($dvlp=false)
 {
     global $_CONF_GEO, $_PLUGIN_INFO, $_TABLES;
@@ -118,13 +119,13 @@ function locator_do_upgrade($dvlp=false)
 
 
 /**
-*   Execute the SQL statement to perform a version upgrade.
-*   An empty SQL parameter will return success.
-*
-*   @param string   $version  Version being upgraded to
-*   @param array    $sql      SQL statement to execute
-*   @return boolean     True on success, False on failure
-*/
+ * Execute the SQL statement to perform a version upgrade.
+ * An empty SQL parameter will return success.
+ *
+ * @param   string  $version        Version being upgraded to
+ * @param   boolean $ignore_errors  True to ignore SQL errors and continue
+ * @return  boolean     True on success, False on failure
+ */
 function locator_do_upgrade_sql($version, $ignore_errors=false)
 {
     global $_TABLES, $_CONF_GEO, $_SQL_UPGRADE;
@@ -148,13 +149,13 @@ function locator_do_upgrade_sql($version, $ignore_errors=false)
 
 
 /**
-*   Update the plugin version number in the database.
-*   Called at each version upgrade to keep up to date with
-*   successful upgrades.
-*
-*   @param  string  $ver    New version to set
-*   @return boolean         True on success, False on failure
-*/
+ * Update the plugin version number in the database.
+ * Called at each version upgrade to keep up to date with
+ * successful upgrades.
+ *
+ * @param   string  $ver    New version to set
+ * @return  boolean         True on success, False on failure
+ */
 function locator_do_set_version($ver)
 {
     global $_TABLES, $_CONF_GEO;

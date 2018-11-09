@@ -14,23 +14,42 @@
 namespace Locator\Mappers;
 
 /**
-*   Class to handle the general location markers
-*   @package    locator
-*/
+ * Class to handle the general location markers.
+ * @package locator
+ */
 class mapquest extends \Locator\Mapper
 {
+    /** MqpQuest client key.
+     * @var string */
     private $client_key = NULL;
+
+    /** Indicate that this service provides mapping.
+     * @var boolean */
     protected $is_mapper = true;
-    protected $is_geocoder = true;  // Can be used with an extended license
+
+    /** Indicate that this service provides geocoding.
+     * Requires an extended license for geocoding.
+     * @var boolean */
+    protected $is_geocoder = true;
+
+    /** Display name for this provider.
+     * @var string */
     protected $display_name = 'MapQuest';
+
+    /** Internal name of this provider.
+     * @var string */
     protected $name = 'mapquest';
+
+    /** URL to geocoding service.
+     * @var string */
     const GEOCODE_URL = 'http://www.mapquestapi.com/geocoding/v1/address?inFormat=kvp&outFormat=json&key=%s&location=%s';
 
+
     /**
-    *   Constructor
-    *
-    *   @param  string  $id     Optional ID of a location to load
-    */
+     * Constructor
+     *
+     * @param   string  $id     Optional ID of a location to load
+     */
     public function __construct($id = '')
     {
         global $_CONF_GEO;

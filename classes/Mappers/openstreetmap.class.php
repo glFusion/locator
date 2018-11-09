@@ -14,22 +14,36 @@
 namespace Locator\Mappers;
 
 /**
-*   Class to handle the general location markers
-*   @package    locator
-*/
+ * Provide openstreetmap.org mapping and geocoding services.
+ * @package locator
+ */
 class openstreetmap extends \Locator\Mapper
 {
+    /** Indicate that this service provides mapping.
+     * @var boolean */
     protected $is_mapper = true;
+
+    /** Indicate that this service provides geocoding.
+     * @var boolean */
     protected $is_geocoder = true;
+
+    /** Display name for this provider.
+     * @var string */
     protected $display_name = 'OpenStreetMap';
+
+    /** Internal name for this provider.
+     * @var string */
     protected $name = 'openstreetmap';
+
+    /** URL to geocoding service.
+     * @const string */
     const GEOCODE_URL = 'https://nominatim.openstreetmap.org/search?format=json&q=%s';
 
     /**
-    *   Constructor
-    *
-    *   @param  string  $id     Optional ID of a location to load
-    */
+     * Constructor. Does nothing, not even call the parent constructor.
+     *
+     * @param   string  $id     Optional ID of a location to load
+     */
     public function __construct($id = '')
     {
     }

@@ -1,36 +1,40 @@
 <?php
 /**
-*   Class to cache DB and web lookup results
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.2.0
-*   @since      1.2.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Class to cache DB and web lookup results
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     1.2.0
+ * @since       1.2.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 namespace Locator;
 
 /**
-*   Class for Locator Cache
-*   @package locator
-*/
+ * Class for Locator Cache.
+ * If glFusion is version 2.0.0 or higher then the phpFastCache is used.
+ * Otherwise a database cache table is used.
+ * @package locator
+ */
 class Cache
 {
+    /** Default tag added to all cache entries */
     const TAG = 'locator';
+    /** Minimum glFusion version that supports caching */
     const MIN_GVERSION = '2.0.0';
 
     /**
-    *   Update the cache.
-    *   Adds an array of tags including the plugin name
-    *
-    *   @param  string  $key    Item key
-    *   @param  mixed   $data   Data, typically an array
-    *   @param  mixed   $tag    Tag, or array of tags.
-    *   @param  integer $cache_mins Cache minutes
-    */
+     * Update the cache.
+     * Adds an array of tags including the plugin name
+     *
+     * @param   string  $key    Item key
+     * @param   mixed   $data   Data, typically an array
+     * @param   mixed   $tag    Tag, or array of tags.
+     * @param   integer $cache_mins Cache minutes
+     */
     public static function set($key, $data, $tag='', $cache_mins=1440)
     {
         global $_TABLES;
@@ -55,10 +59,10 @@ class Cache
 
 
     /**
-    *   Delete a single item from the cache by key
-    *
-    *   @param  string  $key    Base key, e.g. item ID
-    */
+     * Delete a single item from the cache by key.
+     *
+     * @param   string  $key    Base key, e.g. item ID
+     */
     public static function delete($key)
     {
         global $_TABLES;
@@ -73,11 +77,10 @@ class Cache
 
 
     /**
-    *   Completely clear the cache.
-    *   Called after upgrade.
-    *
-    *   @param  array   $tag    Optional array of tags, base tag used if undefined
-    */
+     * Completely clear the cache. Called after upgrade.
+     *
+     * @param   array   $tag    Optional array of tags, base tag used if undefined
+     */
     public static function clear($tag = array())
     {
         global $_TABLES;
@@ -96,13 +99,13 @@ class Cache
 
 
     /**
-    *   Create a unique cache key.
-    *   Intended for internal use, but public in case it is needed.
-    *
-    *   @param  string  $key    Base key, e.g. Item ID
-    *   @param  boolean $incl_sechash   True to include the security hash
-    *   @return string          Encoded key string to use as a cache ID
-    */
+     * Create a unique cache key.
+     * Intended for internal use, but public in case it is needed.
+     *
+     * @param   string  $key    Base key, e.g. Item ID
+     * @param   boolean $incl_sechash   True to include the security hash
+     * @return  string          Encoded key string to use as a cache ID
+     */
     public static function makeKey($key, $incl_sechash = false)
     {
         if ($incl_sechash) {
@@ -117,11 +120,11 @@ class Cache
 
 
     /**
-    *   Get an item from cache.
-    *
-    *   @param  string  $key    Key to retrieve
-    *   @return mixed       Value of key, or NULL if not found
-    */
+     * Get an item from cache by key.
+     *
+     * @param   string  $key    Key to retrieve
+     * @return  mixed       Value of key, or NULL if not found
+     */
     public static function get($key)
     {
         global $_TABLES;

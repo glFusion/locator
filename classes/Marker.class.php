@@ -1,32 +1,41 @@
 <?php
 /**
-*   Marker class for the Locator plugin
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.2.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Marker class for the Locator plugin
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     1.2.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 namespace Locator;
 
 /**
-*   Class to handle the general location markers
-*   @package    locator
-*/
+ * Class to handle the general location markers.
+ * @package locator
+ */
 class Marker
 {
+    /** Indicate that the current user is a plugin administrator.
+     * @var boolean */
     private $isAdmin = false;
+
+    /** Marker properties, accessed via `__set()` and `--get()`.
+     * @var array */
     private $properties = array();
+
+    /** Flag to indicate a new marker vs. one read from the DB.
+     * @var boolean */
     public $isNew = true;
 
+
     /**
-    *   Constructor
-    *
-    *   @param  string  $id     Optional ID of a location to load
-    */
+     * Constructor.
+     *
+     * @param   string  $id     Optional ID of a location to load
+     */
     public function __construct($id = '')
     {
         global $_CONF_GEO, $_USER;
@@ -63,11 +72,11 @@ class Marker
 
 
     /**
-    *   Magic setter function.
-    *
-    *   @param  string  $key    Name of variable to set
-    *   @param  mixed   $value  Value to set
-    */
+     * Set a property's value.
+     *
+     * @param   string  $key    Name of variable to set
+     * @param   mixed   $value  Value to set
+     */
     public function __set($key, $value)
     {
         global $_CONF_GEO;
@@ -126,11 +135,11 @@ class Marker
 
 
     /**
-    *   Magic getter function
-    *
-    *   @param  string  $key    Name of variable to get
-    *   @return mixed           Value of $key, if set, or NULL
-    */
+     * Get the value of a property, or NULL if not defined.
+     *
+     * @param   string  $key    Name of variable to get
+     * @return  mixed           Value of $key, if set, or NULL
+     */
     public function __get($key)
     {
         if (array_key_exists($key, $this->properties)) {
@@ -142,11 +151,11 @@ class Marker
 
 
     /**
-    *   Read a marker from the database into variables
-    *
-    *   @param  string  $id     Optional ID of marker, or current is used
-    *   @return boolean         True if found and read, False on error or not found
-    */
+     * Read a marker from the database into variables.
+     *
+     * @param   string  $id     Optional ID of marker, or current is used
+     * @return  boolean         True if found and read, False on error or not found
+     */
     public function Read($id = '')
     {
         global $_TABLES;
@@ -164,11 +173,11 @@ class Marker
 
 
     /**
-    *   Set all variables from the database or form into the object
-    *
-    *   @param  array   $A      Array of name=>value pairs
-    *   @param  boolean $fromDB TRUE if $A is from the DB, FALSE if a form
-    */
+     * Set all variables from the database or form into the object
+     *
+     * @param   array   $A      Array of name=>value pairs
+     * @param   boolean $fromDB TRUE if $A is from the DB, FALSE if a form
+     */
     public function SetVars($A, $fromDB=false)
     {
         if (empty($A) || !is_array($A)) return false;
@@ -214,10 +223,11 @@ class Marker
 
 
     /**
-    *   Delete a single marker, and all category assignments
-    *
-    *   @param  array   $id ID of marker to delete
-    */
+     * Delete a single marker, and all category assignments.
+     *
+     * @param   string  $id     ID of marker to delete
+     * @param   string  $table  Table identifier (prod or submission)
+     */
     public function Delete($id, $table='locator_markers')
     {
         global $_TABLES;
@@ -234,11 +244,11 @@ class Marker
 
 
     /**
-    *   Updates an existing marker in either the live or submission table
-    *
-    *   @param  array   $A      Form data
-    *   @param  string  $table  Table to update
-    */
+     * Updates an existing marker in either the live or submission table.
+     *
+     * @param   array   $A      Form data
+     * @param   string  $table  Table to update
+     */
     public function Save($A, $table='locator_markers')
     {
         global $_TABLES, $_USER, $_CONF_GEO, $_CONF, $LANG_GEO;
@@ -354,11 +364,11 @@ class Marker
 
 
     /**
-    *   Display the marker edit form
-    *
-    *   @param  string  $id     Optional ID to load & edit, current if empty
-    *   @param  string  $mode   Optional mode indicator to set form action
-    */
+     * Display the marker edit form
+     *
+     * @param   string  $id     Optional ID to load & edit, current if empty
+     * @param   string  $mode   Optional mode indicator to set form action
+     */
     public function Edit($id = '', $mode='submit')
     {
         global $_CONF_GEO, $_TABLES, $_CONF, $LANG24, $LANG_postmodes, $_SYSTEM,
@@ -465,10 +475,10 @@ class Marker
 
 
     /**
-    *   Increment the hit counter for a marker
-    *
-    *   @param  string  $id     Marker ID
-    */
+     * Increment the hit counter for a marker
+     *
+     * @param   string  $id     Marker ID
+     */
     public static function Hit($id)
     {
         global $_TABLES;
@@ -480,13 +490,14 @@ class Marker
 
 
     /**
-    *   Displays the location's information, along with a map.
-    *   May be expanded in the future to use $origin to create driving
-    *   directions.
-    *
-    *   @param  string  $origin Optional origin ID, used to create directions
-    *   @return string  HTML displaying location with map
-    */
+     * Displays the location's information, along with a map.
+     * May be expanded in the future to use $origin to create driving
+     * directions.
+     *
+     * @param   string  $origin     Optional origin ID, used to create directions
+     * @param   string  $back_url   Return URL (deprecated)
+     * @return  string  HTML displaying location with map
+     */
     public function Detail($origin='', $back_url='')
     {
         global $_CONF, $_CONF_GEO;
@@ -563,14 +574,14 @@ class Marker
 
 
     /**
-    *   Toggles a boolean field based on the current value.
-    *   Current value must be provided.
-    *
-    *   @param  string  $id     ID number of element to modify
-    *   @param  string  $field  Field to modify
-    *   @param  integer $value  New value to set
-    *   @return         New value, or old value upon failure
-    */
+     * Toggles a boolean field based on the current value.
+     * Current value must be provided.
+     *
+     * @param   string  $id         ID number of element to modify
+     * @param   string  $field      Name of field to modify
+     * @param   integer $oldvalue   Original value
+     * @return          New value, or old value upon failure
+     */
     public static function Toggle($id, $field, $oldvalue)
     {
         global $_TABLES;
@@ -602,12 +613,12 @@ class Marker
 
 
     /**
-    *   Combine the address elements into a string to be used for geocoding.
-    *   Override the delimiter to create a different format.
-    *
-    *   @param  string  $delim  Delimiter, default to comma
-    *   @return string  String form of address
-    */
+     * Combine the address elements into a string to be used for geocoding.
+     * Override the delimiter to create a different format.
+     *
+     * @param   string  $delim  Delimiter, default to comma
+     * @return  string  String form of address
+     */
     public function AddressToString($delim = ', ')
     {
         $parts = array();

@@ -16,22 +16,37 @@
 namespace Locator\Mappers;
 
 /**
-*   Class to handle the general location markers
-*   @package    locator
-*/
+ * Class to support geocoding by geocodio.com.
+ * @package locator
+ */
 class geocodio extends \Locator\Mapper
 {
+    /** API key from service provider.
+     * @var string */
     private $api_key = NULL;
+
+    /** Indicate that this service provides geocoding.
+     * @var boolean */
     protected $is_geocoder = true;
+
+    /** Display name for this service.
+     * @var string */
     protected $display_name = 'Geocodio';
+
+    /** Internal name for this service.
+     * @var string */
     protected $name = 'geocodio';
+
+    /** URL to geocoding service.
+     * @var string */
     const GEOCODE_URL = 'https://api.geocod.io/v1.3/geocode?api_key=%s&q=%s';
 
+
     /**
-    *   Constructor
-    *
-    *   @param  string  $id     Optional ID of a location to load
-    */
+     * Constructor.
+     *
+     * @param   string  $id     Optional ID of a location to load
+     */
     public function __construct($id = '')
     {
         global $_CONF_GEO;

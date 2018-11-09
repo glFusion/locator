@@ -1,21 +1,33 @@
 <?php
 /**
-*   Sitemap driver for the Locator Plugin.
-*   There are no categories in this plugin.
-*
-*   @author     Lee P. Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2017 Lee P. Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.1.1
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Sitemap driver for the Locator Plugin.
+ * There are no categories in this plugin.
+ *
+ * @author      Lee P. Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2017 Lee P. Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     1.1.1
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
+/**
+ * Sitemap class for the Locator plugin
+ * @package locator
+ */
 class sitemap_locator extends sitemap_base
 {
+    /** Plugin name
+     * @var string */
     protected $name = 'locator';
 
+
+    /**
+     * Get the display name when showing the sitemap.
+     *
+     * @return  string  Plugin display name
+     */
     public function getDisplayName()
     {
         global $_CONF_GEO;
@@ -23,6 +35,12 @@ class sitemap_locator extends sitemap_base
     }
 
 
+    /**
+     * Get items for the sitemap.
+     *
+     * @param   mixed   $cat_id     Category ID (not used)
+     * @return  array       Array of item information.
+     */
     public function getItems($cat_id = false)
     {
         global $_TABLES, $_USER;

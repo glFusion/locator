@@ -1,26 +1,26 @@
 <?php
 /**
-*   Plugin-specific functions for the Locator plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2017 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.1.1
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Plugin-specific functions for the Locator plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2017 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     1.1.1
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 /**
-*   Gets and displays all locations within $radius $units of $id.
-*
-*   @param  string  $id     ID of location to use as origin
-*   @param  int     $radius Radius, in $units
-*   @param  string  $units  Unit of measure, 'km' or 'miles'
-*   @param  string  $keywords   Search string
-*   @param  string  $address    Optional street address to use as origin
-*   @return string  Content for web page
-*/
+ * Gets and displays all locations within $radius $units of $id.
+ *
+ * @param   string  $id     ID of location to use as origin
+ * @param   integer $radius Radius, in $units
+ * @param   string  $units  Unit of measure, 'km' or 'miles'
+ * @param   string  $keywords   Search string
+ * @param   string  $address    Optional street address to use as origin
+ * @return  string  Content for web page
+ */
 function GEO_showLocations($id, $radius=0, $units='', $keywords='', $address='')
 {
     global $_TABLES, $_CONF_GEO, $_CONF, $_USER, $LANG_GEO;
@@ -151,14 +151,14 @@ function GEO_showLocations($id, $radius=0, $units='', $keywords='', $address='')
 
 
 /**
-*   Gets all the locations with $radius $units of location $id.
-*
-*   @param  int     $id     ID number of origin
-*   @param  int     $radius Radius, in $units
-*   @param  string  $units  Unit of measure, 'km' or 'miles'
-*   @param  string  $keywords   Search keywords to limit result set
-*   @return array   Array of location records
-*/
+ * Gets all the locations with $radius $units of location $id.
+ *
+ * @param   integer $id     ID number of origin
+ * @param   integer $radius Radius, in $units
+ * @param   string  $units  Unit of measure, 'km' or 'miles'
+ * @param   string  $keywords   Search keywords to limit result set
+ * @return  array   Array of location records
+ */
 function getLocsByID($id, $radius=0, $units='', $keywords='')
 {
     global $_TABLES, $_CONF_GEO, $_USER;
@@ -187,14 +187,15 @@ function getLocsByID($id, $radius=0, $units='', $keywords='')
 
 
 /**
-*   Actually performs the search for location within $radius $units of $lat/$lng.
-*   @param  double  $lat    Origin Latitude
-*   @param  double  $lng    Origin Longitude
-*   @param  int     $radius Radius from origin to include
-*   @param  string  $units  Unit of measure for radius.  'km' or 'miles'
-*   @param  string  $keywords   Search keywords to limit results
-*   @return array   Array of location records matching criteria
-*/
+ * Actually performs the search for location within $radius $units of $lat/$lng.
+ *
+ * @param  float   $lat    Origin Latitude
+ * @param  float   $lng    Origin Longitude
+ * @param  integer $radius Radius from origin to include
+ * @param  string  $units  Unit of measure for radius.  'km' or 'miles'
+ * @param  string  $keywords   Search keywords to limit results
+ * @return array   Array of location records matching criteria
+ */
 function getLocsByCoord($lat, $lng, $radius, $units='', $keywords='')
 {
     global $_TABLES, $_CONF_GEO, $_USER;
@@ -268,12 +269,12 @@ function getLocsByCoord($lat, $lng, $radius, $units='', $keywords='')
 
 
 /**
-*   Creates a dropdown list of origins.
-*   Includes user-selected origins, if any.
-*
-*   @param  string  $id     Optional ID of origin to be selected
-*   @return string  HTML of selection list
-*/
+ * Creates a dropdown list of origins.
+ * Includes user-selected origins, if any.
+ *
+ * @param   string  $id     Optional ID of origin to be selected
+ * @return  string  HTML of selection list
+ */
 function GEO_originSelect($id)
 {
     global $_USER, $_TABLES;
@@ -312,10 +313,10 @@ function GEO_originSelect($id)
 
 
 /**
-*   Adds a system marker to the user origin table for the current user.
-*
-*   @param string $id   Marker ID to add as a user's origin
-*/
+ * Adds a system marker to the user origin table for the current user.
+ *
+ * @param   string $id   Marker ID to add as a user's origin
+ */
 function GEO_addUserOrigin($id='')
 {
     global $_USER, $_TABLES;
@@ -338,10 +339,10 @@ function GEO_addUserOrigin($id='')
 
 
 /**
-*   Removes a system marker from the user origin table for the current user.
-*
-*   @param string $id   Marker ID to add as a user's origin
-*/
+ * Removes a system marker from the user origin table for the current user.
+ *
+ * @param   string $id   Marker ID to add as a user's origin
+ */
 function GEO_delUserOrigin($id='')
 {
     global $_USER, $_TABLES;
@@ -356,10 +357,11 @@ function GEO_delUserOrigin($id='')
 
 
 /**
-*   Creates an administrator list to allow users to add origins to
-*   their preferences.
-*   @return string HTML of origin list
-*/
+ * Creates an administrator list to allow users to add origins to
+ * their preferences.
+ *
+ * @return  string HTML of origin list
+ */
 function GEO_showOrigins()
 {
     global $_CONF, $_TABLES, $_CONF_GEO, $LANG_GEO, $_USER;
@@ -407,14 +409,14 @@ function GEO_showOrigins()
 
 
 /**
-*   Returns a formatted field
-*
-*   @param  string  $fieldname  Name of field
-*   @param  string  $fieldvalue Value of field
-*   @param  array   $A          Array of all values
-*   @param  array   $icon_arr   Array of icons
-*   @return string  String to display for the selected field
-*/
+ * Returns a formatted field.
+ *
+ * @param   string  $fieldname  Name of field
+ * @param   string  $fieldvalue Value of field
+ * @param   array   $A          Array of all values
+ * @param   array   $icon_arr   Array of icons
+ * @return  string  String to display for the selected field
+ */
 function GEO_getAdminListField($fieldname, $fieldvalue, $A, $icon_arr)
 {
     global $_CONF, $_CONF_GEO, $LANG24, $LANG_GEO;
@@ -477,17 +479,17 @@ function GEO_getAdminListField($fieldname, $fieldvalue, $A, $icon_arr)
 
 
 /**
-*   Get the coordinates for a given address from cache.
-*   First looks in the cache table for an exact match to the address.
-*   If found, returns the coordinates.  If not, looks up the address via
-*   Google, adds the information to the cache, and returns the found
-*   information.
-*
-*   @param  string  $address    Address to look up
-*   @param  float   &$lat       Latitude variable to set
-*   @param  float   &$lng       Longitude variable to set
-*   @return integer             Status
-*/
+ * Get the coordinates for a given address from cache.
+ * First looks in the cache table for an exact match to the address.
+ * If found, returns the coordinates.  If not, looks up the address via
+ * Google, adds the information to the cache, and returns the found
+ * information.
+ *
+ * @param   string  $address    Address to look up
+ * @param   float   &$lat       Latitude variable to set
+ * @param   float   &$lng       Longitude variable to set
+ * @return  integer             Status
+ */
 function GEO_getCoordsUserAddress($address, &$lat, &$lng)
 {
     $rec = new Locator\UserOrigin($address);
@@ -501,14 +503,14 @@ function GEO_getCoordsUserAddress($address, &$lat, &$lng)
 
 
 /**
-*   Show the site header, with or without left blocks according to config.
-*
-*   @since  version 1.0.1
-*   @see    COM_siteHeader()
-*   @param  string  $subject    Text for page title (ad title, etc)
-*   @param  string  $meta       Other meta info
-*   @return string              HTML for site header
-*/
+ * Show the site header, with or without left blocks according to config.
+ *
+ * @since   version 1.0.1
+ * @see     COM_siteHeader()
+ * @param   string  $subject    Text for page title (ad title, etc)
+ * @param   string  $meta       Other meta info
+ * @return  string              HTML for site header
+ */
 function GEO_siteHeader($subject='', $meta='')
 {
     global $_CONF_GEO, $LANG_GEO;
@@ -537,12 +539,12 @@ function GEO_siteHeader($subject='', $meta='')
 
 
 /**
-*   Show the site footer, with or without right blocks according to config.
-*
-*   @since  version 1.0.1
-*   @see    COM_siteFooter()
-*   @return string              HTML for site header
-*/
+ * Show the site footer, with or without right blocks according to config.
+ *
+ * @since  version 1.0.1
+ * @see    COM_siteFooter()
+ * @return string              HTML for site header
+ */
 function GEO_siteFooter()
 {
     global $_CONF_GEO;

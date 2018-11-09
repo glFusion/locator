@@ -1,15 +1,15 @@
 <?php
 /**
-*   Administrator interface for the Locator plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.0.2
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Administrator interface for the Locator plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     1.0.2
+ * @license     http://opensource.org/licenses/gpl-2.0.php 
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 /** Include required glFusion common functions */
 require_once '../../../lib-common.php';
@@ -20,10 +20,11 @@ USES_locator_functions();
 USES_lib_admin();
 
 /**
-*   Create the admin menu block.
-*   @param  string  $desc_text  Description text to appear in the menu.
-*   @return string  HTML for the menu block
-*/
+ * Create the admin menu block.
+ *
+ * @param   string  $view   Name of view, for creating New link and help.
+ * @return  string  HTML for the menu block
+ */
 function GEO_adminMenu($view = '')
 {
     global $LANG_ADMIN, $LANG_GEO, $_CONF, $_CONF_GEO;
@@ -53,14 +54,14 @@ function GEO_adminMenu($view = '')
 
 
 /**
-*   Returns a formatted field to the admin list when managing general locations.
-*
-*   @param  string  $fieldname  Name of field
-*   @param  string  $fieldvalue Value of field
-*   @param  array   $A          Array of all values
-*   @param  array   $icon_arr   Array of icons
-*   @return string              String to display for the selected field
-*/
+ * Returns a formatted field to the admin list when managing general locations.
+ *
+ * @param   string  $fieldname  Name of field
+ * @param   string  $fieldvalue Value of field
+ * @param   array   $A          Array of all values
+ * @param   array   $icon_arr   Array of icons
+ * @return  string              String to display for the selected field
+ */
 function plugin_getListField_marker($fieldname, $fieldvalue, $A, $icon_arr)
 {
     global $_CONF, $_CONF_GEO, $LANG24, $LANG_GEO, $LANG_ADMIN;
@@ -133,9 +134,10 @@ function plugin_getListField_marker($fieldname, $fieldvalue, $A, $icon_arr)
 
 
 /**
-*   Builds an admin list of locations.
-*   @return string HTML for the location list
-*/
+ * Builds an admin list of locations.
+ *
+ * @return  string HTML for the location list
+ */
 function GEO_adminList()
 {
     global $_CONF, $_TABLES, $LANG_ADMIN, $LANG_ACCESS, $_CONF_GEO, $LANG_GEO;
@@ -187,14 +189,14 @@ function GEO_adminList()
 
 
 /**
-*   Returns a formatted field when managing user locations.
-*
-*   @param  string  $fieldname  Name of field
-*   @param  string  $fieldvalue Value of field
-*   @param  array   $A          Array of all values
-*   @param  array   $icon_arr   Array of icons
-*   @return string              String to display for the selected field
-*/
+ * Returns a formatted field when managing user locations.
+ *
+ * @param   string  $fieldname  Name of field
+ * @param   string  $fieldvalue Value of field
+ * @param   array   $A          Array of all values
+ * @param   array   $icon_arr   Array of icons
+ * @return  string              String to display for the selected field
+ */
 function GEO_getListField_userloc($fieldname, $fieldvalue, $A, $icon_arr)
 {
     global $_CONF, $_CONF_GEO, $LANG24, $LANG_GEO, $LANG_ADMIN;
@@ -227,11 +229,12 @@ function GEO_getListField_userloc($fieldname, $fieldvalue, $A, $icon_arr)
 
 
 /**
-*   Creates an admin list to administer the user location cache. 
-*   The cache is built from the user locations given in glFusion account 
-*   settings.
-*   @return string  HTML for the admin list
-*/
+ * Creates an admin list to administer the user location cache. 
+ * The cache is built from the user locations given in glFusion account 
+ * settings.
+ *
+ * @return  string  HTML for the admin list
+ */
 function GEO_adminUserloc()
 {
     global $_CONF, $_TABLES, $LANG_ADMIN, $LANG_ACCESS, $_CONF_GEO, $LANG_GEO;
@@ -266,11 +269,6 @@ function GEO_adminUserloc()
                     $text_arr, $query_arr, $defsort_arr, '', '', '', $form_arr);
 }
 
-
-
-/*
-* Main 
-*/
 
 // If plugin is installed but not enabled, display an error and exit gracefully
 if (!in_array('locator', $_PLUGINS)) {

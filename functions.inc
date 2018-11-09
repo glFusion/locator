@@ -1,24 +1,24 @@
 <?php
 /**
-*   glFusion API functions for the Locator plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.2.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * glFusion API functions for the Locator plugin.
+ *
+ * @author     Lee Garner <lee@leegarner.com>
+ * @copyright  Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
+ * @package    locator
+ * @version    1.2.0
+ * @license    http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 if (!defined('GVERSION')) {
     die('This file can not be used on its own.');
 }
 
 /**
-*   Global plugin-specific configuration items
-*   @global array $_CONF_GEO
-*/
+ * Global plugin-specific configuration items
+ * @global array $_CONF_GEO
+ */
 global $_CONF_GEO;
 
 //  Check and see if we need to load the plugin configuration
@@ -86,21 +86,24 @@ spl_autoload_register(function ($class)
 });
 
 
+/** Load plugin-specific functions when needed. */
 function USES_locator_functions()
 {   require_once LOCATOR_PI_PATH . '/locator_functions.inc.php';    }
 
+/** Load the marker editing functions when needed. */
 function USES_locator_editmarker()
 {   require_once LOCATOR_PI_PATH . '/editmarker.php';   }
 
+/** Load the Google language file when needed. */
 function USES_locator_google_lang()
 {   require_once LOCATOR_PI_PATH . '/google_lang.inc.php';  }
 
 
 /**
-*   Returns the items for this plugin that should appear on the main menu
-*
-*   @return array   Associative array of menu items to be added to menu
-*/
+ * Returns the items for this plugin that should appear on the main menu
+ *
+ * @return  array   Associative array of menu items to be added to menu
+ */
 function plugin_getmenuitems_locator()
 {
     global $LANG_GEO, $_CONF_GEO;
@@ -118,10 +121,10 @@ function plugin_getmenuitems_locator()
 
 
 /**
-*   Add the admin option to command & control.
-*
-*   @return   array   Array (plugin name, admin url, url of plugin icon)
-*/
+ * Add the admin option to command & control.
+ *
+ * @return  array   Array (plugin name, admin url, url of plugin icon)
+ */
 function plugin_cclabel_locator()
 {
     global $LANG_GEO;
@@ -139,10 +142,10 @@ function plugin_cclabel_locator()
 
 
 /**
-*   Returns the administrative menu option for this plugin.
-*
-*   @return array   Array (plugin name, admin url, # of plugin items or '')
-*/
+ * Returns the administrative menu option for this plugin.
+ *
+ * @return  array   Array (plugin name, admin url, # of plugin items or '')
+ */
 function plugin_getadminoption_locator()
 {
     global $_CONF, $LANG_GEO, $_CONF_GEO;
@@ -160,10 +163,10 @@ function plugin_getadminoption_locator()
 
 
 /**
-*   Returns the user menu option for this plugin.
-*
-*   @return array   Array containing (plugin name, plugin user url, 0)
-*/
+ * Returns the user menu option for this plugin.
+ *
+ * @return  array   Array containing (plugin name, plugin user url, 0)
+ */
 function plugin_getuseroption_locator()
 {
     return false;
@@ -171,11 +174,11 @@ function plugin_getuseroption_locator()
 
 
 /**
-*   Return the current version of code.
-*   Used in the Plugin Editor to show the registered version and code version
-*
-*   @return string Plugin version
-*/
+ * Return the current version of code.
+ * Used in the Plugin Editor to show the registered version and code version
+ *
+ * @return  string Plugin version
+ */
 function plugin_chkVersion_locator()
 {
     global $_CONF_GEO;
@@ -185,19 +188,19 @@ function plugin_chkVersion_locator()
 
 
 /**
-*   Removes the datastructures for this plugin from the glFusion database.
-*   This routine will get called from the Plugin install program if user
-*   selects De-Install or if Delete is used in the Plugin Editor.
-*   The Plugin Installer will also call this routine upon and install error
-*   to remove anything it has created.
-*   The Plugin installer will pass the optional parameter which will then
-*   double check that plugin has first been disabled.
-*
-*   Returns True if all Plugin related data is removed without error
-*
-*   @param  string  $installCheck   Defult is blank but if set, check if plugin is disabled first
-*   @return boolean                 True if successful false otherwise
-*/
+ * Removes the datastructures for this plugin from the glFusion database.
+ * This routine will get called from the Plugin install program if user
+ * selects De-Install or if Delete is used in the Plugin Editor.
+ * The Plugin Installer will also call this routine upon and install error
+ * to remove anything it has created.
+ * The Plugin installer will pass the optional parameter which will then
+ * double check that plugin has first been disabled.
+ * 
+ * Returns True if all Plugin related data is removed without error
+ *
+ * @param   string  $installCheck   Defult is blank but if set, check if plugin is disabled first
+ * @return  boolean                 True if successful false otherwise
+ */
 function plugin_uninstall_locator($installCheck='')
 {
     global $_TABLES, $LANG_PHOTO;
@@ -256,10 +259,10 @@ function plugin_uninstall_locator($installCheck='')
 
 
 /**
-*   Gets an array of items to be removed during plugin removal.
-*
-*   @return array Array of plugin elements to remove
-*/
+ * Gets an array of items to be removed during plugin removal.
+ *
+ * @return  array Array of plugin elements to remove
+ */
 function plugin_autouninstall_locator()
 {
     global $_CONF_GEO;
@@ -294,13 +297,13 @@ function plugin_autouninstall_locator()
 
 
 /**
-*   Returns the current user's ability to moderate the plugin
-*
-*   Checks that the current user has the rights to moderate the
-*   plugin, returns true if this is the case, false otherwise
-*
-*   @return boolean True if moderator
-*/
+ * Returns the current user's ability to moderate the plugin.
+ *
+ * Checks that the current user has the rights to moderate the
+ * plugin, returns true if this is the case, false otherwise.
+ *
+ * @return  boolean True if moderator
+ */
 function plugin_ismoderator_locator()
 {
     global $_CONF_GEO;
@@ -314,11 +317,11 @@ function plugin_ismoderator_locator()
 
 
 /**
-*   Returns the plugins submission form
-*   Returns a string contain the HTML of the submission form for the plugin.
-*
-*   @return string  The HTML form
-*/
+ * Returns the plugins submission form.
+ * Returns a string contain the HTML of the submission form for the plugin.
+ *
+ * @return string  The HTML form
+ */
 function plugin_submit_locator()
 {
     global $HTTP_POST_VARS, $LANG12, $_CONF, $_CONF_GEO, $LANG_GEO;
@@ -343,10 +346,10 @@ function plugin_submit_locator()
 
 
 /**
-*   Returns the URL of the plugin's icon.
-*
-*   @return string  URL of the icon
-*/
+ * Returns the URL of the plugin's icon.
+ *
+ * @return  string  URL of the icon
+ */
 function plugin_geticon_locator()
 {
     return LOCATOR_URL . '/images/locator.png';
@@ -354,8 +357,19 @@ function plugin_geticon_locator()
 
 
 /**
-*   Search the plugin data
-*/
+ * Search the plugin data.
+ *
+ * @param   string  $query      Search Query
+ * @param   string  $datestart  Starting Date (not used)
+ * @param   string  $dateend    Ending Date (not used)
+ * @param   string  $topic      Topic ID (not used)
+ * @param   string  $type       Not used
+ * @param   integer $author     Author ID (not used)
+ * @param   string  $keyType    Not used
+ * @param   integer $page       Page number (not used)
+ * @param   integer $perpage    Results per page (not used)
+ * @return  object      Search object
+ */
 function plugin_dopluginsearch_locator(
     $query,
     $datestart,
@@ -400,15 +414,14 @@ function plugin_dopluginsearch_locator(
     //$search->setURLRewrite(true);
 
     return $search;
-
 }
 
 
 /**
-*   Returns the plugin menu option for searching
-*
-*   @return array Plugin name => Menu Label
-*/
+ * Returns the plugin menu option for searching.
+ *
+ * @return  array Plugin name => Menu Label
+ */
 function plugin_searchtypes_locator()
 {
     global $LANG_GEO, $_CONF, $_CONF_GEO;
@@ -422,12 +435,12 @@ function plugin_searchtypes_locator()
 
 
 /**
-*   Returns the number of submissions waiting moderation
-*   Calculates the number of submissions that are currently waiting
-*   to be moderated and returns that number.
-*
-*   @return      int       number of submissions awaiting moderation
-*/
+ * Returns the number of submissions waiting moderation.
+ * Calculates the number of submissions that are currently waiting
+ * to be moderated and returns that number.
+ *
+ * @return  inteter     Number of submissions awaiting moderation
+ */
 function plugin_submissioncount_locator()
 {
     global $_TABLES;
@@ -437,12 +450,12 @@ function plugin_submissioncount_locator()
 
 
 /**
-*   Show items for moderation on submissions page
-*   Uses the Plugin class to return data required by moderation.php to list
-*   plugin objects that need to be moderated.
-*
-*   @return       Plugin       return Plugin class containing submission data
-*/
+ * Show items for moderation on submissions page
+ * Uses the Plugin class to return data required by moderation.php to list
+ * plugin objects that need to be moderated.
+ *
+ * @return  Object      Plugin class containing submission data
+ */
 function plugin_itemlist_locator()
 {
     global $_TABLES, $LANG_GEO;
@@ -520,12 +533,13 @@ function plugin_supportadblock_locator()
 
 
 /**
-*   Use the system message block to display an error message
-*   @param  string  $msg    Message to display
-*   @param  string  $type   Type or severity of message, default 'info'
-*   @param  string  $hdr    Header text, default 'Error'
-*   @return string  HTML code to display teh message box
-*/
+ * Use the system message block to display an error message.
+ *
+ * @param   string  $msg    Message to display
+ * @param   string  $type   Type or severity of message, default 'info'
+ * @param   string  $hdr    Header text, default 'Error'
+ * @return  string  HTML code to display teh message box
+ */
 function GEO_errorMsg($msg='', $type='info', $hdr='')
 {
     if ($msg == '')
@@ -560,12 +574,12 @@ function GEO_errorMsg($msg='', $type='info', $hdr='')
 
 
 /**
-*   Upgrade the plugin
-*   Calls locator_do_upgrade() to perform the upgrade if not already
-*   at the current revision.
-*
-*   @return boolean True on success, error code on failure
-*/
+ * Upgrade the plugin.
+ * Calls locator_do_upgrade() to perform the upgrade if not already
+ * at the current revision.
+ *
+ * @return  boolean True on success, error code on failure
+ */
 function plugin_upgrade_locator()
 {
     require_once dirname(__FILE__) . '/upgrade.inc.php';
@@ -574,11 +588,11 @@ function plugin_upgrade_locator()
 
 
 /**
-*   Select default group for ad access (viewing and editing)
-*
-*   @uses   GEO_getGroups()
-*   @return array   Array of groups for the selection dropdown
-*/
+ * Select default group for ad access (viewing and editing)
+ *
+ * @uses    GEO_getGroups()
+ * @return  array   Array of groups for the selection dropdown
+ */
 function plugin_configmanager_select_defgrp_locator()
 {
     return GEO_getGroups('\'All Users\'', 'NOT');
@@ -586,13 +600,13 @@ function plugin_configmanager_select_defgrp_locator()
 
 
 /**
-*   Get an array of groups.
-*   A comma-separated list of groups can be included or excluded.
-*
-*   @param string $grplist  Comma-separated list of groups, SQL format
-*   @param string $NOT      Set to "NOT" to exclude $grplist, blank to include.
-*   @return array           Array of groups.
-*/
+ * Get an array of groups.
+ * A comma-separated list of groups can be included or excluded.
+ *
+ * @param   string $grplist  Comma-separated list of groups, SQL format
+ * @param   string $NOT      Set to "NOT" to exclude $grplist, blank to include.
+ * @return  array           Array of groups.
+ */
 function GEO_getGroups($grplist='', $NOT='')
 {
     global $_TABLES;
@@ -618,10 +632,10 @@ function GEO_getGroups($grplist='', $NOT='')
 
 
 /**
-*   Determines if the current user can submit a location
-*
-*   @return boolean True if submission allowed, False otherwise
-*/
+ * Determines if the current user can submit a location.
+ *
+ * @return  boolean True if submission allowed, False otherwise
+ */
 function GEO_canSubmit()
 {
     global $_CONF, $_CONF_GEO;
@@ -643,13 +657,13 @@ function GEO_canSubmit()
 
 
 /**
-*   Implements the [locator:] autotag.
-*
-*   @param  string  $op         Operation to perform
-*   @param  string  $content    Page Content
-*   @param  string  $autotag    Autotag parameters
-*   @return string              HTML generated by autotag
-*/
+ * Implements the `[locator:]` autotag.
+ *
+ * @param   string  $op         Operation to perform
+ * @param   string  $content    Page Content
+ * @param   string  $autotag    Autotag parameters
+ * @return  string              HTML generated by autotag
+ */
 function plugin_autotags_locator($op, $content = '', $autotag = '')
 {
     global $_CONF, $_TABLES, $_CONF_GEO;
@@ -726,8 +740,8 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
 
 
 /**
-*   Perform scheduled functions, such as deleting user-entered locations
-*/
+ * Perform scheduled functions, such as deleting user-entered locations.
+ */
 function plugin_runScheduledTask_locator()
 {
     global $_TABLES, $_CONF_GEO;
@@ -748,13 +762,13 @@ function plugin_runScheduledTask_locator()
 
 
 /**
-*   Create a basic map for display.
-*
-*   @param  float   $lat    Latitude
-*   @param  float   $lng    Longitude
-*   @param  string  $text   Optional text for marker popup
-*   @return string          HTML code for map display
-*/
+ * Create a basic map for display.
+ *
+ * @param   float   $lat    Latitude
+ * @param   float   $lng    Longitude
+ * @param   string  $text   Optional text for marker popup
+ * @return  string          HTML code for map display
+ */
 function GEO_showMap($lat, $lng, $text='')
 {
     global $_CONF_GEO;
@@ -769,12 +783,12 @@ function GEO_showMap($lat, $lng, $text='')
 
 
 /**
-*   Displays a map in the user's profile.
-*
-*   @param  integer $uid    User ID whose profile is being displayed
-*   @param  object  &$T     Pointer to template object
-*   @return string          HTML to include in profile page
-*/
+ * Displays a map in the user's profile.
+ *
+ * @param   integer $uid    User ID whose profile is being displayed
+ * @param   object  &$T     Pointer to template object
+ * @return  string          HTML to include in profile page
+ */
 function plugin_profilevariablesdisplay_locator($uid, &$T)
 {
     global $_CONF_GEO, $_TABLES;
@@ -812,13 +826,13 @@ function plugin_profilevariablesdisplay_locator($uid, &$T)
 
 
 /**
-*   Get the link to a documentation file.
-*   Returns the URL to the file, or to the directory if no file requested.
-*
-*   @param  string  $file       HTML file
-*   @param  string  $doclang    Documentation language
-*   @return string              URL to document directory or file
-*/
+ * Get the link to a documentation file.
+ * Returns the URL to the file, or to the directory if no file requested.
+ *
+ * @param   string  $file       HTML file
+ * @param   string  $doclang    Documentation language
+ * @return  string              URL to document directory or file
+ */
 function LOCATOR_getDocURL($file='', $doclang='english')
 {
     global $_CONF, $_CONF_GEO;
@@ -844,13 +858,13 @@ function LOCATOR_getDocURL($file='', $doclang='english')
 
 
 /**
-*   Get the URL to the localized configuration help file.
-*
-*   @uses   LOCATOR_getDocURL()
-*   @param  string  $option     Configuration option to display
-*   @param  string  $doclang    Documentation language requested
-*   @return array   Array of (url, window_type)
-*/
+ * Get the URL to the localized configuration help file.
+ *
+ * @uses    LOCATOR_getDocURL()
+ * @param   string  $option     Configuration option to display
+ * @param   string  $doclang    Documentation language requested
+ * @return  array   Array of (url, window_type)
+ */
 function plugin_getconfigelementhelp_locator($option, $doclang='english')
 {
     if (version_compare(GVERSION, '1.6.0', '<')) {
@@ -871,13 +885,13 @@ function plugin_getconfigelementhelp_locator($option, $doclang='english')
 
 
 /**
-*   Looks up coordinates from Google for the given address.
-*
-*   @param  string  $address    Address to look up
-*   @param  float   &$lat       Reference to latitude value
-*   @param  float   &$lng       Reference to longitude value
-*   @return int                 Zero for success, or -1 for failure
-*/
+ * Looks up coordinates from Google for the given address.
+ *
+ * @param   string  $address    Address to look up
+ * @param   float   &$lat       Reference to latitude value
+ * @param   float   &$lng       Reference to longitude value
+ * @return  integer             Zero for success, or -1 for failure
+ */
 function GEO_getCoords($address, &$lat, &$lng)
 {
     return \Locator\Mapper::getGeocoder()->geoCode($address, $lat, $lng);
@@ -885,16 +899,16 @@ function GEO_getCoords($address, &$lat, &$lng)
 
 
 /**
-*   Returns an array containing the data for a single location.
-*   Used as an API function to allow other plugins to look up a location.
-*   The returned array will have all items, plus address components.
-*
-*   @since  1.0.3
-*   @param  string  $id         Location ID to retrieve
-*   @param  boolean $singleAddress  True to return a single address string,
-*                                   False to return array of all info
-*   @return mixed   Array of location information, address string, or false on failure
-*/
+ * Returns an array containing the data for a single location.
+ * Used as an API function to allow other plugins to look up a location.
+ * The returned array will have all items, plus address components.
+ *
+ * @since   version 1.0.3
+ * @param   string  $id         Location ID to retrieve
+ * @param   boolean $singleAddress  True to return a single address string,
+ *                                False to return array of all info
+ * @return  mixed   Array of location information, address string, or false on failure
+ */
 function GEO_getInfo($id, $singleAddress = false)
 {
     global $_TABLES;
@@ -920,14 +934,14 @@ function GEO_getInfo($id, $singleAddress = false)
 
 
 /**
-*   Get the URL to Google Maps for inclusion in a template
-*   This makes sure the javascript is included only once even if there
-*   are multiple maps on the page.
-*   Returns the URL, and a random number to be used for the canvas ID.
-*
-*   @deprecated 1.2.0
-*   @return array   $url=>URL to Google Maps javascript, $canvas_id=> random ID
-*/
+ * Get the URL to Google Maps for inclusion in a template
+ * This makes sure the javascript is included only once even if there
+ * are multiple maps on the page.
+ * Returns the URL, and a random number to be used for the canvas ID.
+ *
+ * @deprecated version 1.2.0
+ * @return array   $url=>URL to Google Maps javascript, $canvas_id=> random ID
+ */
 function XGEO_MapJS()
 {
     global $_CONF_GEO;
@@ -946,10 +960,10 @@ function XGEO_MapJS()
 
 
 /**
-*   Return true since this plugin supports webservices
-*
-*   @return boolean     False, web services are not supported
-*/
+ * Return true since this plugin supports webservices
+ *
+ * @return  boolean     False, web services are not supported
+ */
 function plugin_wsEnabled_locator()
 {
     return false;
@@ -957,11 +971,11 @@ function plugin_wsEnabled_locator()
 
 
 /**
-*   Support merging local accounts into remote accounts
-*
-*   @param  integer $origUID    Original (remote) user ID
-*   @param  integer $destUID    Merged (local) user ID
-*/
+ * Support merging local accounts into remote accounts
+ *
+ * @param   integer $origUID    Original (remote) user ID
+ * @param   integer $destUID    Merged (local) user ID
+ */
 function plugin_user_move_locator($origUID, $destUID)
 {
     global $_TABLES;
@@ -978,8 +992,11 @@ function plugin_user_move_locator($origUID, $destUID)
 }
 
 /**
-*   Save the profile information when edited via Account Settings
-*/
+ * Save the profile information when edited via Account Settings.
+ *
+ * @param   ingeger $uid    Optional user ID, current user by default
+ *
+ */
 function plugin_profilesave_locator($uid=0)
 {
     global $_TABLES, $_USER;
@@ -997,14 +1014,14 @@ function plugin_profilesave_locator($uid=0)
 
 
 /**
-*   Provides the getItemInfo function for locations
-*
-*   @param  string  $id         Location ID
-*   @param  string  $fields     Comma-separated list of fields to return
-*   @param  integer $uid        User ID
-*   @param  array   $options    Not used
-*   @return array           Array of product information
-*/
+ * Provides the getItemInfo function for locations.
+ *
+ * @param   string  $id         Location ID
+ * @param   string  $what       Comma-separated list of fields to return
+ * @param   integer $uid        User ID
+ * @param   array   $options    Not used
+ * @return  array           Array of product information
+ */
 function plugin_getiteminfo_locator($id, $what, $uid=0, $options=array())
 {
     global $_TABLES, $_CONF;
@@ -1125,13 +1142,13 @@ function plugin_getiteminfo_locator($id, $what, $uid=0, $options=array())
 
 
 /**
-*   Get a map given a pair of coordinates
-*
-*   @param  array   $args       Array of item information
-*   @param  array   &$output    Pointer to output array
-*   @param  array   &$svc_msg   Unused
-*   @return integer             Status code
-*/
+ * Get a map given a pair of coordinates
+ *
+ * @param   array   $args       Array of item information
+ * @param   array   &$output    Pointer to output array
+ * @param   array   &$svc_msg   Unused
+ * @return  integer             Status code
+ */
 function service_getMap_locator($args, &$output, &$svc_msg)
 {
     if (!is_array($args)) return PLG_RET_ERROR;
@@ -1144,13 +1161,13 @@ function service_getMap_locator($args, &$output, &$svc_msg)
 
 
 /**
-*   Get the coordinates for a given address
-*
-*   @param  array   $args       Array of item information
-*   @param  array   &$output    Pointer to output array
-*   @param  array   &$svc_msg   Unused
-*   @return integer             Status code
-*/
+ * Get the coordinates for a given address.
+ *
+ * @param   array   $args       Array of item information
+ * @param   array   &$output    Pointer to output array
+ * @param   array   &$svc_msg   Unused
+ * @return  integer             Status code
+ */
 function service_getCoords_locator($args, &$output, &$svc_msg)
 {
     //if (!is_array($args) || empty($args['address'])) return PLG_RET_ERROR;
@@ -1168,13 +1185,13 @@ function service_getCoords_locator($args, &$output, &$svc_msg)
 
 
 /**
-*   Returns a selection list of locations.
-*   Intended for other plugins to create a dropdown list.
-*
-*   @uses   COM_optionList()
-*   @param  string  $sel        Currently selected item ID
-*   @return string          Options to be bracketd by Select tags
-*/
+ * Returns a selection list of locations.
+ * Intended for other plugins to create a dropdown list.
+ *
+ * @uses    COM_optionList()
+ * @param   string  $sel        Currently selected item ID
+ * @return  string          Options to be bracketd by Select tags
+ */
 function GEO_optionList($sel='')
 {
     global $_TABLES;
@@ -1185,15 +1202,15 @@ function GEO_optionList($sel='')
 
 
 /**
-*   Returns a selection list of locations.
-*   Intended for other plugins to create a dropdown list.
-*
-*   @uses   GEO_optionList()
-*   @param  array   $args       Unused
-*   @param  string  &$output    String to hold resulting option list
-*   @param  string  &$svc_msg   String to hold any service message
-*   @return integer             Just returns OK, $output may be empty at worst
-*/
+ * Returns a selection list of locations.
+ * Intended for other plugins to create a dropdown list.
+ *
+ * @uses    GEO_optionList()
+ * @param   array   $args       Unused
+ * @param   string  &$output    String to hold resulting option list
+ * @param   string  &$svc_msg   String to hold any service message
+ * @return  integer             Just returns OK, $output may be empty at worst
+ */
 function service_optionList_locator($args, &$output, &$svc_msg)
 {
     global $_TABLES;
@@ -1205,14 +1222,14 @@ function service_optionList_locator($args, &$output, &$svc_msg)
 
 
 /**
-*   Return general information about a location
-*
-*   @uses   GEO_getInfo()
-*   @param  array   $args       Array of parameters
-*   @param  array   &$output    Array to receive information items
-*   @param  string  &$svc_msg   String to hold any service messages
-*   @return integer             Status of function call
-*/
+ * Return general information about a location
+ *
+ * @uses    GEO_getInfo()
+ * @param   array   $args       Array of parameters
+ * @param   array   &$output    Array to receive information items
+ * @param   string  &$svc_msg   String to hold any service messages
+ * @return  integer             Status of function call
+ */
 function service_getInfo_locator($args, &$output, &$svc_msg)
 {
     $id = $args['id'];
@@ -1226,11 +1243,11 @@ function service_getInfo_locator($args, &$output, &$svc_msg)
 
 
 /**
-*   Convert an array of address elements into a string.
-*
-*   @param  array   $args   Array of address elements
-*   @return string      String form of address
-*/
+ * Convert an array of address elements into a string.
+ *
+ * @param   array   $args   Array of address elements
+ * @return  string      String form of address
+ */
 function GEO_AddressToString($args)
 {
     if (is_array($args)) {
@@ -1249,12 +1266,12 @@ function GEO_AddressToString($args)
 
 
 /**
-*   Convert a latitude or longitude to a string based on the configured separators.
-*
-*   @param  float   $val    Value to convert
-*   @param  boolean $us     True to force US formatting, False for locale-based
-*   @return string      Formatted numeric string
-*/
+ * Convert a latitude or longitude to a string based on the configured separators.
+ *
+ * @param   float   $val    Value to convert
+ * @param   boolean $us     True to force US formatting, False for locale-based
+ * @return  string      Formatted numeric string
+ */
 function GEO_coord2str($val, $us = false)
 {
     if (!is_numeric($val)) return '';

@@ -1,32 +1,34 @@
 <?php
 /**
-*   User location class for the Locator plugin.
-*   The UserLoc class handles user locations based on each user's profile.
-*   The UserOrigin class is for addresses entered by users as search origins,
-*   and are subject to being purged after some time.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2011 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.0.2
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * User location class for the Locator plugin.
+ * The UserLoc class handles user locations based on each user's profile.
+ * The UserOrigin class is for addresses entered by users as search origins,
+ * and are subject to being purged after some time.
+ *
+ * @author     Lee Garner <lee@leegarner.com>
+ * @copyright  Copyright (c) 2009-2011 Lee Garner <lee@leegarner.com>
+ * @package    locator
+ * @version    1.0.2
+ * @license    http://opensource.org/licenses/gpl-2.0.php 
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 namespace Locator;
 
 /**
-*   Class to handle the user-entered strings used as search origins.
-*   Unlike user profile locations (type 0), these can be automatically
-*   purged after some time.
-*   @package locator
-*/
+ * Class to handle the user-entered strings used as search origins.
+ * Unlike user profile locations (type 0), these can be automatically
+ * purged after some time.
+ * @package locator
+ */
 class UserOrigin extends UserLoc
 {
     /**
-    *   Constructor
-    *   Calls the parent constructor and sets the record type to '1'
-    */
+     * Constructor.
+     * Calls the parent constructor and sets the record type to '1'
+     *
+     * @param   string  $location   Optional location to get immediately.
+     */
     public function __construct($location='')
     {
         $this->location = $location;
@@ -48,10 +50,10 @@ class UserOrigin extends UserLoc
 
 
     /**
-    *   Read the current location from the database
-    *
-    *   @return boolean     True on success, False on failure or not found
-    */
+     * Read the current location from the database
+     *
+     * @return  boolean     True on success, False on failure or not found
+     */
     public function readFromDB()
     {
         global $_TABLES, $_USER;

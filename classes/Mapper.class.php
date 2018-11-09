@@ -1,29 +1,46 @@
 <?php
 /**
-*   Base class for mappers. Mainly used to instantiate the configured mapper.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2018 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.1.4
-*   @since      1.1.4
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Base class for mappers. Mainly used to instantiate the configured mapper.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     1.1.4
+ * @since       1.1.4
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 namespace Locator;
 
 /**
-*   Base class to return a Mapper
-*   @package locator
-*/
+ * Base class to return a Mapper.
+ * @package locator
+ */
 class Mapper
 {
+    /** Indicate that this service provides mapping. Default = false.
+     * @var boolean */
     protected $is_mapper = false;
+
+    /** Indicate that this service provides Geocoding. Default = false.
+     * @var boolean */
     protected $is_geocoder = false;
+
+    /** Displaly name for this service.
+     * @var string */
     protected $display_name = 'Undefined';
+
+    /** Class name for this service.
+     * @var string */
     protected $name = 'Undefined';
 
+    /**
+     * Get a service instance.
+     *
+     * @param   string  $name   Name of service
+     * @return  object          Instance of service class.
+     */
     public static function getInstance($name='')
     {
         global $_CONF_GEO;
@@ -42,6 +59,11 @@ class Mapper
     }
 
 
+    /**
+     * Get an instance of the configured mapping service.
+     *
+     * @return  object  Instance of a Mapper object.
+     */
     public static function getMapper()
     {
         global $_CONF_GEO;
@@ -50,6 +72,11 @@ class Mapper
     }
 
 
+    /**
+     * Get an instance of the configured geocoding service.
+     *
+     * @return  object  Instance of a Mapper object.
+     */
     public static function getGeocoder()
     {
         global $_CONF_GEO;
@@ -58,12 +85,22 @@ class Mapper
     }
 
 
+    /**
+     * Get the display name of this service.
+     *
+     * @return  string      Service display name
+     */
     public function getDisplayName()
     {
         return $this->display_name;
     }
 
 
+    /**
+     * Get the internal classname of this service.
+     *
+     * @return  string      Class Name
+     */
     public function getName()
     {
         return $this->name;
@@ -71,8 +108,7 @@ class Mapper
 
 
     /**
-     * Default function to show a map, in case an invalid class
-     * was instantiated.
+     * Default function to show a map, in case an invalid class was instantiated.
      *
      * @param   float   $lat    Latitude
      * @param   float   $lng    Longitude
@@ -85,18 +121,12 @@ class Mapper
     }
 
 
-    public function showLargeMap($lat, $lng, $text = '')
-    {
-        return '';
-    }
-
-
     /**
-    *   Retrieve the contents of a remote URL.
-    *
-    *   @param  string  $url    URL to retrieve
-    *   @return string          Raw contents from URL
-    */
+     * Retrieve the contents of a remote URL.
+     *
+     * @param   string  $url    URL to retrieve
+     * @return  string          Raw contents from URL
+     */
     public static function getUrl($url)
     {
         if (in_array('curl', get_loaded_extensions())) {
@@ -184,7 +214,7 @@ class Mapper
 
 
     /**
-     * Check if this provider is a Mapping provider
+     * Check if this provider is a Mapping provider.
      *
      * @return  boolean     True or False
      */
@@ -195,7 +225,7 @@ class Mapper
 
 
     /**
-     * Check if this provider is a Geocoding provider
+     * Check if this provider is a Geocoding provider.
      *
      * @return  boolean     True or False
      */
