@@ -34,6 +34,7 @@ class Cache
      * @param   mixed   $data   Data, typically an array
      * @param   mixed   $tag    Tag, or array of tags.
      * @param   integer $cache_mins Cache minutes
+     * @return  boolean     True on success, False on error
      */
     public static function set($key, $data, $tag='', $cache_mins=1440)
     {
@@ -53,7 +54,7 @@ class Cache
                 if (!is_array($tag)) $tag = array($tag);
                 $tags = array_merge($tags, $tag);
             }
-            \glFusion\Cache::getInstance()->set($key, $data, $tags, $ttl);
+            return \glFusion\Cache\Cache::getInstance()->set($key, $data, $tags, $ttl);
         }
     }
 
@@ -62,6 +63,7 @@ class Cache
      * Delete a single item from the cache by key.
      *
      * @param   string  $key    Base key, e.g. item ID
+     * @return  boolean     True on success, False on error
      */
     public static function delete($key)
     {
@@ -70,8 +72,9 @@ class Cache
         $key = self::makeKey($key);
         if (version_compare(GVERSION, self::MIN_GVERSION, '<')) {
             DB_delete($_TABLES['locator_cache'], 'cache_id', $key);
+            return DB_error() ? false : true;
         } else {
-            \glFusion\Cache::getInstance()->delete($key);
+            return \glFusion\Cache\Cache::getInstance()->delete($key);
         }
     }
 
@@ -80,6 +83,7 @@ class Cache
      * Completely clear the cache. Called after upgrade.
      *
      * @param   array   $tag    Optional array of tags, base tag used if undefined
+     * @return  boolean     True on success, False on error
      */
     public static function clear($tag = array())
     {
@@ -87,13 +91,14 @@ class Cache
 
         if (version_compare(GVERSION, self::MIN_GVERSION, '<')) {
             DB_query("TRUNCATE {$_TABLES['locator_cache']}");
+            return DB_error() ? false : true;
         } else {
             $tags = array(self::TAG);
             if (!empty($tag)) {
                 if (!is_array($tag)) $tag = array($tag);
                 $tags = array_merge($tags, $tag);
             }
-            \glFusion\Cache::getInstance()->deleteItemsByTagsAll($tags);
+            return \glFusion\Cache\Cache::getInstance()->deleteItemsByTagsAll($tags);
         }
     }
 
@@ -110,7 +115,7 @@ class Cache
     {
         if ($incl_sechash) {
             // Call the parent class function to use the security hash
-            $key = \glFusion\Cache::getInstance()->createKey(self::TAG . '_' . $key);
+            $key = \glFusion\Cache\Cache::getInstance()->createKey(self::TAG . '_' . $key);
         } else {
             // Just generate a simple string key
             $key = self::TAG . '_' . $key;
@@ -135,8 +140,8 @@ class Cache
             $data = @unserialize($data);
             return $data ? $data : NULL;
         } else {
-            if (\glFusion\Cache::getInstance()->has($key)) {
-                return \glFusion\Cache::getInstance()->get($key);
+            if (\glFusion\Cache\Cache::getInstance()->has($key)) {
+                return \glFusion\Cache\Cache::getInstance()->get($key);
             } else {
                 return NULL;
             }
