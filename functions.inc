@@ -315,36 +315,6 @@ function plugin_ismoderator_locator()
 }
 
 
-
-/**
- * Returns the plugins submission form.
- * Returns a string contain the HTML of the submission form for the plugin.
- *
- * @return string  The HTML form
- */
-function plugin_submit_locator()
-{
-    global $HTTP_POST_VARS, $LANG12, $_CONF, $_CONF_GEO, $LANG_GEO;
-
-    // only valid users allowed
-    if (!GEO_canSubmit()) {
-        return GEO_errorMsg($LANG_GEO['access_denied_msg1'], 'alert',
-                $LANG_GEO['access_denied_msg']);
-    }
-
-    // If mode = preview or editsubmission, load the ad info.
-    if ($HTTP_POST_VARS['mode'] == $LANG12[32] ||
-        $HTTP_POST_VARS['mode'] == 'editsubmission') {
-        $A = $HTTP_POST_VARS;
-    } else {
-        $A = array();
-    }
-
-    $M = new Locator\Marker();
-    return $M->Edit();
-}
-
-
 /**
  * Returns the URL of the plugin's icon.
  *
@@ -642,14 +612,13 @@ function GEO_canSubmit()
     static $cansubmit = NULL;
 
     if ($cansubmit === NULL) {
+        $cansubmit = false;
         if (plugin_ismoderator_locator()) {
             $cansubmit = true;
-        } elseif (
-            (COM_isAnonUser() && $_CONF_GEO['submit'] == 2) ||
-            (!COM_isAnonUser() && $_CONF_GEO['submit'] > 0) ) {
+        } elseif (COM_isAnonUser() && $_CONF_GEO['submit'] == 2) {
             $cansubmit = true;
-        } else {
-            $cansubmit = false;
+        } elseif (!COM_isAnonUser() && $_CONF_GEO['submit'] > 0) {
+            $cansubmit = true;
         }
     }
     return $cansubmit;

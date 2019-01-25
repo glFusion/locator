@@ -39,7 +39,7 @@ $display = '';
 $action = '';
 $actionval = '';
 $expected = array(
-    'savemarker', 'detail', 'myorigins', 
+    'savemarker', 'detail', 'myorigins', 'submit',
     'mode', 
 );
 foreach($expected as $provided) {
@@ -126,6 +126,15 @@ case 'detail':
     $content .= $M->Detail($origin, $back_url);
     break;
 
+case 'submit':
+    // only valid users allowed
+    if (!GEO_canSubmit()) {
+        COM_404();
+    }
+    $M = new Locator\Marker();
+    $content .= $M->Edit();
+    break;
+
 case 'loclist':
 default:
     $content .= GEO_showLocations($origin, $radius, $units, $keywords, $address);
@@ -145,11 +154,11 @@ if (!COM_isAnonUser()) {
             "<a href=\"{$_SERVER['PHP_SELF']}?myorigins=x\">" .
                 $LANG_GEO['my_origins']. '</a>');
 }
-if (!COM_isAnonUser() || $_CONF_GEO['submit'] > 0) {
-    $T->set_var('url_contrib', 
-            '<a href="' . $_CONF['site_url'] . '/submit.php?type=' .
-            $_CONF_GEO['pi_name'] . '">' .$LANG_GEO['contrib_origin'] . 
-            '</a>' . LB);
+if (GEO_canSubmit()) {
+    $T->set_var('url_contrib',  COM_createLink(
+        $LANG_GEO['contrib_origin'],
+        LOCATOR_URL . '/index.php?submit=x'
+    ) );
 }
 $T->set_var('url_home', LOCATOR_URL . '/index.php');
 $T->parse('output', 'page');
