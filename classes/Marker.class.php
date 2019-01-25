@@ -383,11 +383,7 @@ class Marker
 
         //displays the add quote form for single quotations
         $T = new \Template(LOCATOR_PI_PATH . '/templates');
-        if ($_CONF_GEO['_is_uikit']) {
-            $T->set_file('page', 'markerform.uikit.thtml');
-        } else {
-            $T->set_file('page', 'markerform.thtml');
-        }
+        $T->set_file('page', 'markerform.thtml');
 
         // Set up the wysiwyg editor, if available
         switch (PLG_getEditorType()) {
@@ -550,7 +546,6 @@ class Marker
             'map'               => \Locator\Mapper::getMapper()->showMap($this->lat, $this->lng, $info_window),
             'adblock'           => PLG_displayAdBlock('locator_marker', 0),
             'show_map'          => true,
-            'is_uikit'          => $_CONF_GEO['_is_uikit'],
             'directions'        => \Locator\Mapper::getMapper()->showDirectionsForm($this->lat, $this->lng),
         ) );
 

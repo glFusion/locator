@@ -1,5 +1,8 @@
 # glLocator - Change Log
 
+## 1.2.1 (TBD)
+- Remove support for non-uikit themes
+
 ## 1.2.0 (2018-11-03)
 - Add separate Google API key for Javascript
 - Add Mapquest, OpenStreetMap map providers

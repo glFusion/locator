@@ -70,38 +70,23 @@ function plugin_getListField_marker($fieldname, $fieldvalue, $A, $icon_arr)
 
     switch($fieldname) {
     case 'edit':
-        if ($_CONF_GEO['_is_uikit']) {
-            $retval = COM_createLink('',
-                LOCATOR_ADMIN_URL . '/index.php?edit=x&amp;id=' .$A['id'],
-                array(
-                    'class' => 'uk-icon uk-icon-edit'
-                )
-            );
-        } else {
-            $retval = COM_createLink(
-                $icon_arr['edit'],
-                LOCATOR_ADMIN_URL . '/index.php?edit=x&amp;id=' .$A['id']);
-        }
+        $retval = COM_createLink('',
+            LOCATOR_ADMIN_URL . '/index.php?edit=x&amp;id=' .$A['id'],
+            array(
+                'class' => 'uk-icon uk-icon-edit'
+            )
+        );
         break;
 
     case 'delete':
-        if ($_CONF_GEO['_is_uikit']) {
-            $retval = COM_createLink('',
-                LOCATOR_ADMIN_URL . '/index.php?deletemarker=x&amp;id=' . $A['id'],
-                array(
-                    'title' => $LANG_ADMIN['delete'],
-                    'onclick'=>"return confirm('{$LANG_GEO['confirm_delitem']}');",
-                    'class' => 'uk-icon uk-icon-trash loc-icon-danger'
-                )
-            );
-        } else {
-            $retval = COM_createLink(
-                $icon_arr['delete'],
-                LOCATOR_ADMIN_URL . '/index.php?deletemarker=x&amp;id=' . $A['id'],
-                array('title' => $LANG_ADMIN['delete'],
-                        'onclick'=>"return confirm('{$LANG_GEO['confirm_delitem']}');")
-            );
-        }
+        $retval = COM_createLink('',
+            LOCATOR_ADMIN_URL . '/index.php?deletemarker=x&amp;id=' . $A['id'],
+            array(
+                'title' => $LANG_ADMIN['delete'],
+                'onclick'=>"return confirm('{$LANG_GEO['confirm_delitem']}');",
+                'class' => 'uk-icon uk-icon-trash loc-icon-danger'
+            )
+        );
         break;
 
     case 'is_origin':

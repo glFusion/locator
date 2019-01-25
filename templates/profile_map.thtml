@@ -1,15 +1,9 @@
 {# begin {templatelocation} #}
-{!if is_uikit}
 <nav class="uk-navbar">
   <div class="uk-navbar-content">
   {$LANG_GEO['location']}
   </div>
 </nav>
-{!else}
-<div class="profile-header">
-  {$LANG_GEO['location']}
-</div>
-{!endif}
 <div class="profile-map">
     {profile_map}
 </div>

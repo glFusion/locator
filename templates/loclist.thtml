@@ -23,7 +23,7 @@
   <br />
   <label for="keywords">{$LANG_GEO['keywords']}: </label>
   <input type="text" size="40" maxlength="255" name="keywords" value="{keywords}" />
-  <input class="lgButton green" type="submit" value="{$LANG_ADMIN['submit']}" />
+  <input class="uk-button uk-button-success uk-button-mini" type="submit" value="{$LANG_ADMIN['submit']}" />
 </fieldset>
 </form>
 </div>

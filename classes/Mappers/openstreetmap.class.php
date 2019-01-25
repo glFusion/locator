@@ -81,7 +81,6 @@ class openstreetmap extends \Locator\Mapper
             'geo_map_js_url' => $js_url,
             'canvas_id'     => $canvas_id,
             'text'          => $text,
-            'is_uikit'      => $_CONF_GEO['_is_uikit'],
         ) );
         // OSM requires some URL params like {x} in the template.
         // Make sure they're kept and not assumed to be template vars.

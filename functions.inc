@@ -29,7 +29,6 @@ if (!isset($_CONF_GEO['default_radius'])) {
     $geo_config = config::get_instance();
     $_CONF_GEO = $geo_config->get_config('locator');
 }
-$_CONF_GEO['_is_uikit'] = $_SYSTEM['framework'] == 'uikit' ? true : false;
 
 define('LOCATOR_PI_PATH', __DIR__);
 define('LOCATOR_URL', $_CONF['site_url'] . '/locator');
@@ -783,7 +782,6 @@ function plugin_profilevariablesdisplay_locator($uid, &$T)
     $LT = new Template(LOCATOR_PI_PATH . '/templates');
     $LT->set_file('page', 'profile_map.thtml');
     $LT->set_var(array(
-        'is_uikit'      => $_CONF_GEO['_is_uikit'] ? 'true' : '',
         'profile_map'   => \Locator\Mapper::getMapper()->showMap($U->lat, $U->lng, $userloc),
     ) );
     $LT->parse('output','page');

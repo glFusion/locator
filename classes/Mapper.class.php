@@ -254,7 +254,6 @@ class Mapper
             $T->set_var(array(
                 'lat'   => $lat,
                 'lng'   => $lng,
-                'is_uikit' => $_CONF_GEO['_is_uikit'],
             ) );
             $T->parse('output', 'form');
             return $T->finish($T->get_var('output'));

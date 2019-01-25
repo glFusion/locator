@@ -132,7 +132,6 @@ class google extends \Locator\Mapper
             'iso_lang'      => $iso_lang,
             'geo_map_js_url' => $js_url,
             'canvas_id'     => $canvas_id,
-            'is_uikit'      => $_CONF_GEO['_is_uikit'],
         ) );
         $T->parse('output','page');
         return $T->finish($T->get_var('output'));

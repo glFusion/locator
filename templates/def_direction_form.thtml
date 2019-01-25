@@ -3,11 +3,7 @@
   <form action="https://maps.google.com/maps" method="get" target="_blank">
     <input type="text" size="40" maxlength="40"
         name="saddr" id="saddr" placeholder="{$LANG_GEO['start_addr']}" />
-{!if is_uikit}
     <button class="uk-button uk-button-small uk-button-success" type="submit">{$LANG_GEO['get_directions']}</button>
-{!else}
-    <input class="lgButton green" value="{$LANG_GEO['get_directions']}" type="submit"/>
-{!endif}
     <input type="hidden" name="daddr" value="{lat},{lng}" />
   </form>
 </div>
