@@ -202,7 +202,7 @@ class UserLoc
         // Use local variables to allow pass-by-reference
         $lat = 0;
         $lng = 0;
-        Mapper::getInstance()->geoCode($this->location, $lat, $lng);
+        Mapper::getGeocoder()->geoCode($address, $lat, $lng);
         $this->lat = $lat;
         $this->lng = $lng;
     }
