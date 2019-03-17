@@ -95,7 +95,8 @@ class mapquest extends \Locator\Mapper
             'geo_map_js_url' => $js_url,
             'canvas_id'     => $canvas_id,
             'client_key'    => $this->client_key,
-            'text'          => $text,
+            'text'          => str_replace('"', '&quot;', $text),
+            'div_style'     => $this->getDivStyle(),
         ) );
         $T->parse('output','page');
         return $T->finish($T->get_var('output'));

@@ -128,7 +128,7 @@ class google extends \Locator\Mapper
         $T->set_var(array(
             'lat'           => GEO_coord2str($lat, true),
             'lng'           => GEO_coord2str($lng, true),
-            'infowindow_text' => COM_checkHTML($text),
+            'infowindow_text' => str_replace('"', '&quot;', COM_checkHTML($text)),
             'iso_lang'      => $iso_lang,
             'geo_map_js_url' => $js_url,
             'canvas_id'     => $canvas_id,

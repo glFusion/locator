@@ -35,6 +35,14 @@ class Mapper
      * @var string */
     protected $name = 'Undefined';
 
+    /** Width of map, default = NULL.
+     * @var string */
+    protected $width = NULL;
+
+    /** Height of map, defualt = NULL.
+     * @var string */
+    protected $height = NULL;
+
     /**
      * Get a service instance.
      *
@@ -260,6 +268,57 @@ class Mapper
         } else {
             return '';
         }
+    }
+
+
+    /**
+     * Set the map display width to override CSS.
+     *
+     * @param   string  $width  New width
+     */
+    public function setWidth($width)
+    {
+        // Change to pixel string if no unit is given.
+        if (is_numeric($width)) {
+            $width = "{$width}px";
+        }
+        $this->width = $width;
+    }
+
+
+    /**
+     * Set the map display height to override CSS.
+     *
+     * @param   string  $height  New height
+     */
+    public function setHeight($height)
+    {
+        // Change to pixel string if no unit is given.
+        if (is_numeric($height)) {
+            $height = "{$height}px";
+        }
+        $this->height = $height;
+    }
+
+
+    /**
+     * Get the CSS style string to apply to the outer map div element.
+     *
+     * @return  string  Style string, empty if no styles defined.
+     */
+    protected function getDivStyle()
+    {
+        $style = '';
+        if ($this->width !== NULL) {
+            $style .= 'width:' . $this->width . ';';
+        }
+        if ($this->height !== NULL) {
+            $style .= 'height:' . $this->height . ';';
+        }
+        if ($style != '') {
+            $style = 'style="' . $style . '"';
+        }
+        return $style;
     }
 
 }   // class Mapper

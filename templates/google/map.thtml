@@ -1,6 +1,6 @@
 {# begin {templatelocation} #}
 {geo_map_js_url}
-<div class="map_dimension" id="map_canvas{canvas_id}"></div>
+<div class="map_dimension" id="map_canvas{canvas_id}" {div_style}></div>
 <script type="text/javascript">
     function initializeGMap() {
         var point = new google.maps.LatLng({lat}, {lng});

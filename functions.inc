@@ -3,9 +3,9 @@
  * glFusion API functions for the Locator plugin.
  *
  * @author     Lee Garner <lee@leegarner.com>
- * @copyright  Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
+ * @copyright  Copyright (c) 2009-2019 Lee Garner <lee@leegarner.com>
  * @package    locator
- * @version    1.2.0
+ * @version    1.2.1
  * @license    http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -194,7 +194,7 @@ function plugin_chkVersion_locator()
  * to remove anything it has created.
  * The Plugin installer will pass the optional parameter which will then
  * double check that plugin has first been disabled.
- * 
+ *
  * Returns True if all Plugin related data is removed without error
  *
  * @param   string  $installCheck   Defult is blank but if set, check if plugin is disabled first
@@ -639,13 +639,55 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
     $lat = '';
     $lng = '';
     $title = '';
+    $locid = '';
+    $width = NULL;
+    $height = NULL;
     switch ($op) {
     case 'tagname':
         $retval = 'locator';
         break;
     case 'parse':
         $HTML = '';
-        $option = trim(COM_applyFilter($autotag['parm1']));
+        $option = COM_applyFilter($autotag['parm1']);
+        $parms = explode(' ', COM_applyFilter($autotag['parm2']));
+        foreach ($parms as $parm) {
+            if (strpos($parm, ':') > 0) {
+                list($key, $value) = explode(':', $parm);
+                switch ($key) {
+                case 'id':
+                    $locid = $value;
+                    $skip++;
+                    break;
+                case 'addr':
+                case 'address':
+                    if (!empty($value)) {
+                        $U = new Locator\UserLoc($value, 1);
+                        $lat = $U->lat;
+                        $lng = $U->lng;
+                        $title = $parm3;
+                    }
+                    break;
+                case 'width':
+                case 'height':
+                    $$key = $value;
+                    $skip++;
+                    break;
+                }
+            } else {
+                $locid = $parm;
+            }
+        }
+        // If a location ID was obtained from an "id:" tag or a standalone
+        // one, get the coordinates from that.
+        // Otherwise, there should have been an address provided above.
+        if ($locid !== '') {
+                $M = new Locator\Marker($locid);
+                if (!$M->isNew) {
+                    $lat = $M->lat;
+                    $lng = $M->lng;
+                    $title = $M->lng;
+                }
+        }
         switch ($option) {
         case 'map':
             // Insert a google map, if configured correctly.  We check this
@@ -659,41 +701,11 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
                 break;
             }
 
-            $parm2 = $autotag['parm2'];
-            $A = explode(':', $parm2);
-            $opt = $A[0];
-            $parm3 = isset($A[1]) ? $A[1] : '';
-            if (empty($parm3)) {
-                $opt = 'id';
-                $parm3 = $parm2;
-            }
-            switch($opt) {
-            case 'id':
-                $M = new Locator\Marker($parm3);
-                if (!$M->isNew) {
-                    $lat = $M->lat;
-                    $lng = $M->lng;
-                    $title = $M->lng;
-                }
-                break;
-
-            case 'addr':
-            case 'address':
-                if (!empty($parm3)) {
-                    $U = new Locator\UserLoc($parm3, 1);
-                    $lat = $U->lat;
-                    $lng = $U->lng;
-                    $title = $parm3;
-                }
-                break;
-            }
             if (!empty($lat) && !empty($lng)) {
-                $HTML = GEO_showMap($lat, $lng, $title);
+                $HTML = GEO_showMap($lat, $lng, $title, $width, $height);
             }
             break;
-
-        } // switch($option)
-
+        }
         $retval = str_replace($autotag['tagstr'], $HTML, $content);
         break;
 
@@ -737,7 +749,7 @@ function plugin_runScheduledTask_locator()
  * @param   string  $text   Optional text for marker popup
  * @return  string          HTML code for map display
  */
-function GEO_showMap($lat, $lng, $text='')
+function GEO_showMap($lat, $lng, $text='', $width=NULL, $height=NULL)
 {
     global $_CONF_GEO;
 
@@ -746,7 +758,10 @@ function GEO_showMap($lat, $lng, $text='')
         return '';
     }
 
-    return \Locator\Mapper::getMapper()->showMap($lat, $lng, $text);
+    $M =  \Locator\Mapper::getMapper();
+    $M->setWidth($width);
+    $M->setHeight($height);
+    return $M->showMap($lat, $lng, $text);
 }
 
 

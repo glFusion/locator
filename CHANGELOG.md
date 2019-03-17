@@ -1,8 +1,9 @@
 # glLocator - Change Log
 
 ## 1.2.1 (TBD)
-- Remove support for non-uikit themes
-- Fix call to geocoder function from UserLoc class.
+  * Remove support for non-uikit themes
+  * Fix call to geocoder function from UserLoc class.
+  * Accept width and height parameters in autotags.
 
 ## 1.2.0 (2018-11-03)
 - Add separate Google API key for Javascript

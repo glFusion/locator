@@ -1,6 +1,6 @@
 {# begin {templatelocation} #}
 {geo_map_js_url}
-<div class="map_dimension" style="float:right" id="map{canvas_id}"></div>
+<div class="map_dimension" style="float:right" id="map{canvas_id}" {div_style}></div>
 <script type="text/javascript">
     function initializeMap{canvas_id}() {
         L.mapquest.key = '{client_key}';
@@ -14,7 +14,7 @@
         L.marker([{lat}, {lng}], {
           icon: L.mapquest.icons.marker(),
           draggable: false
-        }).bindPopup('{text}').addTo(map);
+        }).bindPopup("{text}").addTo(map);
         map.addControl(L.mapquest.control());
     }
 

@@ -80,7 +80,8 @@ class openstreetmap extends \Locator\Mapper
             'lng'           => GEO_coord2str($lng, true),
             'geo_map_js_url' => $js_url,
             'canvas_id'     => $canvas_id,
-            'text'          => $text,
+            'text'          => str_replace('"', '&quot;', $text),
+            'div_style'     => $this->getDivStyle(),
         ) );
         // OSM requires some URL params like {x} in the template.
         // Make sure they're kept and not assumed to be template vars.
