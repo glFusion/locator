@@ -301,6 +301,7 @@ class Marker
             keywords = '" . DB_escapeString($this->keywords) . "',
             url = '" . DB_escapeString($A['url']) . "',
             is_origin = '{$this->is_origin}',
+            enabled = '{$this->enabled}',
             owner_id = '{$this->owner_id}',
             group_id = '{$this->group_id}',
             perm_owner = '{$this->perm_owner}',
