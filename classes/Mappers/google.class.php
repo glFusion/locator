@@ -48,7 +48,7 @@ class google extends \Locator\Mapper
     protected $name = 'google';
 
     /** URL to maps javascript. */
-    const GEO_MAP_URL = 'https://maps.google.com/maps/api/js?key=%s';
+    const GEO_MAP_URL = 'https://maps.google.com/maps/api/js?key=%s&callback=initializeGMap';
 
     /** Geocoding url, address will be appended to this. */
     const GEO_GOOG_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
@@ -203,7 +203,7 @@ class google extends \Locator\Mapper
         if (!$have_map_js) {
             if (!empty($this->js_key)) {
                 $have_map_js = true;
-                $url = '<script src="' .
+                $url = '<script async defer src="' .
                     sprintf(self::GEO_MAP_URL, $this->js_key) .
                     '"></script>';
             } else {
