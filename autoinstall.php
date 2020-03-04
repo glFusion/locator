@@ -1,15 +1,15 @@
 <?php
 /**
-*   Automatic installation routine for the Locator plugin
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.2.0
-*   @license    http://opensource.org/licenses/gpl-2.0.php
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Automatic installation routine for the Locator plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     1.2.1
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 if (!defined ('GVERSION')) {
     die ('This file can not be used on its own.');
@@ -20,10 +20,6 @@ require_once __DIR__ . '/functions.inc';
 
 /** Include the database statements */
 require_once __DIR__ . '/sql/mysql_install.php';
-
-// +--------------------------------------------------------------------------+
-// | Plugin installation options                                              |
-// +--------------------------------------------------------------------------+
 
 $INSTALL_plugin['locator'] = array(
     'installer' => array(
@@ -124,11 +120,11 @@ $INSTALL_plugin['locator'] = array(
 
 
 /**
-*   Puts the datastructures for this plugin into the glFusion database
-*   Note: Corresponding uninstall routine is in functions.inc
-*
-*   @return   boolean True if successful False otherwise
-*/
+ * Puts the datastructures for this plugin into the glFusion database.
+ * Note: Corresponding uninstall routine is in functions.inc.
+ *
+ * @return  boolean True if successful False otherwise
+ */
 function plugin_install_locator()
 {
     global $INSTALL_plugin, $_CONF_GEO;
@@ -145,10 +141,10 @@ function plugin_install_locator()
 
 
 /**
-*   Loads the configuration records for the Online Config Manager
-*
-*   @return   boolean     true = proceed with install, false = an error occured
-*/
+ * Loads the configuration records for the Online Config Manager.
+ *
+ * @return  boolean     true = proceed with install, false = an error occured
+ */
 function plugin_load_configuration_locator()
 {
     global $_CONF, $_CONF_GEO, $_TABLES;

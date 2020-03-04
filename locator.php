@@ -1,26 +1,26 @@
 <?php
 /**
-*   Static configuration items for the Locator plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.1.3
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * Static configuration items for the Locator plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     v1.2.1
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 /**
-*   Database table prefix
-*   @global string $_DB_table_prefix
-*/
+ * Database table prefix.
+ * @global string $_DB_table_prefix
+ */
 global $_DB_table_prefix;
 
 /**
-*   System array of database table names
-*   @global array $_TABLES
-*/
+ * System array of database table names.
+ * @global array $_TABLES
+ */
 global $_TABLES;
 
 $_GEO_table_prefix = $_DB_table_prefix;
