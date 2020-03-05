@@ -44,8 +44,8 @@
       {!if loc_url}
         <a href="{loc_url}">
       {!endif}
-      <img src="{site_url}/locator/images/{img_origin}" 
-          class="gl_mootip" title="{img_origin_title}" 
+      <img src="{site_url}/locator/images/{img_origin}"
+          class="tooltip" title="{img_origin_title}"
           alt="{img_origin_title}">
       {!if loc_url}
         </a>
@@ -62,7 +62,7 @@
   <!-- END LocRow -->
 </table>
 {!if no_display}
-<span class="note">{no_display}</span>
+<div class="uk-alert uk-alert-info">{no_display}</div>
 {!endif}
 <hr />
 <span class="locDisclaimer">{$LANG_GEO['disclaimer']}</span>

@@ -1,51 +1,45 @@
 {# begin {templatelocation} #}
-{!if mootools}
-<script type="text/javascript">
-<!--
-window.addEvent('domready',function() {
-    var myValidator = new fValidator("submit");
-});
--->
-</script>
-{!endif}
 <h2>{$LANG_GEO['editmarker']}</h2>
 {$LANG_GEO['coord_instr']}<br />
 {goog_map_instr}
 <p>&nbsp;</p>
 
-<form id="submit" action="{action_url}" method="post">
-  <input type="hidden" name="id" value="{frm_id}" />
-  <input type="hidden" name="type" value="{pi_name}" />
+<form id="submit" action="{action_url}" method="post"
+    class="uk-form uk-form-horizontal">
+    <input type="hidden" name="id" value="{frm_id}" />
+      <input type="hidden" name="type" value="{pi_name}" />
 
-  <p>
-    <label for="location">{$LANG_GEO['name']}:</label>
-    <input  class="fValidate['required']" name="location" type="text" 
-        size="32" value="{location}" />
-  </p>
+    <div class="uk-form-row">
+        <label class="uk-form-label">{$LANG_GEO['name']}:</label>
+        <div class="uk-form-controls">
+            <input required name="location" type="text"
+                size="32" value="{location}" />
+        </div>
+    </div>
 
-  <p>
-    <label for="coord">{$LANG_GEO['coord']}:</label>
-    <input name="lat" type="text" size="12" value="{lat}" />
-    {$LANG_GEO['latitude']}, &nbsp;&nbsp;
-    <input name="lng" type="text" size="12" value="{lng}" />
-    {$LANG_GEO['longitude']}
-  </p>
+    <div class="uk-form-row">
+        <label class="uk-form-label">{$LANG_GEO['coord']}:</label>
+        <div class="uk-form-controls">
+            <input name="lat" type="text" size="12" value="{lat}" />
+                {$LANG_GEO['latitude']}, &nbsp;&nbsp;
+            <input name="lng" type="text" size="12" value="{lng}" />
+                {$LANG_GEO['longitude']}
+        </div>
+    </div>
 
-  <p align="center">
-    <button name="mode" value="saveuserloc" type="submit" >
-        &nbsp;Submit
-    </button>
-    <button name="reset" type="reset">
-        &nbsp;Reset
-    </button>
-    {!if show_del_btn}
-      <button
-        name="mode" value="deleteuserloc" type="submit"
-        onclick="return confirm('Do you really want to delete this item?');" 
-        >
-        &nbsp;Delete
-      </button>
-    {!endif}
-  </p>
+    <div class="uk-form-row">
+        <div class="uk-form-controls">
+            <button class="uk-button uk-button-success" name="mode" value="saveuserloc" type="submit">
+                {$LANG_ADMIN['submit']}
+            </button>
+            <button name="reset" type="reset" class="uk-button">{$LANG_ADMIN['reset']}</button>
+{!if show_del_btn}
+            <button name="mode" value="deleteuserloc" type="submit"
+                class="uk-button uk-button-danger"
+                onclick="return confirm('Do you really want to delete this item?');"
+            >{$LANG_ADMIN['delete']}</button>
+{!endif}
+        </div>
+    </div>
 </form>
 {# end {templatelocation} #}
