@@ -1,20 +1,21 @@
 <?php
 /**
-*   English language file for the Locator plugin
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    0.1.1
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
-*   GNU Public License v2 or later
-*   @filesource
-*/
+ * English language file for the Locator plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     v1.2.1
+ * @license     http://opensource.org/licenses/gpl-2.0.php 
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 /**
-*   Main language string array
-*   @global array $LANG_GEO
-*/
-$LANG_GEO= array(
+ * Main language string array.
+ * @global array $LANG_GEO
+ */
+$LANG_GEO = array(
 'pi_title'          => 'Locator Service',
 'item_id'           => 'Item ID',
 'access_denied'     => 'Access Denied',
@@ -96,18 +97,18 @@ $PLG_locator_MESSAGE99 = 'A database error occurred.  Check your error log for d
 
 
 /**
-*   Localization of the Admin Configuration UI
-*   @global array $LANG_configsections['locator']
-*/
+ * Localization of the Admin Configuration UI.
+ * @global array $LANG_configsections['locator']
+ */
 $LANG_configsections['locator'] = array(
     'label' => 'Geo Locator',
     'title' => 'Geo Locator Configuration'
 );
 
 /**
-*   Configuration system prompt strings
-*   @global array $LANG_confignames['locator']
-*/
+ * Configuration system prompt strings.
+ * @global array $LANG_confignames['locator']
+ */
 $LANG_confignames['locator'] = array(
     'default_radius'    => 'Default Search Radius:',
     'distance_unit'     => 'Distance Units:',
@@ -133,20 +134,21 @@ $LANG_confignames['locator'] = array(
     'geocoder'          => 'Geocoding Provider',
     'mapquest_key'      => 'Mapquest Client Key',
     'geocodio_api_key'  => 'Geocodio API Key',
+    'osm_use_tileserver' => 'Use internal tileserver for OSM',
 );
 
 /**
-*   Configuration system subgroup strings
-*   @global array $LANG_configsubgroups['locator']
-*/
+ * Configuration system subgroup strings.
+ * @global array $LANG_configsubgroups['locator']
+ */
 $LANG_configsubgroups['locator'] = array(
     'sg_main' => 'Main Settings'
 );
 
 /**
-*   Configuration system fieldset names
-*   @global array $LANG_fs['locator']
-*/
+ * Configuration system fieldset names.
+ * @global array $LANG_fs['locator']
+ */
 $LANG_fs['locator'] = array(
     'fs_main' => 'General Settings',
     'fs_mappers' => 'Map Providers',
@@ -154,12 +156,12 @@ $LANG_fs['locator'] = array(
  );
 
 /**
-*   Configuration system selection strings
-*   Note: entries 0, 1, and 12 are the same as in 
-*   $LANG_configselects['Core']
-*
-*   @global array $LANG_configselects['locator']
-*/
+ * Configuration system selection strings.
+ * Note: entries 0, 1, and 12 are the same as in 
+ * $LANG_configselects['Core'].
+ *
+ * @global array $LANG_configselects['locator']
+ */
 $LANG_configselects['locator'] = array(
     0 => array('True' => 1, 'False' => 0),
     1 => array('True' => TRUE, 'False' => FALSE),
@@ -172,6 +174,5 @@ $LANG_configselects['locator'] = array(
     13 => array('None' => 0, 'Left' => 1, 'Right' => 2, 'Both' => 3),
     15 => array('Admins Only' => 0, 'Logged-In Users' => 1, 'Logged-In+Anon Users' => 2),
 );
-
 
 ?>

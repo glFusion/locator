@@ -261,6 +261,17 @@ $locatorConfigData = array(
         'set' => true,
         'group' => 'locator',
     ),
+    array(
+        'name' => 'osm_use_tileserver',
+        'default_value' => false,
+        'type' => 'select',
+        'subgroup' => 0,
+        'fieldset' => 10,
+        'selection_array' => 3,
+        'sort' => 60,
+        'set' => true,
+        'group' => 'locator',
+    ),
 
     // Permissions fieldset
     array(

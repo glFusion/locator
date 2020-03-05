@@ -35,6 +35,10 @@ class openstreetmap extends \Locator\Mapper
      * @var string */
     protected $name = 'openstreetmap';
 
+    /** Tile server URL.
+     * @var string */
+    protected $tileserver = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
     /** URL to geocoding service.
      * @const string */
     const GEOCODE_URL = 'https://nominatim.openstreetmap.org/search?format=json&q=%s';
@@ -46,6 +50,11 @@ class openstreetmap extends \Locator\Mapper
      */
     public function __construct($id = '')
     {
+        global $_CONF_GEO;
+
+        if ($_CONF_GEO['osm_use_tileserver']) {
+            $this->tileserver = LOCATOR_URL . '/tileserver.php?z={z}&x={x}&y={y}';
+        }
     }
 
 
@@ -82,6 +91,7 @@ class openstreetmap extends \Locator\Mapper
             'canvas_id'     => $canvas_id,
             'text'          => str_replace('"', '&quot;', $text),
             'div_style'     => $this->getDivStyle(),
+            'tileserver_url' => $this->tileserver,
         ) );
         // OSM requires some URL params like {x} in the template.
         // Make sure they're kept and not assumed to be template vars.
