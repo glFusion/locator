@@ -2,11 +2,11 @@
 /**
  * glFusion API functions for the Locator plugin.
  *
- * @author     Lee Garner <lee@leegarner.com>
- * @copyright  Copyright (c) 2009-2019 Lee Garner <lee@leegarner.com>
- * @package    locator
- * @version    1.2.1
- * @license    http://opensource.org/licenses/gpl-2.0.php
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     v1.2.1
+ * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
  */
@@ -86,16 +86,8 @@ spl_autoload_register(function ($class)
 
 
 /** Load plugin-specific functions when needed. */
-function USES_locator_functions()
-{   require_once LOCATOR_PI_PATH . '/locator_functions.inc.php';    }
-
-/** Load the marker editing functions when needed. */
-function USES_locator_editmarker()
-{   require_once LOCATOR_PI_PATH . '/editmarker.php';   }
-
-/** Load the Google language file when needed. */
-function USES_locator_google_lang()
-{   require_once LOCATOR_PI_PATH . '/google_lang.inc.php';  }
+//function USES_locator_functions()
+//{   require_once LOCATOR_PI_PATH . '/locator_functions.inc.php';    }
 
 
 /**
@@ -662,8 +654,8 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
                 case 'address':
                     if (!empty($value)) {
                         $U = new Locator\UserLoc($value, 1);
-                        $lat = $U->lat;
-                        $lng = $U->lng;
+                        $lat = $U->getLat();
+                        $lng = $U->getLng();
                         $title = $parm3;
                     }
                     break;
@@ -682,28 +674,26 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
         // Otherwise, there should have been an address provided above.
         if ($locid !== '') {
                 $M = new Locator\Marker($locid);
-                if (!$M->isNew) {
-                    $lat = $M->lat;
-                    $lng = $M->lng;
-                    $title = $M->lng;
+                if (!$M->isNew()) {
+                    $lat = $M->getLat();
+                    $lng = $M->getLng();
+                    $title = $M->getTitle();
                 }
         }
         switch ($option) {
         case 'map':
             // Insert a google map, if configured correctly.  We check this
             // here just to save time looking up markers if we're not.
-            if ($_CONF_GEO['show_map'] == 0) {
+            if (
+                $_CONF_GEO['show_map'] == 0 ||
+                // Don't insert a map into an e-mailed article.  Doesn't work.
+                (isset($_POST['what']) && $_POST['what'] == 'sendstory') ||
+                !empty($lat) ||
+                !empty($lng)
+            ) {
                 break;
             }
-
-            // Don't insert a map into an e-mailed article.  Doesn't work.
-            if (isset($_POST['what']) && $_POST['what'] == 'sendstory') {
-                break;
-            }
-
-            if (!empty($lat) && !empty($lng)) {
-                $HTML = GEO_showMap($lat, $lng, $title, $width, $height);
-            }
+            $HTML = GEO_showMap($lat, $lng, $title, $width, $height);
             break;
         }
         $retval = str_replace($autotag['tagstr'], $HTML, $content);
@@ -747,6 +737,8 @@ function plugin_runScheduledTask_locator()
  * @param   float   $lat    Latitude
  * @param   float   $lng    Longitude
  * @param   string  $text   Optional text for marker popup
+ * @param   integer $width  Map width, in pixels
+ * @param   integer $height Map height, in pixels
  * @return  string          HTML code for map display
  */
 function GEO_showMap($lat, $lng, $text='', $width=NULL, $height=NULL)
@@ -758,10 +750,8 @@ function GEO_showMap($lat, $lng, $text='', $width=NULL, $height=NULL)
         return '';
     }
 
-    $M =  \Locator\Mapper::getMapper();
-    $M->setWidth($width);
-    $M->setHeight($height);
-    return $M->showMap($lat, $lng, $text);
+    $M = Locator\Mapper::getMapper();
+    return $M->setWidth($width)->setHeight($height)->showMap($lat, $lng, $text);
 }
 
 
@@ -775,8 +765,6 @@ function GEO_showMap($lat, $lng, $text='', $width=NULL, $height=NULL)
 function plugin_profilevariablesdisplay_locator($uid, &$T)
 {
     global $_CONF_GEO, $_TABLES;
-
-    $retval = '';
 
     // Make sure that a valid UID was passed in and that we are supposed
     // to show a map in the profile.
@@ -797,7 +785,7 @@ function plugin_profilevariablesdisplay_locator($uid, &$T)
     $LT = new Template(LOCATOR_PI_PATH . '/templates');
     $LT->set_file('page', 'profile_map.thtml');
     $LT->set_var(array(
-        'profile_map'   => \Locator\Mapper::getMapper()->showMap($U->lat, $U->lng, $userloc),
+        'profile_map'   => \Locator\Mapper::getMapper()->showMap($U->getLat(), $U->getLng(), $userloc),
     ) );
     $LT->parse('output','page');
     $existingFields = $T->get_var('plugin_fields');
@@ -849,11 +837,7 @@ function LOCATOR_getDocURL($file='', $doclang='english')
  */
 function plugin_getconfigelementhelp_locator($option, $doclang='english')
 {
-    if (version_compare(GVERSION, '1.6.0', '<')) {
-        $file = 'config.legacy.html';
-    } else {
-        $file = 'config.html';
-    }
+    $file = 'config.html';
     $doc_url = LOCATOR_getDocURL($file, $doclang);
     if (empty($doc_url))
         return false;
@@ -912,43 +896,6 @@ function GEO_getInfo($id, $singleAddress = false)
         $addr = $A;
     }
     return $addr;
-}
-
-
-/**
- * Get the URL to Google Maps for inclusion in a template
- * This makes sure the javascript is included only once even if there
- * are multiple maps on the page.
- * Returns the URL, and a random number to be used for the canvas ID.
- *
- * @deprecated version 1.2.0
- * @return array   $url=>URL to Google Maps javascript, $canvas_id=> random ID
- */
-function XGEO_MapJS()
-{
-    global $_CONF_GEO;
-
-    $canvas_id = rand(1,999);   // Create a random id for the canvas
-    if (!defined('GEO_HAVE_MAP_JS')) {
-        define('GEO_HAVE_MAP_JS', 1);
-        $url = '<script src="' .
-            sprintf(GEO_MAP_URL, $_CONF_GEO['google_api_key']) .
-            '"></script>';
-    } else {
-        $url = '';
-    }
-    return array($url, $canvas_id);
-}
-
-
-/**
- * Return true since this plugin supports webservices
- *
- * @return  boolean     False, web services are not supported
- */
-function plugin_wsEnabled_locator()
-{
-    return false;
 }
 
 

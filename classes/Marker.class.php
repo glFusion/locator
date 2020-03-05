@@ -3,14 +3,15 @@
  * Marker class for the Locator plugin
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.2.0
+ * @version     1.2.1
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
  */
 namespace Locator;
+
 
 /**
  * Class to handle the general location markers.
@@ -18,6 +19,90 @@ namespace Locator;
  */
 class Marker
 {
+    /** Radius for searching, in miles or KM.
+     * @var float */
+    private $radius = 0;
+
+    /** Search keywords.
+     * @var string */
+    private $keywords = '';
+
+    /** Latitude coordinate.
+     * @var float */
+    private $lat = 0;
+
+    /** Longitude coordinate.
+     * @var float */
+    private $lng = 0;
+
+    /** Marker title.
+     * @var string */
+    private $title = '';
+
+    /** Description.
+     * @var string */
+    private $dscp = '';
+
+    /** Street address.
+     * @var string */
+    private $address = '';
+
+    /** City name.
+     * @var string */
+    private $city = '';
+
+    /** State name.
+     * @var string */
+    private $state = '';
+
+    /** Postal code.
+     * @var string */
+    private $postal = '';
+
+    /** Enabled flag.
+     * @var boolean */
+    private $enabled = 1;
+
+    /** Flag to indicate that this is a search origin.
+     * @var boolean */
+    private $is_origin = 0;
+
+    /** Owner permission value.
+     * @var integer */
+    private $perm_owner = 3;
+
+    /** Group permission value.
+     * @var integer */
+    private $perm_group = 2;
+
+    /** Members permission value.
+     * @var integer */
+    private $perm_members = 2;
+
+    /** Anomymous permission value.
+     * @var integer */
+    private $perm_anon = 2;
+
+    /** Owner's user ID.
+     * @var integer */
+    private $owner_id = 1;
+
+    /** Group ID.
+     * @var intgeer */
+    private $group_id = 2;
+
+    /** View counter.
+     * @var integer */
+    private $views = 0;
+
+    /** URL to the site's website.
+     * @var string */
+    private $url = '';
+
+    /** Date added to the database (timestamp).
+     * @var integer */
+    private $add_date = 0;
+
     /** Indicate that the current user is a plugin administrator.
      * @var boolean */
     private $isAdmin = false;
@@ -48,7 +133,7 @@ class Marker
             };
         } else {
             $this->title = '';
-            $this->description = '';
+            $this->dscp = '';
             $this->radius = 0;
             $this->keywords = '';
             $this->address = '';
@@ -72,81 +157,61 @@ class Marker
 
 
     /**
-     * Set a property's value.
+     * Get the title string.
      *
-     * @param   string  $key    Name of variable to set
-     * @param   mixed   $value  Value to set
+     * @return  string      Marker title
      */
-    public function __set($key, $value)
+    public function getTitle()
     {
-        global $_CONF_GEO;
-
-        switch ($key) {
-        case 'id':
-        case 'oldid':       // used during update of existing
-            if (!empty($value)) {
-                $this->properties[$key] = COM_sanitizeId($value);
-            } else {
-                $this->properties[$key] = '';
-            }
-            break;
-
-        case 'lat':
-        case 'lng':
-            // Convert European decimal char if coming from a form
-            $value = str_replace(',', '.', $value);
-            $this->properties[$key] = (float)$value;
-            break;
-
-        case 'views':
-        case 'add_date':
-        case 'perm_owner':
-        case 'perm_group':
-        case 'perm_members':
-        case 'perm_anon':
-        case 'owner_id':
-        case 'group_id':
-            $this->properties[$key] = (int)$value;
-            break;
-
-        case 'is_origin':
-        case 'enabled':
-            $this->properties[$key] = $value == 1 ? 1 : 0;
-            break;
-
-        case 'address':
-        case 'city':
-        case 'state':
-        case 'postal':
-        case 'keywords':
-        case 'description':
-        case 'title':
-        case 'url':
-            $value = trim(COM_checkWords(COM_checkHTML($value)));
-            $this->properties[$key] = $value;
-            break;
-
-        case 'radius':
-            $this->properties[$key] =
-                $value == 0 ? $_CONF_GEO['default_radius'] : (int)$value;
-            break;
-        }
+        return $this->title;
     }
 
 
     /**
-     * Get the value of a property, or NULL if not defined.
+     * Set the longitude coordinate.
      *
-     * @param   string  $key    Name of variable to get
-     * @return  mixed           Value of $key, if set, or NULL
+     * @param   float   $lng    Longitude
+     * @return  object  $this
      */
-    public function __get($key)
+    public function setLng($lng)
     {
-        if (array_key_exists($key, $this->properties)) {
-            return $this->properties[$key];
-        } else {
-            return NULL;
-        }
+        $this->lng = (float)$lng;
+        return $this;
+    }
+
+
+    /**
+     * Get the longitude value.
+     *
+     * @return  float       Longitude
+     */
+    public function getLng()
+    {
+        return (float)$this->lng;
+    }
+
+
+    /**
+     * Set the latitude coordinate.
+     *
+     * @param   float   $lat    Latitude
+     * @return  object  $this
+     */
+    public function setLat($lat)
+    {
+        $this->lat = (float)$lat;
+        return $this;
+    }
+
+
+    /**
+     * Get the latitude value.
+     *
+     * @return  float       Latitude
+     */
+    public function getLat()
+    {
+        return (float)$this->lat;
     }
 
 
@@ -254,9 +319,17 @@ class Marker
         global $_TABLES, $_USER, $_CONF_GEO, $_CONF, $LANG_GEO;
 
         // This is a system error of some kind.  Ignore
-        if (!is_array($A) || empty($A))
+        if (!is_array($A) || empty($A)) {
             return 0;
+        }
 
+        if ($A['id'] == '') {       // id field was cleared, restore it.
+            if ($A['oldid'] != '') {
+                $A['id'] = $A['oldid'];
+            } else {
+                $A['id'] = COM_makeSid();
+            }
+        }
         $this->SetVars($A);
 
         if ($table != 'locator_submission') {
@@ -270,8 +343,10 @@ class Marker
         // from the geocoder.
         $lat = $this->lat;      // convert to "real" variables
         $lng = $this->lng;      // so the pointer can be passed
-        if ( (empty($lat) || empty($lng))
-            && $_CONF_GEO['autofill_coord'] == true ) {
+        if (
+            (empty($lat) || empty($lng)) &&
+            $_CONF_GEO['autofill_coord'] == true
+        ) {
             $address = $this->AddressToString();
             if ($address != '' && GEO_getCoords($address, $lat, $lng) == 0) {
                 $this->lat = $lat;
@@ -279,14 +354,7 @@ class Marker
             }
         }
 
-        if ($this->id == '') {
-            if ($this->oldid != '')
-                $this->id = $this->oldid;
-            else
-                $this->id = COM_makeSid();
-        }
-
-        // Force floating-point format to use decimal in case locale is different.
+       // Force floating-point format to use decimal in case locale is different.
         $lat = GEO_coord2str($this->lat, true);
         $lng = GEO_coord2str($this->lng, true);
 
@@ -435,7 +503,6 @@ class Marker
                             $this->perm_members, $this->perm_anon),
             'pi_name'       => $_CONF_GEO['pi_name'],
             'action'        => $mode,
-            'mootools' => $_SYSTEM['disable_mootools'] ? '' : 'true',
             'saveaction'     => $saveaction,
         ) );
 
@@ -534,10 +601,10 @@ class Marker
             'loc_id'            => $this->id,
             'action_url'        => $_SERVER['PHP_SELF'],
             'name'              => $this->title,
-            'address'           => $this->address,
-            'city'              => $this->city,
-            'state'             => $this->state,
-            'postal'            => $this->postal,
+            'address'           => $this->AddressToHTML(),
+            //'city'              => $this->city,
+            //'state'             => $this->state,
+            //'postal'            => $this->postal,
             'description'       => $this->description,
             'url'               => COM_createLink($this->url, $this->url,
                                     array('target' => '_new')),
@@ -624,6 +691,491 @@ class Marker
             }
         }
         return implode($delim, $parts);
+    }
+
+
+    /**
+     * Combine the address elements into a string to be used for geocoding.
+     * Override the delimiter to create a different format.
+     *
+     * @param   string  $delim  Delimiter, default to comma
+     * @return  string  String form of address
+     */
+    public function AddressToHTML()
+    {
+        $retval = '';
+        if ($this->address != '') {
+            $retval .= $this->address . '<br />';
+        }
+        if ($this->city != '') {
+            $retval .= $this->city;
+            if ($this->state != '') {
+                $retval .= ', ';
+            }
+        }
+        if ($this->state != '') {
+            $retval .= $this->state;
+            if ($this->postal != '') {
+                $retval .= ' ';
+            }
+        }
+        if ($this->postal != '') {
+            $retval .= $this->postal;
+        }
+        return $retval;
+    }
+
+
+    /**
+     * Builds an admin list of locations.
+     *
+     * @return  string HTML for the location list
+     */
+    public static function adminList()
+    {
+        global $_CONF, $_TABLES, $LANG_ADMIN, $LANG_ACCESS, $_CONF_GEO, $LANG_GEO;
+
+        USES_lib_admin();
+
+        $retval = '';
+        $header_arr = array(      # display 'text' and use table field 'field'
+            array(
+                'text' => $LANG_ADMIN['edit'],
+                'field' => 'edit',
+                'sort' => false,
+                'align' => 'center',
+            ),
+            array(
+                'text' => 'ID',
+                'field' => 'id',
+                'sort' => true,
+            ),
+            array(
+                'text' => $LANG_GEO['title'],
+                'field' => 'title',
+                'sort' => true,
+            ),
+            array(
+                'text' => $LANG_GEO['address'],
+                'field' => 'address',
+                'sort' => true,
+            ),
+            array(
+                'text' => $LANG_GEO['origin'],
+                'field' => 'is_origin',
+                'sort' => true,
+                'align' => 'center',
+            ),
+            array(
+                'text' => $LANG_GEO['enabled'],
+                'field' => 'enabled',
+                'sort' => true,
+                'align' => 'center',
+            ),
+            array(
+                'text' => $LANG_GEO['latitude'],
+                'field' => 'lat',
+                'sort' => true,
+            ),
+            array(
+                'text' => $LANG_GEO['longitude'],
+                'field' => 'lng',
+                'sort' => true,
+            ),
+            array(
+                'text' => $LANG_ADMIN['delete'],
+                'field' => 'deletemarker',
+                'sort' => false,
+                'align' => 'center',
+            ),
+        );
+        $defsort_arr = array('field' => 'title', 'direction' => 'asc');
+        $text_arr = array(
+            'has_extras' => true,
+            'form_url' => LOCATOR_ADMIN_URL . '/index.php',
+        );
+
+        $query_arr = array(
+            'table' => 'locator_markers',
+            'sql' => "SELECT * FROM {$_TABLES['locator_markers']} ",
+            'query_fields' => array('title', 'address'),
+            'default_filter' => 'WHERE 1=1'
+            //'default_filter' => COM_getPermSql ()
+        );
+        $options_arr = array(
+            'chkdelete' => true,
+            'chkfield'  => 'id',
+        );
+        $form_arr = array();
+
+        $retval .= COM_createLink(
+            $LANG_GEO['contrib_origin'],
+            LOCATOR_ADMIN_URL . '/index.php?edit=x',
+            array(
+                'class' => 'uk-button uk-button-success',
+                'style' => 'float:left',
+            )
+        );
+        $retval .= ADMIN_list(
+            'locator',
+            array(__CLASS__, 'getAdminField'),
+            $header_arr,
+            $text_arr, $query_arr, $defsort_arr, '', '',
+            $options_arr, $form_arr
+        );
+        return $retval;
+    }
+
+
+    /**
+     * Returns a formatted field to the admin list when managing general locations.
+     *
+     * @param   string  $fieldname  Name of field
+     * @param   string  $fieldvalue Value of field
+     * @param   array   $A          Array of all values
+     * @param   array   $icon_arr   Array of icons
+     * @return  string              String to display for the selected field
+     */
+    public static function getAdminField($fieldname, $fieldvalue, $A, $icon_arr)
+    {
+        global $_CONF, $_CONF_GEO, $LANG24, $LANG_GEO, $LANG_ADMIN;
+
+        $retval = '';
+
+        switch($fieldname) {
+        case 'edit':
+        case 'edituserloc':
+            $retval = COM_createLink('',
+                LOCATOR_ADMIN_URL . '/index.php?' . $fieldname . '=x&amp;id=' .$A['id'],
+                array(
+                    'class' => 'uk-icon uk-icon-edit'
+                )
+            );
+            break;
+
+        case 'deletemarker':
+        case 'deleteuserloc':
+            $retval = COM_createLink('',
+                LOCATOR_ADMIN_URL . '/index.php?' . $fieldname . '=x&amp;id=' . $A['id'],
+                array(
+                    'title' => $LANG_ADMIN['delete'],
+                    'onclick'=>"return confirm('{$LANG_GEO['confirm_delitem']}');",
+                    'class' => 'uk-icon uk-icon-trash loc-icon-danger'
+                )
+            );
+            break;
+
+        case 'is_origin':
+        case 'enabled':
+            $checked = $fieldvalue == 1 ? 'checked="checked"' : '';
+            $retval .= "<input type=\"checkbox\" id=\"{$fieldname}_{$A['id']}\"
+                        name=\"{$fieldname}_{$A['id']}\" $checked
+                        onclick='LOCtoggleEnabled(this, \"{$A['id']}\", \"$fieldname\", \"{$_CONF['site_url']}\");'>";
+            break;
+
+        case 'title':
+            $retval = COM_createLink(stripslashes($fieldvalue),
+                    $_CONF['site_url'] . '/' .
+                    $_CONF_GEO['pi_name'] . '/index.php?detail=x&id=' .
+                    $A['id']);
+            break;
+
+        case 'address':
+            $retval = stripslashes($fieldvalue);
+            break;
+
+        default:
+            $retval = $fieldvalue;
+            break;
+        }
+
+        return $retval;
+
+    }
+
+
+    /**
+     * Actually performs the search for location within $radius $units of $lat/$lng.
+     *
+     * @param  integer $radius Radius from origin to include
+     * @param  string  $units  Unit of measure for radius.  'km' or 'miles'
+     * @param  string  $keywords   Search keywords to limit results
+     * @return array   Array of location records matching criteria
+     */
+    public function getNearby($radius, $units='', $keywords='')
+    {
+        global $_TABLES, $_CONF_GEO, $_USER;
+
+        if ($units == '') {
+            $units = $_CONF_GEO['distance_unit'];
+        }
+        if ($units == 'km') {
+            $factor = 6371;
+        } else {
+            $factor = 3959;
+        }
+
+        $radius = (int)$radius;
+        $values = array();
+        if ($this->getLat() == 0 || $this->getLng() == 0) {
+            // If invalid coordinates, return empty array
+            return $values;
+        }
+
+        // Replace commas in lat & lng with decimal points
+        $lat = GEO_coord2str($this->getLat(), true);
+        $lng = GEO_coord2str($this->getLng(), true);
+
+        // Find all the locations, excluding the origin, within the radius
+        $sql = "SELECT
+                m.*,
+                ( $factor * acos(
+                    cos( radians($lat) ) *
+                    cos( radians( lat ) ) *
+                    cos( radians( lng ) - radians($lng) ) +
+                    sin( radians($lat) ) *
+                    sin( radians( lat ) )
+                ) ) AS distance,";
+        if (!COM_isAnonUser()) {
+            $sql .= " (SELECT uid FROM {$_TABLES['locator_userXorigin']} u
+                    where u.uid={$_USER['uid']} and u.mid=m.id) as userOrigin ";
+        } else {
+            $sql .= " NULL as userOrigin ";
+        }
+        $sql .= " FROM {$_TABLES['locator_markers']} m
+            WHERE enabled = 1 ";
+        if (isset($_GET['origin'])) {
+            $sql .= " AND id <> '" . DB_escapeString($_GET['origin']) . "' ";
+        }
+        if ($keywords != '') {
+            $kw_esc = explode(' ', DB_escapeString(trim($keywords)));
+            foreach ($kw_esc as $kw) {
+                $sql .= " AND (keywords LIKE '%$kw%'
+                    OR title LIKE '%$kw%'
+                    OR description LIKE '%$kw%'
+                    OR address LIKE '%$kw%'
+                    OR url LIKE '%$kw%')";
+            }
+        }
+        $sql .= COM_getPermSQL('AND', 0, 2, 'm');
+        $sql .= " HAVING distance < $radius
+            ORDER BY distance
+            LIMIT 0, 200";
+        $result = DB_query($sql);
+        if (!$result) {
+            return "Error reading from database";
+        }
+
+        while ($record = DB_fetchArray($result)) {
+            $values[] = $record;
+        }
+        return $values;
+    }
+
+
+    /**
+     * Creates a dropdown list of origins.
+     * Includes user-selected origins, if any.
+     *
+     * @param   string  $id     Optional ID of origin to be selected
+     * @return  string  HTML of selection list
+     */
+    public static function originSelect($id)
+    {
+        global $_USER, $_TABLES;
+
+        $retval = '';
+
+        // Find the user-specific origins, if any.
+        if (!COM_isAnonUser()) {
+            $sql = "SELECT DISTINCT m.id,m.title
+                FROM {$_TABLES['locator_markers']} m
+                LEFT JOIN {$_TABLES['locator_userXorigin']} u
+                ON u.mid=m.id
+                WHERE u.uid = {$_USER['uid']}
+                OR m.is_origin=1";
+            $result = DB_query($sql);
+            while ($row = DB_fetchArray($result, false)) {
+                $selected = $row['id'] == $id ? 'selected ' : '';
+                $retval .= "<option value=\"{$row['id']}\" $selected>{$row['title']}</option>\n";
+            }
+
+            // Add the user's own location, if any, and select if it's the chosen one.
+            $selected = $id == 'user' ? 'selected' : '';
+            $userloc = DB_getItem(
+                $_TABLES['userinfo'],
+                'location',
+                "uid=".$_USER['uid']
+            );
+            if ($userloc != '') {
+                $retval .= "<option value=\"user\" $selected>{$userloc}</option>\n";
+            }
+        } else {
+            // Get the systemwide origins
+            $retval = COM_optionList(
+                $_TABLES['locator_markers'],
+                'id,title',
+                $id,
+                1,
+                "is_origin=1 or id='$id'"
+            );
+        }
+        return $retval;
+    }
+
+
+    /**
+     * Gets and displays all locations within $radius $units of $id.
+     *
+     * @param   string  $id     ID of location to use as origin
+     * @param   integer $radius Radius, in $units
+     * @param   string  $units  Unit of measure, 'km' or 'miles'
+     * @param   string  $keywords   Search string
+     * @param   string  $address    Optional street address to use as origin
+     * @return  string  Content for web page
+     */
+    public static function getLocations($id, $radius=0, $units='', $keywords='', $address='')
+    {
+        global $_TABLES, $_CONF_GEO, $_CONF, $_USER, $LANG_GEO;
+
+        $content = '';
+        $locations = array();
+        $errmsg = '';
+
+        if ($units == '') {
+            $units = $_CONF_GEO['distance_unit'];
+        }
+        if ($radius == 0) {
+            $radius = $_CONF_GEO['default_radius'];
+        }
+
+        $url_opts = '&origin=' . urlencode($id).
+            '&radius=' . (int)$radius.
+            '&units=' . urlencode($units).
+            '&keywords=' . urlencode($keywords).
+            '&address=' . urlencode($address);
+
+        $T = new \Template($_CONF['path'] . 'plugins/locator/templates');
+        $T->set_file('page', 'loclist.thtml');
+        $T->set_var(array(
+            'action_url'    => $_SERVER['PHP_SELF'],
+            'origin_select' => self::originSelect($id),
+            'radius_val'    => $radius == 0 ?
+                                $_CONF_GEO['default_radius'] : $radius,
+            'keywords'      => $keywords,
+            'units'         => $units,
+            'address'       => $address,
+        ) );
+
+        if ($units == 'km' ) {
+            $T->set_var('km_selected', 'selected="selected"');
+            $T->set_var('miles_selected', '');
+        } else {
+            $T->set_var('km_selected', '');
+            $T->set_var('miles_selected', 'selected="selected"');
+        }
+
+        if ($_CONF_GEO['autofill_coord'] == 1) {
+            $T->set_var('do_lookup', 'true');
+        }
+
+        if ($address != '' && $_CONF_GEO['autofill_coord']) {
+            // user-supplied address.  Check the speedlimit to avoid
+            // hammering Google.
+            $id = '';        // clear the id since the address is used
+            COM_clearSpeedlimit(
+                $_CONF['speedlimit'],
+                $_CONF_GEO['pi_name'].'lookup'
+            );
+            $last = COM_checkSpeedlimit($_CONF_GEO['pi_name'].'lookup');
+            if ($last > 0) {
+                $errmsg = $LANG_GEO['speedlimit_exceeded'];
+            } elseif (Locator\Mapper::getGeocoder()->geoCode($address, $lat, $lng)) {
+                $M = new self;
+                $locations = $M->setLat($lat)
+                    ->setLng($lng)
+                    ->getNearby($radius, $units, $keywords);
+                COM_updateSpeedlimit($_CONF_GEO['pi_name'].'lookup');
+            }
+        } elseif ($id != 'user') {
+            // Get all locations within $radius
+            $M = new self($id);
+            $locations = $M->getNearby($radius, $units, $keywords);
+        } elseif (!COM_isAnonUser()) {
+            // use user profile location
+            $user_location = DB_getItem(
+                $_TABLES['userinfo'],
+                'location',
+                'uid='. $_USER['uid']
+            );
+            $userloc = new Locator\UserLoc($user_location);
+            if ($userloc->getLat() != 0 && $userloc->getLng() != 0) {
+                $M = new self;
+                $locations = $M->setLat($userloc->getLat())
+                    ->setLng($userloc->getLng())
+                    ->getNearby($radius, $units, $keywords);
+                /*$locations = getLocsByCoord(
+                    $userloc->getLat(), $userloc->getLng(), $radius,
+                    $units, $keywords
+                );*/
+            }
+        }
+
+        for ($i = 0; $i < count($locations); $i++) {
+            // The origin is in this array, so skip it
+            if ($locations[$i]['id'] == $id) continue;
+
+            $T->set_block('page', 'LocRow', 'LRow');
+            if ($locations[$i]['is_origin'] == 0) {
+                $T->set_var('loc_url', LOCATOR_URL .
+                    '/index.php?ddorigin=x&origin=' .
+                    $locations[$i]['id'] . '&id=' . $locations[$i]['id'] .
+                    '&radius=' . $radius);
+            }
+            $T->set_var(array(
+                'loc_id'    => $locations[$i]['id'],
+                'loc_name'  => $locations[$i]['title'],
+                'loc_address' => $locations[$i]['address'],
+                'loc_distance' => sprintf("%4.2f", $locations[$i]['distance']),
+                'loc_info_url' => LOCATOR_URL .
+                                '/index.php?detail=x&id=' .
+                                $locations[$i]['id'] . $url_opts,
+                'loc_lat'   => $locations[$i]['lat'],
+                'loc_lng'   => $locations[$i]['lng'],
+                'url_opts'  => $url_opts,
+                'adblock'   => PLG_displayAdBlock('locator_list', $i+1),
+            ) );
+            if (
+                $locations[$i]['is_origin'] == 1 ||
+                $locations[$i]['userOrigin'] != NULL
+            ) {
+                $T->set_var(array(
+                    'ck_origin' => 'checked="checked"',
+                    'img_origin' => 'on.png',
+                    'img_origin_title' =>
+                            'This location is already an available origin',
+                ) );
+            } else {
+                $T->set_var(array(
+                    'ck_origin' => 'checked=""',
+                    'img_origin' => 'off.png',
+                    'img_origin_title' =>
+                        'Click to add this location as an available origin',
+                ) );
+            }
+            $T->parse('LRow', 'LocRow', true);
+        }
+
+        if ($i == 0) {
+            if ($errmsg == '') {
+                $errmsg = $LANG_GEO['no_locs_found'];
+            }
+            $T->set_var('no_display', $errmsg);
+        }
+
+        $T->parse('output','page');
+        $content .= $T->finish($T->get_var('output'));
+        return $content;
     }
 
 }

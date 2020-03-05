@@ -3,9 +3,9 @@
  * Administrator interface for the Locator plugin.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2009 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.0.2
+ * @version     1.2.1
  * @license     http://opensource.org/licenses/gpl-2.0.php 
  *              GNU Public License v2 or later
  * @filesource
@@ -14,273 +14,22 @@
 /** Include required glFusion common functions */
 require_once '../../../lib-common.php';
 
-/** Include plugin-specific functions */
-USES_locator_functions();
-/** Include system admin functions */
-USES_lib_admin();
-
-/**
- * Create the admin menu block.
- *
- * @param   string  $view   Name of view, for creating New link and help.
- * @return  string  HTML for the menu block
- */
-function GEO_adminMenu($view = '')
-{
-    global $LANG_ADMIN, $LANG_GEO, $_CONF, $_CONF_GEO;
-
-    $retval = '';
-    if (!empty($view) && isset($LANG_GEO['menu_hlp'][$view])) {
-        $desc_text = $LANG_GEO['menu_hlp'][$view];
-    }
-
-    $menu_arr = array (
-        array('url' => $_CONF['site_admin_url'],
-              'text' => $LANG_ADMIN['admin_home']),
-        array('url' => LOCATOR_ADMIN_URL . '/index.php?edit=x',
-              'text' => $LANG_GEO['contrib_origin']),
-        array('url' => LOCATOR_ADMIN_URL . '/index.php',
-              'text' => $LANG_GEO['manage_locations']),
-        array('url' => LOCATOR_ADMIN_URL . '/index.php?mode=userloc',
-              'text' => $LANG_GEO['manage_userlocs']),
-    );
-
-    $header_str = $LANG_GEO['plugin_name'] . ' ' . $LANG_GEO['version'] . 
-        ' ' . $_CONF_GEO['pi_version'];
-
-    $retval .= ADMIN_createMenu($menu_arr, $view, '');
-    return $retval;
-}
-
-
-/**
- * Returns a formatted field to the admin list when managing general locations.
- *
- * @param   string  $fieldname  Name of field
- * @param   string  $fieldvalue Value of field
- * @param   array   $A          Array of all values
- * @param   array   $icon_arr   Array of icons
- * @return  string              String to display for the selected field
- */
-function plugin_getListField_marker($fieldname, $fieldvalue, $A, $icon_arr)
-{
-    global $_CONF, $_CONF_GEO, $LANG24, $LANG_GEO, $LANG_ADMIN;
-
-    $retval = '';
-
-    switch($fieldname) {
-    case 'edit':
-        $retval = COM_createLink('',
-            LOCATOR_ADMIN_URL . '/index.php?edit=x&amp;id=' .$A['id'],
-            array(
-                'class' => 'uk-icon uk-icon-edit'
-            )
-        );
-        break;
-
-    case 'delete':
-        $retval = COM_createLink('',
-            LOCATOR_ADMIN_URL . '/index.php?deletemarker=x&amp;id=' . $A['id'],
-            array(
-                'title' => $LANG_ADMIN['delete'],
-                'onclick'=>"return confirm('{$LANG_GEO['confirm_delitem']}');",
-                'class' => 'uk-icon uk-icon-trash loc-icon-danger'
-            )
-        );
-        break;
-
-    case 'is_origin':
-    case 'enabled':
-        $checked = $fieldvalue == 1 ? 'checked="checked"' : '';
-        $retval .= "<input type=\"checkbox\" id=\"{$fieldname}_{$A['id']}\"
-                    name=\"{$fieldname}_{$A['id']}\" $checked 
-                    onclick='LOCtoggleEnabled(this, \"{$A['id']}\", \"$fieldname\", \"{$_CONF['site_url']}\");'>";
-        break;
-
-    case 'title':
-        $retval = COM_createLink(stripslashes($fieldvalue),
-                $_CONF['site_url'] . '/' . 
-                $_CONF_GEO['pi_name'] . '/index.php?detail=x&id=' .
-                $A['id']);
-        break;
-
-    case 'address':
-        $retval = stripslashes($fieldvalue);
-        break;
-
-    default:
-        $retval = $fieldvalue;
-        break;
-    }
-
-    return $retval;
-
-}
-
-
-/**
- * Builds an admin list of locations.
- *
- * @return  string HTML for the location list
- */
-function GEO_adminList()
-{
-    global $_CONF, $_TABLES, $LANG_ADMIN, $LANG_ACCESS, $_CONF_GEO, $LANG_GEO;
-
-    USES_lib_admin();
-
-    $header_arr = array(      # display 'text' and use table field 'field'
-        array('text' => $LANG_ADMIN['edit'], 'field' => 'edit', 'sort' => false, 'align' => 'center'),
-        array('text' => 'ID', 'field' => 'id', 'sort' => true),
-        array('text' => $LANG_GEO['title'], 'field' => 'title', 'sort' => true),
-        array('text' => $LANG_GEO['address'], 'field' => 'address', 
-                'sort' => true),
-        array('text' => $LANG_GEO['origin'], 'field' => 'is_origin', 
-                'sort' => true, 'align' => 'center'),
-        array('text' => $LANG_GEO['enabled'], 'field' => 'enabled', 
-                'sort' => true, 'align' => 'center'),
-        array('text' => $LANG_GEO['latitude'], 'field' => 'lat', 
-                'sort' => true),
-        array('text' => $LANG_GEO['longitude'], 'field' => 'lng', 
-                'sort' => true),
-        array('text' => $LANG_ADMIN['delete'], 'field' => 'delete', 
-                'sort' => false, 'align' => 'center'),
-    );
-
-
-    $defsort_arr = array('field' => 'title', 'direction' => 'asc');
-
-    $text_arr = array(
-        'has_extras' => true,
-        'form_url' => LOCATOR_ADMIN_URL . '/index.php',
-    );
-
-    $query_arr = array('table' => 'locator_markers',
-        'sql' => "SELECT * FROM {$_TABLES['locator_markers']} ",
-        'query_fields' => array('title', 'address'),
-        'default_filter' => 'WHERE 1=1'
-        //'default_filter' => COM_getPermSql ()
-    );
-
-    $options_arr = array(
-        'chkdelete' => true,
-        'chkfield'  => 'id',
-    );
-    $form_arr = array();
-    return ADMIN_list('locator', 'plugin_getListField_marker', $header_arr,
-                    $text_arr, $query_arr, $defsort_arr, '', '', 
-                    $options_arr, $form_arr);
-}
-
-
-/**
- * Returns a formatted field when managing user locations.
- *
- * @param   string  $fieldname  Name of field
- * @param   string  $fieldvalue Value of field
- * @param   array   $A          Array of all values
- * @param   array   $icon_arr   Array of icons
- * @return  string              String to display for the selected field
- */
-function GEO_getListField_userloc($fieldname, $fieldvalue, $A, $icon_arr)
-{
-    global $_CONF, $_CONF_GEO, $LANG24, $LANG_GEO, $LANG_ADMIN;
-
-    switch($fieldname) {
-    case 'edit':
-        $retval = COM_createLink(
-            $icon_arr['edit'],
-            LOCATOR_ADMIN_URL . "/index.php?mode=edituserloc&amp;id={$A['id']}"
-            );
-        break;
-
-    case 'delete':
-        $retval = COM_createLink(
-            $icon_arr['delete'],
-            LOCATOR_ADMIN_URL . "/index.php?mode=deleteuserloc&amp;id={$A['id']}",
-                array('title' => $LANG_ADMIN['delete'],
-                    'onclick'=>"return confirm('{$LANG_GEO['confirm_delitem']}');")
-            );
-        break;
-
-    default:
-        $retval = $fieldvalue;
-        break;
-    }
-
-    return $retval;
-
-}
-
-
-/**
- * Creates an admin list to administer the user location cache. 
- * The cache is built from the user locations given in glFusion account 
- * settings.
- *
- * @return  string  HTML for the admin list
- */
-function GEO_adminUserloc()
-{
-    global $_CONF, $_TABLES, $LANG_ADMIN, $LANG_ACCESS, $_CONF_GEO, $LANG_GEO;
-
-    $header_arr = array(
-        array('text' => $LANG_ADMIN['edit'], 'field' => 'edit', 
-                'sort' => false),
-        array('text' => $LANG_GEO['address'], 'field' => 'location', 
-                'sort' => true),
-        array('text' => $LANG_GEO['latitude'], 'field' => 'lat', 
-                'sort' => true),
-        array('text' => $LANG_GEO['longitude'], 'field' => 'lng', 
-                'sort' => true),
-        array('text' => $LANG_ADMIN['delete'], 'field' => 'delete', 
-                'sort' => false, 'align' => 'center'),
-    );
-
-    $defsort_arr = array('field' => 'location', 'direction' => 'asc');
-
-    $text_arr = array(
-        'has_extras' => true,
-        'form_url' => LOCATOR_ADMIN_URL . '/index.php?userloc=x',
-    );
-
-    $query_arr = array('table' => 'locator_userloc',
-        'sql' => "SELECT * FROM {$_TABLES['locator_userloc']} ",
-        'query_fields' => array(),
-        'default_filter' => ''
-    );
-    $form_arr = array();
-    return ADMIN_list('locator', 'GEO_getListField_userloc', $header_arr,
-                    $text_arr, $query_arr, $defsort_arr, '', '', '', $form_arr);
-}
-
-
 // If plugin is installed but not enabled, display an error and exit gracefully
-if (!in_array('locator', $_PLUGINS)) {
-    /** Include the 404 error page if needed */
-    COM_404();
-    exit;
-}
-
 // Only let admin users access this page
-$isAdmin = SEC_hasRights($_CONF_GEO['pi_name'].'.admin');
-if (!$isAdmin) {
-    // Someone is trying to illegally access this page
-    COM_errorLog("Someone has tried to illegally access the dailyquote Admin page.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: $REMOTE_ADDR",1);
-    $display = COM_siteHeader();
-    $display .= COM_startBlock($LANG_GEO['access_denied']);
-    $display .= $LANG_GEO['access_denied_msg'];
-    //$display .= COM_endBlock();
-    $display .= COM_siteFooter(true);
-    echo $display;
+if (
+    !in_array('locator', $_PLUGINS) ||
+    !SEC_hasRights($_CONF_GEO['pi_name'].'.admin')
+) {
+    COM_404();
     exit;
 }
 
 $action = '';
 $actionval = '';
 $expected = array(
-    'edit', 'moderate', 'approve', 'savemarker', 'submit', 'cancel', 
-    'deletemarker', 'delitem', 'validate', 'userloc', 'mode', 
+    'edit', 'edituserloc', 'moderate', 'approve', 'savemarker',
+    'submit', 'cancel', 
+    'deletemarker', 'deleteuserloc', 'delitem', 'validate', 'userloc', 'mode', 
 );
 foreach($expected as $provided) {
     if (isset($_POST[$provided])) {
@@ -321,7 +70,6 @@ case 'toggleorigin':
     break;
 
 case 'deletemarker':
-//case $LANG_ADMIN['delete']:
     if ($id != '') {
         if ($action == 'moderate') {
             // Deleting from the submission queue
@@ -385,23 +133,13 @@ case 'deleteuserloc':
     break;
 
 case 'saveuserloc':
-    $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
-    $location = DB_escapeString($_POST['location']);
-    $lat = (double)$_POST['lat'];
-    $lng = (double)$_POST['lng'];
-    if ($id > 0) {
-        $sql = "UPDATE {$_TABLES['locator_userloc']} SET
-                location='$location',
-                lat=$lat,
-                lng=$lng
-            WHERE id=$id";
-    } else {
-        $sql = "INSERT INTO {$_TABLES['locator_userloc']}
-                (location, lat, lng)
-            VALUES
-                ($location, $lat, $lng)";
+    $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+    $Loc = new Locator\UserLoc($id);
+    $Loc->setVars($_POST);
+    if ($Loc->getLat() == 0 || $Loc->getLng() == 0) {
+        $Loc->getCoords();
     }
-    @DB_query($sql, 1);
+    $Loc->saveToDB();
     $view = 'userloc';
     break;
 
@@ -412,7 +150,7 @@ default:
 
 switch($view) {
 case 'userloc':
-    $content .= GEO_adminUserloc();
+    $content .= Locator\UserLoc::adminList();
     break;
 
 case 'edit':
@@ -437,10 +175,7 @@ case 'moderate':
 
 case 'edituserloc':
     $id = isset($_REQUEST['id']) ? (int)$_REQUEST['id'] : 0;
-    require_once $_CONF['path'] . '/plugins/locator/edituserloc.php';
-    $A = DB_fetchArray(DB_query("SELECT * FROM {$_TABLES['locator_userloc']}
-            WHERE id=$id"));
-    $content .= GEO_userlocForm($A);
+    $content .= Locator\UserLoc::getByID($id)->Edit();
     $view = 'none';
     break;
 
@@ -448,7 +183,8 @@ case 'none':    // display nothing, it was handled earlier
     break;
 
 default:
-    $content .= GEO_adminList();
+    $view = 'locations';
+    $content .= Locator\Marker::adminList();
     break;
 }
 
@@ -456,7 +192,7 @@ $display = COM_siteHeader();
 if (!empty($msg)) {
     $display .= COM_showMessage($msg, $_CONF_GEO['pi_name']);
 }
-$display .= GEO_adminMenu($view);
+$display .= Locator\Menu::Admin($view);
 $display .= $content;
 $display .= COM_siteFooter();
 echo $display;

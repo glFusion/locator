@@ -1,15 +1,15 @@
 <?php
 /**
-*   Public entry point for the Locator plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    0.1.2
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ *   Public entry point for the Locator plugin.
+ *
+ *   @author     Lee Garner <lee@leegarner.com>
+ *   @copyright  Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
+ *   @package    locator
+ *   @version    v1.2.1
+ *   @license    http://opensource.org/licenses/gpl-2.0.php 
+ *               GNU Public License v2 or later
+ *   @filesource
+ */
 
 /** Include required common glFusion functions */
 require_once '../lib-common.php';
@@ -29,13 +29,9 @@ if ($_CONF['loginrequired'] == 1 && COM_isAnonUser()) {
     exit;
 }
 
-/** Include plugin-specific functions */
-USES_locator_functions();
-
+// Retrieve and sanitize arguments and form vars
 $msg = isset($_GET['msg']) ? $_GET['msg'] : '';
 $display = '';
-
-// Retrieve and sanitize arguments and form vars
 $action = '';
 $actionval = '';
 $expected = array(
@@ -98,9 +94,9 @@ case 'savemarker':
 case 'toggleorigin':
     $newval = (int)$_REQUEST['is_origin'];
     if ($newval == 0) {
-        GEO_delUserOrigin($id);
+        Locator\UserOrigin::delete($id);
     } else {
-        GEO_addUserOrigin($id);
+        Locator\UserOrigin::add($id);
     }
     $view = 'myorigins';
     break;
@@ -112,7 +108,7 @@ default:
 
 switch ($view) {
 case 'myorigins':
-    $content .= GEO_showOrigins();
+    $content .= Locator\UserLoc::originList();
     break;
 
 case 'detail':
@@ -137,11 +133,11 @@ case 'submit':
 
 case 'loclist':
 default:
-    $content .= GEO_showLocations($origin, $radius, $units, $keywords, $address);
+    $content .= Locator\Marker::getLocations($origin, $radius, $units, $keywords, $address);
     break;
 }
 
-$display .= GEO_siteHeader();
+$display .= Locator\Menu::siteHeader();
 
 if (!empty($msg)) {
     $display .= COM_showMessage((int)$msg, 'locator');
@@ -165,7 +161,7 @@ $T->parse('output', 'page');
 $display .= $T->finish($T->get_var('output'));
 $display .= $content;
 
-$display .= GEO_siteFooter();
+$display .= Locator\Menu::siteFooter();
 echo $display;
 
 ?>
