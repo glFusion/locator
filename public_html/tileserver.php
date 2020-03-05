@@ -6,9 +6,9 @@
  * For performance there is no integration with glFusion.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2020 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.2.0
+ * @version     1.2.1
  * @license     http://opensource.org/licenses/gpl-2.0.php 
  *              GNU Public License v2 or later
  * @filesource
@@ -61,7 +61,6 @@ if (!isset($x) || !isset($y) || !isset($z)) {
 }
 
 $url = "https://a.tile.openstreetmap.org/$z/$x/$y.png";
-//$url = 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
 //$url = 'http://tile.thunderforest.com/cycle/{z}/{x}/{y}.png';
 //$url = 'http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
 /*$url = str_replace(
@@ -69,9 +68,11 @@ $url = "https://a.tile.openstreetmap.org/$z/$x/$y.png";
     array($z, $x, $y),
     $url
 );*/
+/* Uncomment to debug
 $fp = fopen('/tmp/tileserver.log', 'a+');
 fputs($fp, $url . "\n");
 fclose($fp);
+ */
 
 //$cache_key = 'tiles_' . md5($url);
 $cache_key = md5($url);
