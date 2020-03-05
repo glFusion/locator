@@ -275,6 +275,7 @@ class Mapper
      * Set the map display width to override CSS.
      *
      * @param   string  $width  New width
+     * @return  object  $this
      */
     public function setWidth($width)
     {
@@ -283,6 +284,7 @@ class Mapper
             $width = "{$width}px";
         }
         $this->width = $width;
+        return $this;
     }
 
 
@@ -290,6 +292,7 @@ class Mapper
      * Set the map display height to override CSS.
      *
      * @param   string  $height  New height
+     * @return  object  $this
      */
     public function setHeight($height)
     {
@@ -298,6 +301,7 @@ class Mapper
             $height = "{$height}px";
         }
         $this->height = $height;
+        return $this;
     }
 
 
