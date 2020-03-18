@@ -111,6 +111,11 @@ class Marker
      * @var boolean */
     public $isNew = true;
 
+    /** Distance from origin.
+     * Set by caller, used for display only.
+     * @var float */
+    private $distFromOrigin = 0;
+
 
     /**
      * Constructor.
@@ -197,6 +202,19 @@ class Marker
     public function getLat()
     {
         return (float)$this->lat;
+    }
+
+
+    /**
+     * Set the distance from an origin.
+     *
+     * @param   float   $dist   Distance in Miles or KM
+     * @return  object  $this
+     */
+    public function setDistance($dist)
+    {
+        $this->distFromOrigin = (float)$dist;
+        return $this;
     }
 
 
@@ -574,7 +592,6 @@ class Marker
 
         $T = new \Template(LOCATOR_PI_PATH . '/templates');
         $T->set_file('page', 'locinfo.thtml');
-
         $info_window = $this->title;
         foreach (array('address', 'city', 'state', 'postal') as $fld) {
             if ($this->$fld != '') {
@@ -600,6 +617,8 @@ class Marker
             'adblock'           => PLG_displayAdBlock('locator_marker', 0),
             'show_map'          => true,
             'directions'        => \Locator\Mapper::getMapper()->showDirectionsForm($this->lat, $this->lng),
+            'distFromOrigin'    => $this->distFromOrigin,
+            'dist_unit'         => $_CONF_GEO['distance_unit'],
         ) );
 
         // Show the location's weather if that plugin integration is enabled
@@ -1117,14 +1136,16 @@ class Marker
                     $locations[$i]['id'] . '&id=' . $locations[$i]['id'] .
                     '&radius=' . $radius);
             }
+            $dist = sprintf("%4.2f", $locations[$i]['distance']);
             $T->set_var(array(
                 'loc_id'    => $locations[$i]['id'],
                 'loc_name'  => $locations[$i]['title'],
                 'loc_address' => $locations[$i]['address'],
-                'loc_distance' => sprintf("%4.2f", $locations[$i]['distance']),
+                'loc_distance' => $dist,
                 'loc_info_url' => LOCATOR_URL .
                                 '/index.php?detail=x&id=' .
-                                $locations[$i]['id'] . $url_opts,
+                                $locations[$i]['id'] . $url_opts .
+                                '&dist=' . $dist,
                 'loc_lat'   => $locations[$i]['lat'],
                 'loc_lng'   => $locations[$i]['lng'],
                 'url_opts'  => $url_opts,

@@ -83,6 +83,7 @@ $LANG_GEO= array(
 'location'  => 'Location',
 'loc_updated'       => 'Location has been updated',
 'notify_subject'    => 'Location Submission from ' . $_CONF['site_name'],
+'from_origin'       => 'From Origin',
 );
 
 

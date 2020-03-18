@@ -113,6 +113,9 @@ case 'myorigins':
 
 case 'detail':
     $M = new Locator\Marker($id);
+    if (isset($_GET['dist'])) {
+        $M->setDistance($_GET['dist']);
+    }
     $back_url = LOCATOR_URL . '/index.php?loclist=x' .
             '&origin=' . urlencode($origin) .
             '&radius=' . (int)$radius .

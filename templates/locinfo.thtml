@@ -40,6 +40,16 @@
     {description}
   </td>
 </tr>
+{!if distFromOrigin}
+<tr>
+  <td class="locinfo">
+   <label>{$LANG_GEO['from_origin']}:</label>
+  </td>
+  <td>
+   {distFromOrigin} {dist_unit}
+  </td>
+</tr>
+{!endif}
 <!--<tr>
   <td class="locinfo">
    <label for="coord">{$LANG_GEO['coord']}:</label>
@@ -53,8 +63,10 @@
 
 {!if show_map}
 <div class="large-map">
-{map}
-{directions}
+    {map}
+</div>
+<div class="aligncenter">
+    {directions}
 </div>
 {!endif}
 
@@ -68,8 +80,10 @@
 </div>
 {!endif}
 
+{!if distFromOrigin}
 <div class="locDisclaimer">
-<hr />
-  {$LANG_GEO['disclaimer']}
+    <hr />
+    {$LANG_GEO['disclaimer']}
 </div>
+{!endif}
 {# end {templatelocation} #}
