@@ -107,10 +107,6 @@ class Marker
      * @var boolean */
     private $isAdmin = false;
 
-    /** Marker properties, accessed via `__set()` and `--get()`.
-     * @var array */
-    private $properties = array();
-
     /** Flag to indicate a new marker vs. one read from the DB.
      * @var boolean */
     public $isNew = true;
@@ -132,17 +128,6 @@ class Marker
                 $this->isNew = false;
             };
         } else {
-            $this->title = '';
-            $this->dscp = '';
-            $this->radius = 0;
-            $this->keywords = '';
-            $this->address = '';
-            $this->city = '';
-            $this->state = '';
-            $this->postal = '';
-            $this->oldid = '';
-            $this->enabled = 1;
-            $this->is_origin = 0;
             $this->perm_owner = $_CONF_GEO['default_permissions'][0];
             $this->perm_group = $_CONF_GEO['default_permissions'][1];
             $this->perm_members = $_CONF_GEO['default_permissions'][2];
@@ -733,7 +718,7 @@ class Marker
      */
     public static function adminList()
     {
-        global $_CONF, $_TABLES, $LANG_ADMIN, $LANG_ACCESS, $_CONF_GEO, $LANG_GEO;
+        global $_TABLES, $LANG_ADMIN, $LANG_GEO;
 
         USES_lib_admin();
 
@@ -838,7 +823,7 @@ class Marker
      */
     public static function getAdminField($fieldname, $fieldvalue, $A, $icon_arr)
     {
-        global $_CONF, $_CONF_GEO, $LANG24, $LANG_GEO, $LANG_ADMIN;
+        global $_CONF, $_CONF_GEO, $LANG_GEO, $LANG_ADMIN;
 
         $retval = '';
 
