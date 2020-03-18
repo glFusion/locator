@@ -113,6 +113,7 @@ function locator_do_upgrade($dvlp=false)
         $c->set('geocoder', $map_provider, $_CONF_GEO['pi_name']);
     }
 
+    LOC_remove_old_files();
     COM_errorLog("Successfully updated the {$_CONF_GEO['pi_display_name']} Plugin", 1);
     return true;
 }
@@ -173,6 +174,50 @@ function locator_do_set_version($ver)
     } else {
         COM_errorLog("Succesfully updated the {$_CONF_GEO['pi_display_name']} Plugin version",1);
         return true;
+    }
+}
+
+
+/**
+ * Remove deprecated files
+ * Errors in unlink() and rmdir() are ignored.
+ */
+function LOC_remove_old_files()
+{
+    global $_CONF;
+
+    $paths = array(
+        // private/plugins/locator
+        __DIR__ => array(
+            'edituserloc.php',
+            'google_lang.inc.php',
+            'locator_functions.inc.php',
+        ),
+        // public_html/locator
+        $_CONF['path_html'] . 'locator' => array(
+        ),
+        // admin/plugins/locator
+        $_CONF['path_html'] . 'admin/plugins/locator' => array(
+        ),
+    );
+    if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+        // Files that were renamed, changing case only.
+        // Only delete these on non-windows systems.
+        $files = array(
+            // 1.2.1
+            'classes/marker.class.php',
+            'classes/userloc.class.php',
+        );
+        $paths[__DIR__] = array_merge($paths[__DIR__], $files);
+    }
+
+    foreach ($paths as $path=>$files) {
+        foreach ($files as $file) {
+            if (is_file("$path/$file")) {
+                COM_errorLog("removing $path/$file");
+                @unlink("$path/$file");
+            }
+        }
     }
 }
 
