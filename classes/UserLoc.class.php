@@ -292,7 +292,7 @@ class UserLoc
         );
         $retval .= ADMIN_list(
             'locator',
-            'GEO_getAdminListField',
+            array(__NAMESPACE__ . '\Marker', 'getAdminField'),
             $header_arr,
             $text_arr, $query_arr, $defsort_arr,
             '', '', '', $form_arr
