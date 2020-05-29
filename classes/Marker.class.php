@@ -219,6 +219,17 @@ class Marker
 
 
     /**
+     * Check if this is new or existing record.
+     *
+     * @return  boolean     1 if new, 0 if existing
+     */
+    public function isNew()
+    {
+        return $this->isNew ? 1 : 0;
+    }
+
+
+    /**
      * Read a marker from the database into variables.
      *
      * @param   string  $id     Optional ID of marker, or current is used
@@ -612,7 +623,7 @@ class Marker
                                     array('target' => '_new')),
             'lat'               => GEO_coord2str($this->lat),
             'lng'               => GEO_coord2str($this->lng),
-            //'back_url'          => $back_url,
+            'back_url'          => $back_url,
             'map'               => \Locator\Mapper::getMapper()->showMap($this->lat, $this->lng, $info_window),
             'adblock'           => PLG_displayAdBlock('locator_marker', 0),
             'show_map'          => true,
@@ -623,12 +634,42 @@ class Marker
 
         // Show the location's weather if that plugin integration is enabled
         if ($_CONF_GEO['use_weather']) {
-            if ($this->lat != 0 && $this->lng != 0) {
+            // Try coordinates first, if present
+            if (!empty($this->lat) && !empty($this->lng)) {
+                $loc = array(
+                    'type' => 'coord',
+                    'parts' => array(
+                        'lat' => $this->lat,
+                        'lng' => $this->lng,
+                    ),
+                );
+            } else {
+                // The postal code works best, but not internationally.
+                // Try the regular address first.
+                if (!empty($city) && !empty($province)) {
+                    $loc = array(
+                        'type' => 'address',
+                        'parts' => array(
+                            'city' => $this->city,
+                            'province' => $this->state,
+                            'country' => $this->country,
+                        ),
+                    );
+                }
+                if (!empty($postal)) {
+                    $loc['parts']['postal'] = $postal;
+                }
+            }
+            $args = array('loc' => $loc);
+            /*if ($this->lat != 0 && $this->lng != 0) {
                 $args = array('loc' => $this->lat . ',' . $this->lng);
             } else {
                 $args = array('loc' => $this->address);
-            }
-            $s = LGLIB_invokeService('weather', 'embed', $args, $weather, $svc_msg);
+            }*/
+            $s = LGLIB_invokeService(
+                'weather', 'embed',
+                $args, $weather, $svc_msg
+            );
             if ($s == PLG_RET_OK) {
                 $T->set_var('weather', $weather);
             }
@@ -1112,7 +1153,7 @@ class Marker
                 'location',
                 'uid='. $_USER['uid']
             );
-            $userloc = new Locator\UserLoc($user_location);
+            $userloc = new UserLoc($user_location);
             if ($userloc->getLat() != 0 && $userloc->getLng() != 0) {
                 $M = new self;
                 $locations = $M->setLat($userloc->getLat())
