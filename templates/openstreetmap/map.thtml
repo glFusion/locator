@@ -1,5 +1,4 @@
 {# begin {templatelocation} #}
-{geo_map_js_url}
 <div class="map_dimension" id="map{canvas_id}" {div_style}></div>
 <script type="text/javascript">
     var mymap{canvas_id} = L.map('map{canvas_id}').setView([{lat}, {lng}], 13);

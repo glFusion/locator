@@ -81,14 +81,13 @@ class openstreetmap extends \Locator\Mapper
             return '';
         }
 
-        list($js_url, $canvas_id) = $this->getMapJS();
+        $this->loadMapJS();
         $T = new \Template(LOCATOR_PI_PATH . '/templates/' . $this->getName());
         $T->set_file('page', 'map.thtml');
         $T->set_var(array(
             'lat'           => GEO_coord2str($lat, true),
             'lng'           => GEO_coord2str($lng, true),
-            'geo_map_js_url' => $js_url,
-            'canvas_id'     => $canvas_id,
+            'canvas_id'     => rand(1,999),
             'text'          => str_replace('"', '&quot;', $text),
             'div_style'     => $this->getDivStyle(),
             'tileserver_url' => $this->tileserver,
@@ -154,24 +153,25 @@ class openstreetmap extends \Locator\Mapper
      *
      * @return  array   $url=>URL to javascript, $canvas_id=> random ID
      */
-    private function getMapJS()
+    private function loadMapJS()
     {
         static $have_map_js = false;    // Flag to avoid duplicate loading
 
         $canvas_id = rand(1,999);   // Create a random id for the canvas
         if (!$have_map_js) {
             $have_map_js = true;
-            $url = '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-   crossorigin=""/>' . LB;
-            // JS must be included after CSS
-            $url .= '<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
-   integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-   crossorigin=""></script>' . LB;
-        } else {
-            $url = '';
+            $outputHandle = \outputHandler::getInstance();
+            $outputHandle->addLink(
+                'stylesheet',
+                'https://unpkg.com/leaflet@1.3.4/dist/leaflet.css',
+                'text/css',
+                HEADER_PRIO_NORMAL
+            );
+            $outputHandle->addLinkScript(
+                'https://unpkg.com/leaflet@1.3.4/dist/leaflet.js'
+            );
         }
-        return array($url, $canvas_id);
+        return $this;
     }
 
 }

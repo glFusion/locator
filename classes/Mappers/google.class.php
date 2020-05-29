@@ -122,7 +122,7 @@ class google extends \Locator\Mapper
         $iso_lang = in_array($_CONF['iso_lang'], $this->_lang) ?
                 $_CONF['iso_lang'] : 'en';
 
-        list($js_url, $canvas_id) = $this->getMapJS();
+        $this->loadMapJS();
         $T = new \Template(LOCATOR_PI_PATH . '/templates/' . $this->getName());
         $T->set_file('page', 'map.thtml');
         $T->set_var(array(
@@ -130,8 +130,8 @@ class google extends \Locator\Mapper
             'lng'           => GEO_coord2str($lng, true),
             'infowindow_text' => str_replace('"', '&quot;', COM_checkHTML($text)),
             'iso_lang'      => $iso_lang,
-            'geo_map_js_url' => $js_url,
-            'canvas_id'     => $canvas_id,
+            'canvas_id'     => rand(1,999),
+            'div_style'     => $this->getDivStyle(),
         ) );
         $T->parse('output','page');
         return $T->finish($T->get_var('output'));
@@ -193,24 +193,30 @@ class google extends \Locator\Mapper
      *
      * @return  array   $url=>URL to Google Maps javascript, $canvas_id=> random ID
      */
-    private function getMapJS()
+    private function loadMapJS()
     {
         global $_CONF_GEO;
         static $have_map_js = false;    // Flag to avoid duplicate loading
 
         $url = '';
-        $canvas_id = rand(1,999);   // Create a random id for the canvas
         if (!$have_map_js) {
+            $have_map_js = true;
             if (!empty($this->js_key)) {
-                $have_map_js = true;
-                $url = '<script async defer src="' .
-                    sprintf(self::GEO_MAP_URL, $this->js_key) .
-                    '"></script>';
+                $outputHandle = \outputHandler::getInstance();
+                $outputHandle->addLink(
+                    'stylesheet',
+                    'https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css',
+                    'text/css',
+                    HEADER_PRIO_NORMAL
+                );
+                $outputHandle->addLinkScript(
+                    sprintf(self::GEO_MAP_URL, $this->js_key)
+                );
             } else {
                 COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '():  API Key is required');
             }
         }
-        return array($url, $canvas_id);
+        return $this;
     }
 
 }
