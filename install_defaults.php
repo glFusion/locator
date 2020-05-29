@@ -15,6 +15,10 @@ if (!defined('GVERSION')) {
     die('This file can not be used on its own!');
 }
 
+global $_CONF;
+$parts = preg_split('/[_-]/', $_CONF['locale']);
+$def_country = strtoupper(array_pop($parts));
+
 global $locatorConfigData;
 $locatorConfigData = array(
     array(
@@ -157,6 +161,17 @@ $locatorConfigData = array(
         'fieldset' => 0,
         'selection_array' => 3,
         'sort' => 110,
+        'set' => true,
+        'group' => 'locator',
+    ),
+    array(
+        'name' => 'def_country',
+        'default_value' => $def_country,
+        'type' => 'text',
+        'subgroup' => 0,
+        'fieldset' => 0,
+        'selection_array' => 0,
+        'sort' => 120,
         'set' => true,
         'group' => 'locator',
     ),

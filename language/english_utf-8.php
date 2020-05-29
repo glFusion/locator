@@ -24,6 +24,7 @@ $LANG_GEO = array(
 'city'              => 'City',
 'state'             => 'State',
 'postal'            => 'Postal Code',
+'country'           => 'Country',
 'admin_menu'        => 'Geo Locator',
 'anonview'          => 'Allow anonymous users to use the locator',
 'coord'             => 'Coordinates',
@@ -136,6 +137,7 @@ $LANG_confignames['locator'] = array(
     'mapquest_key'      => 'Mapquest Client Key',
     'geocodio_api_key'  => 'Geocodio API Key',
     'osm_use_tileserver' => 'Use internal tileserver for OSM',
+    'def_country'       => 'Default Country (2-letter code)',
 );
 
 /**

@@ -130,6 +130,9 @@ $_SQL_UPGRADE = array(
             PRIMARY KEY (`cache_id`)
           ) Engine=MyISAM",
     ),
+    '1.2.1' => array(
+        "ALTER TABLE {$_TABLES['locator_markers']} ADD country varchar(3) AFTER postal",
+    ),
 );
 
 ?>

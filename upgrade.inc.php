@@ -25,7 +25,7 @@ require_once dirname(__FILE__) . '/sql/mysql_install.php';
  */
 function locator_do_upgrade($dvlp=false)
 {
-    global $_CONF_GEO, $_PLUGIN_INFO, $_TABLES;
+    global $_CONF_GEO, $_PLUGIN_INFO, $_TABLES, $_CONF, $_SQL_UPGRADE;
 
     if (isset($_PLUGIN_INFO[$_CONF_GEO['pi_name']])) {
         if (is_array($_PLUGIN_INFO[$_CONF_GEO['pi_name']])) {
@@ -87,6 +87,19 @@ function locator_do_upgrade($dvlp=false)
         // only option prior to this version.
         if (!$dvlp) {
             $map_provider = 'google';
+        }
+        if (!locator_do_upgrade_sql($current_ver, $dvlp)) return false;
+        if (!locator_do_set_version($current_ver)) return false;
+    }
+
+    if (!COM_checkVersion($current_ver, '1.2.1')) {
+        $current_ver = '1.2.1';
+        if (!_LOCtableHasColumn('locator_markers', 'country')) {
+            global $_CONF;
+            $parts = preg_split('/[_-]/', $_CONF['locale']);
+            $def_country = strtoupper(array_pop($parts));
+            $_SQL_UPGRADE[$current_ver][] = "UPDATE {$_TABLES['locator_markers']}
+                SET country = '$def_country'";
         }
         if (!locator_do_upgrade_sql($current_ver, $dvlp)) return false;
         if (!locator_do_set_version($current_ver)) return false;
@@ -219,6 +232,23 @@ function LOC_remove_old_files()
             }
         }
     }
+}
+
+
+/**
+ * Check if a column exists in a table
+ *
+ * @param   string  $table      Table Key, defined in shop.php
+ * @param   string  $col_name   Column name to check
+ * @return  boolean     True if the column exists, False if not
+ */
+function _LOCtableHasColumn($table, $col_name)
+{
+    global $_TABLES;
+
+    $col_name = DB_escapeString($col_name);
+    $res = DB_query("SHOW COLUMNS FROM {$_TABLES[$table]} LIKE '$col_name'");
+    return DB_numRows($res) == 0 ? false : true;
 }
 
 ?>

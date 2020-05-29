@@ -64,6 +64,13 @@
   </div>
 
   <div class="uk-form-row">
+    <label class="uk-form-label" for="country">{$LANG_GEO['country']}:</label>
+    <div class="uk-form-controls">
+      <input name="country" type="text" size="3" value="{country}" />
+    </div>
+  </div>
+
+  <div class="uk-form-row">
     <label class="uk-form-label" for="keywords">{$LANG_GEO['keywords']}:</label>
     <div class="uk-form-controls">
       <input name="keywords" type="text" size="65" value="{keywords}" />
