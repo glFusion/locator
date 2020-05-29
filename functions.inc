@@ -632,13 +632,15 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
     $lng = '';
     $title = '';
     $locid = '';
-    $width = NULL;
-    $height = NULL;
+    $width = 300;       // set some default width and height
+    $height = 300;
+    $skip = 0;
     switch ($op) {
     case 'tagname':
         $retval = 'locator';
         break;
     case 'parse':
+        //var_dump($autotag);die;
         $HTML = '';
         $option = COM_applyFilter($autotag['parm1']);
         $parms = explode(' ', COM_applyFilter($autotag['parm2']));
@@ -656,7 +658,6 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
                         $U = new Locator\UserLoc($value, 1);
                         $lat = $U->getLat();
                         $lng = $U->getLng();
-                        $title = $parm3;
                     }
                     break;
                 case 'width':
@@ -665,15 +666,25 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
                     $skip++;
                     break;
                 }
-            } else {
-                $locid = $parm;
+            //} else {
+            //    $locid = $parm;
             }
+        }
+        if ($skip != 0) {
+                if (count ($parms) > $skip) {
+                    for ($i = 0; $i < $skip; $i++) {
+                        array_shift($parms);
+                    }
+                    $caption = trim(implode (' ', $parms));
+                } else {
+                    $caption = '';
+                }
         }
         // If a location ID was obtained from an "id:" tag or a standalone
         // one, get the coordinates from that.
         // Otherwise, there should have been an address provided above.
         if ($locid !== '') {
-                $M = new Locator\Marker($locid);
+            $M = new Locator\Marker($locid);
                 if (!$M->isNew()) {
                     $lat = $M->getLat();
                     $lng = $M->getLng();
@@ -688,8 +699,8 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
                 $_CONF_GEO['show_map'] == 0 ||
                 // Don't insert a map into an e-mailed article.  Doesn't work.
                 (isset($_POST['what']) && $_POST['what'] == 'sendstory') ||
-                !empty($lat) ||
-                !empty($lng)
+                empty($lat) ||
+                empty($lng)
             ) {
                 break;
             }
@@ -751,7 +762,9 @@ function GEO_showMap($lat, $lng, $text='', $width=NULL, $height=NULL)
     }
 
     $M = Locator\Mapper::getMapper();
-    return $M->setWidth($width)->setHeight($height)->showMap($lat, $lng, $text);
+    return $M->setWidth($width)
+        ->setHeight($height)
+        ->showMap($lat, $lng, $text);
 }
 
 
