@@ -14,6 +14,7 @@
  * @filesource
  */
 
+define('MAX_CACHE_SECONDS', 604800);  // cache for one week
 
 /**
  * Get a tile image from cache.
@@ -24,7 +25,7 @@
 function LOC_tileserver_getcache($cache_key)
 {
     $filepath = __DIR__ . '/tilecache/' . $cache_key[0] . '/' . $cache_key . '.png';
-    if (is_file($filepath)) {
+    if (is_file($filepath) && filemtime($filepath) > (time() - MAX_CACHE_SECONDS)) {
         $img = file_get_contents($filepath);
     } else {
         $img = NULL;
