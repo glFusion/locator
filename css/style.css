@@ -110,3 +110,7 @@ div.markerform submit input button {
 .loc-icon-danger {
     color: red;
 }
+
+div#weather {
+    margin-top:5px;
+}
