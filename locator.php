@@ -3,7 +3,7 @@
  * Static configuration items for the Locator plugin.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
  * @package     locator
  * @version     v1.2.1
  * @license     http://opensource.org/licenses/gpl-2.0.php
@@ -36,11 +36,5 @@ $_CONF_GEO['pi_name']           = 'locator';
 $_CONF_GEO['pi_display_name']   = 'Geo Locator';
 $_CONF_GEO['gl_version']        = '1.7.0';
 $_CONF_GEO['pi_url']            = 'http://www.leegarner.com';
-
-// Define Google URLs, just to have them in one place
-// Geocoding url, address will be appended to this
-//define('GEO_GOOG_URL','https://maps.googleapis.com/maps/api/geocode/json?address=');
-// URL to maps javascript
-//define('GEO_MAP_URL', 'https://maps.google.com/maps/api/js?key=%s');
 
 ?>
