@@ -205,6 +205,7 @@ function LOC_remove_old_files()
             'edituserloc.php',
             'google_lang.inc.php',
             'locator_functions.inc.php',
+            'templates/markerform.uikit.thtml',
         ),
         // public_html/locator
         $_CONF['path_html'] . 'locator' => array(
