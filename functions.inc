@@ -48,7 +48,7 @@ if (file_exists(LOCATOR_PI_PATH . '/config.php')) {
 $langpath = LOCATOR_PI_PATH . '/language';
 $langfile = "{$_CONF['language']}.php";
 if (!file_exists("$langpath/$langfile")) {
-    $langfile = 'english.php';
+    $langfile = 'english_utf-8.php';
 }
 include_once "$langpath/$langfile";
 if (file_exists("$langpath/custom/$langfile")) {
@@ -626,7 +626,7 @@ function GEO_canSubmit()
  */
 function plugin_autotags_locator($op, $content = '', $autotag = '')
 {
-    global $_CONF, $_TABLES, $_CONF_GEO;
+    global $_CONF, $_TABLES, $_CONF_GEO, $LANG_GEO;
 
     $lat = '';
     $lng = '';
@@ -638,6 +638,19 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
     switch ($op) {
     case 'tagname':
         $retval = 'locator';
+        break;
+    case 'tagusage':
+        return array('namespace' => 'locator', 'usage' => 'description');
+        break;
+    case 'desc':
+        switch ($content) {
+        case 'locator':
+            return $LANG_GEO['at_dscp_' . $content];
+            break;
+        default:
+            return '';
+            break;
+        }
         break;
     case 'parse':
         //var_dump($autotag);die;
