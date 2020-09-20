@@ -84,6 +84,7 @@ $LANG_GEO = array(
 'loc_updated'       => 'Location has been updated',
 'notify_subject'    => 'Location Submission from ' . $_CONF['site_name'],
 'from_origin'       => 'From Origin',
+'at_dscp_locator'   => 'Show a map. ]locator:map (id:loc_id | addr:address) width:px height:px]',
 );
 
 $PLG_locator_MESSAGE1 = 'Your location has been queued for administrator approval.';
@@ -129,6 +130,8 @@ $LANG_confignames['locator'] = array(
     'show_map'          => 'Show Map?',
     'google_api_key'    => 'Google Maps API Key',
     'google_js_key'     => 'Google Maps JS Key',
+    'here_js_key'       => 'HERE Javascript Key',
+    'here_rest_key'     => 'HERE REST API Key',
 
     'defgrp'            => 'Default Group:',
     'default_permissions' => 'Default Permissions:',

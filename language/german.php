@@ -130,6 +130,8 @@ $LANG_confignames['locator'] = array(
     'show_map'          => 'Karte anzeigen',
     'google_api_key'    => 'Google Maps API Key',
     'google_js_key'     => 'Google Maps JS Key',
+    'here_js_key'       => 'HERE Javascript Key',
+    'here_rest_key'     => 'HERE REST API Key',
 
     'defgrp'            => 'Standard-Gruppe',
     'default_permissions' => 'Standard-Berechtigungen',

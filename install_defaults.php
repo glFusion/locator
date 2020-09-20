@@ -287,6 +287,28 @@ $locatorConfigData = array(
         'set' => true,
         'group' => 'locator',
     ),
+    array(
+        'name' => 'here_rest_key',
+        'default_value' => '',
+        'type' => 'text',
+        'subgroup' => 0,
+        'fieldset' => 10,
+        'selection_array' => 0,
+        'sort' => 90,
+        'set' => true,
+        'group' => 'locator',
+    ),
+    array(
+        'name' => 'here_js_key',
+        'default_value' => '',
+        'type' => 'text',
+        'subgroup' => 0,
+        'fieldset' => 10,
+        'selection_array' => 0,
+        'sort' => 100,
+        'set' => true,
+        'group' => 'locator',
+    ),
 
     // Permissions fieldset
     array(

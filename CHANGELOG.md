@@ -1,5 +1,8 @@
 # glLocator - Change Log
 
+## 1.2.2 (TBD)
+  * Add Here.com map provider
+
 ## 1.2.1 (2020-07-09)
   * Remove support for non-uikit themes
   * Fix call to geocoder function from UserLoc class.
