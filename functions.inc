@@ -785,10 +785,9 @@ function GEO_showMap($lat, $lng, $text='', $width=NULL, $height=NULL)
  * Displays a map in the user's profile.
  *
  * @param   integer $uid    User ID whose profile is being displayed
- * @param   object  &$T     Pointer to template object
  * @return  string          HTML to include in profile page
  */
-function plugin_profilevariablesdisplay_locator($uid, &$T)
+function plugin_profileblocksdisplay_locator($uid)
 {
     global $_CONF_GEO, $_TABLES;
 
@@ -797,13 +796,13 @@ function plugin_profilevariablesdisplay_locator($uid, &$T)
     if (!isset($_CONF_GEO['profile_showmap']) ||
         $_CONF_GEO['profile_showmap'] == 0 ||
         $uid < 2) {
-        return;
+        return '';
     }
 
     // Get the user's location if possible.  If none available, return
     $userloc = DB_getItem($_TABLES['userinfo'], 'location', "uid=$uid");
     if ($userloc == '') {
-        return;
+        return '';
     }
 
     $U = new Locator\UserLoc($userloc);
@@ -814,10 +813,7 @@ function plugin_profilevariablesdisplay_locator($uid, &$T)
         'profile_map'   => \Locator\Mapper::getMapper()->showMap($U->getLat(), $U->getLng(), $userloc),
     ) );
     $LT->parse('output','page');
-    $existingFields = $T->get_var('plugin_fields');
-    $T->set_var('plugin_fields',
-        $existingFields . $LT->finish($LT->get_var('output'))
-    );
+    return $LT->finish($LT->get_var('output'));
 }
 
 
