@@ -2,6 +2,7 @@
 
 ## 1.2.2 (TBD)
   * Add Here.com map provider
+  * More sanitizing for lat/lng before saving
 
 ## 1.2.1 (2020-07-09)
   * Remove support for non-uikit themes

@@ -262,8 +262,8 @@ class Marker
         if (empty($A) || !is_array($A)) return false;
 
         $this->id = $A['id'];
-        $this->lat = $A['lat'];
-        $this->lng = $A['lng'];
+        $this->setLat($A['lat']);
+        $this->setLng($A['lng']);
         $this->keywords = $A['keywords'];
         $this->address = $A['address'];
         $this->city = $A['city'];
@@ -363,8 +363,8 @@ class Marker
         ) {
             $address = $this->AddressToString();
             if ($address != '' && GEO_getCoords($address, $lat, $lng) == 0) {
-                $this->lat = $lat;
-                $this->lng = $lng;
+                $this->setLat($lat);
+                $this->setLng($lng);
             }
         }
 
@@ -378,8 +378,8 @@ class Marker
             state = '" . DB_escapeString($this->state) . "',
             postal = '" . DB_escapeString($this->postal) . "',
             description = '" . DB_escapeString($this->description) . "',
-            lat = {$lat},
-            lng = {$lng},
+            lat = '{$lat}',
+            lng = '{$lng}',
             keywords = '" . DB_escapeString($this->keywords) . "',
             url = '" . DB_escapeString($A['url']) . "',
             is_origin = '{$this->is_origin}',
@@ -1037,8 +1037,8 @@ class Marker
                 FROM {$_TABLES['locator_markers']} m
                 LEFT JOIN {$_TABLES['locator_userXorigin']} u
                 ON u.mid=m.id
-                WHERE u.uid = {$_USER['uid']}
-                OR m.is_origin=1";
+                WHERE m.enabled = 1
+                AND (u.uid = {$_USER['uid']} OR m.is_origin=1)";
             $result = DB_query($sql);
             while ($row = DB_fetchArray($result, false)) {
                 $selected = $row['id'] == $id ? 'selected ' : '';
