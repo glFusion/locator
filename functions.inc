@@ -640,7 +640,7 @@ function plugin_autotags_locator($op, $content = '', $autotag = '')
         $retval = 'locator';
         break;
     case 'tagusage':
-        return array('namespace' => 'locator', 'usage' => 'description');
+        return array(array('namespace' => 'locator', 'usage' => 'description'));
         break;
     case 'desc':
         switch ($content) {
