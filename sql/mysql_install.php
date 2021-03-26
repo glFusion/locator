@@ -25,20 +25,21 @@ $_SQL['locator_markers'] =
   `city` varchar(80) DEFAULT NULL,
   `state` varchar(80) DEFAULT NULL,
   `postal` varchar(80) DEFAULT NULL,
-  `description` text,
+  `country` varchar(3) DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `lat` float(10,6) NOT NULL,
   `lng` float(10,6) NOT NULL,
-  `is_origin` tinyint(1) DEFAULT '0',
+  `is_origin` tinyint(1) DEFAULT 0,
   `keywords` varchar(255) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
-  `views` mediumint(8) NOT NULL DEFAULT '0',
-  `add_date` int(11) NOT NULL DEFAULT '0',
+  `views` mediumint(8) NOT NULL DEFAULT 0,
+  `add_date` int(11) NOT NULL DEFAULT 0,
   `group_id` mediumint(8) unsigned DEFAULT NULL,
-  `perm_owner` tinyint(1) unsigned NOT NULL DEFAULT '3',
-  `perm_group` tinyint(1) unsigned NOT NULL DEFAULT '3',
-  `perm_members` tinyint(1) unsigned NOT NULL DEFAULT '2',
-  `perm_anon` tinyint(1) unsigned NOT NULL DEFAULT '2',
-  `enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `perm_owner` tinyint(1) unsigned NOT NULL DEFAULT 3,
+  `perm_group` tinyint(1) unsigned NOT NULL DEFAULT 3,
+  `perm_members` tinyint(1) unsigned NOT NULL DEFAULT 2,
+  `perm_anon` tinyint(1) unsigned NOT NULL DEFAULT 2,
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM";
 
@@ -52,54 +53,52 @@ $_SQL['locator_submission'] =
   `city` varchar(80) DEFAULT NULL,
   `state` varchar(80) DEFAULT NULL,
   `postal` varchar(80) DEFAULT NULL,
-  `description` text,
+  `description` text DEFAULT NULL,
   `lat` float(10,6) NOT NULL,
   `lng` float(10,6) NOT NULL,
-  `is_origin` tinyint(1) DEFAULT '0',
+  `is_origin` tinyint(1) DEFAULT 0,
   `keywords` varchar(255) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
-  `views` mediumint(8) NOT NULL DEFAULT '0',
-  `add_date` int(11) NOT NULL DEFAULT '0',
+  `add_date` int(11) NOT NULL DEFAULT 0,
   `group_id` mediumint(8) unsigned DEFAULT NULL,
-  `perm_owner` tinyint(1) unsigned NOT NULL DEFAULT '3',
-  `perm_group` tinyint(1) unsigned NOT NULL DEFAULT '3',
-  `perm_members` tinyint(1) unsigned NOT NULL DEFAULT '2',
-  `perm_anon` tinyint(1) unsigned NOT NULL DEFAULT '2',
-  `enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `perm_owner` tinyint(1) unsigned NOT NULL DEFAULT 3,
+  `perm_group` tinyint(1) unsigned NOT NULL DEFAULT 3,
+  `perm_members` tinyint(1) unsigned NOT NULL DEFAULT 2,
+  `perm_anon` tinyint(1) unsigned NOT NULL DEFAULT 2,
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT 1
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM";
 
 /** Table to hold user's selected origins. */
 $_SQL['locator_userXorigin'] = 
 "CREATE TABLE `{$_TABLES['locator_userXorigin']}` (
-  `id` mediumint(8) NOT NULL auto_increment,
-  `uid` mediumint(8) default NULL,
-  `mid` varchar(20) default NULL,
-  PRIMARY KEY  (`id`),
+  `id` mediumint(8) NOT NULL AUTO_INCREMENT,
+  `uid` mediumint(8) DEFAULT NULL,
+  `mid` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
   KEY `idxUID` (`uid`)
 ) ENGINE=MyISAM";
 
 /** Cache table to hold coordinates of user locations */
 $_SQL['locator_userloc'] = 
 "CREATE TABLE `{$_TABLES['locator_userloc']}` (
-  `id` int(11) NOT NULL auto_increment,
-  `uid` int(11) unsigned NOT NULL default 0,
-  `type` tinyint(1) default '0',
-  `location` varchar(80) default NULL,
-  `add_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `lat` float(10,6),
-  `lng` float(10,6),
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `location` (`uid`,`location`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL DEFAULT 0,
+  `type` tinyint(1) DEFAULT 0,
+  `location` varchar(80) DEFAULT NULL,
+  `add_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `lat` float(10,6) DEFAULT 0.000000,
+  `lng` float(10,6) DEFAULT 0.000000,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM";
 
 /** General cache table to hold geocoding lookups */
 $_SQL['locator_cache'] =
 "CREATE TABLE `{$_TABLES['locator_cache']}` (
-  `cache_id` varchar(80) NOT NULL,
-  `data` text,
+  `cache_id` varchar(40) NOT NULL,
+  `data` text DEFAULT NULL,
   PRIMARY KEY (`cache_id`)
-) Engine=MyISAM";
+) ENGINE=MyISAM";
 
 $_SQL_UPGRADE = array(
     '0.1.4' => array(
