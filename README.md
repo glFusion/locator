@@ -4,12 +4,12 @@ Geo Locator plugin for glFusion
 ## Features
 * Creates a "store locator"-type function where visitors can find locations
 within a distance range from an origin location.
-* Provides an autotag to allow inclusion of maps in stories and staticpages,
-and an API for other plugins such as Evlist.
+* Provides an autotag to allow inclusion of maps in stories and staticpages.
+* Provides an API for other plugins such as Evlist.
 
 ## Requirements
 * glFusion 1.7.0+
-* PHP 7.0+
+* PHP 7.3+
 * LGLib plugin
 
 ## Provider Configuration
@@ -24,7 +24,6 @@ Driving directions are always provided by maps.google.com.
   * Geocoding: Yes
   * Mapping: Yes
 * MapQuest (https://developer.mapquest.com/documentation/)
-  * Requires an API key.
   * Terms of service do not allow for caching or using coordinates for any purpose other than mapping. Unless you have an Enhanced plan you should not use MapQuest for geocoding.
   * Geocoding: Yes
   * Mapping: Yes
@@ -35,11 +34,17 @@ Driving directions are always provided by maps.google.com.
   * Geocoding: Yes
   * Mapping: No
 * Geocodio (https://www.geocod.io)
-  * USA and Canada
-  * API key required, free 2500 lookups per day
+  * Free 2500 lookups per day
+  * Regions: USA and Canada
   * Geocoding: Yes
   * Mapping: No
 * OpenStreetMap (https://www.openstreetmap.org)
   * Check the site for terms and conditions, light usage is expected
+  * Regions: Worldwide
+  * Geocoding: Yes
+  * Mapping: Yes
+* Here.com (https://www.here.com)
+  * Monthly limits (free plan): 250k transactions, 5k active users, 2.5GB data transrer
+  * Regions: Worldwide
   * Geocoding: Yes
   * Mapping: Yes
