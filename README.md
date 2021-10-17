@@ -8,7 +8,7 @@ within a distance range from an origin location.
 * Provides an API for other plugins such as Evlist.
 
 ## Requirements
-* glFusion 1.7.0+
+* glFusion 1.7.8+
 * PHP 7.3+
 * LGLib plugin
 
@@ -43,8 +43,10 @@ Driving directions are always provided by maps.google.com.
   * Regions: Worldwide
   * Geocoding: Yes
   * Mapping: Yes
-* Here.com (https://www.here.com)
-  * Monthly limits (free plan): 250k transactions, 5k active users, 2.5GB data transrer
+* Here.com (https://developer.here.com)
+  * Free plan limits:
+    * Monthly: 250k transactions, 5k active users, 2.5GB data transrer
+    * Per second: 5 Geocoding requests, 30 Map tile requests
   * Regions: Worldwide
   * Geocoding: Yes
   * Mapping: Yes
