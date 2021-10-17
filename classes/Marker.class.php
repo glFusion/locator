@@ -362,7 +362,8 @@ class Marker
             $_CONF_GEO['autofill_coord'] == true
         ) {
             $address = $this->AddressToString();
-            if ($address != '' && GEO_getCoords($address, $lat, $lng) == 0) {
+            if ($address != '') {
+                Mapper::getGeocoder()->geoCode($address, $lat, $lng);
                 $this->setLat($lat);
                 $this->setLng($lng);
             }
