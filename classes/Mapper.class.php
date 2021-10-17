@@ -3,10 +3,10 @@
  * Base class for mappers. Mainly used to instantiate the configured mapper.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.1.4
- * @since       1.1.4
+ * @version     v1.2.2
+ * @since       v1.1.4
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -126,6 +126,25 @@ class Mapper
     public function showMap($lat, $lng, $text = '')
     {
         return '';
+    }
+
+
+    /**
+     * Get the URL to an embeddable map image or iframe.
+     * This is for a simplified URL which does not require the full javascript
+     * initialization.
+     *
+     * @param   float   $lat    Latitude
+     * @param   float   $lng    Longitude
+     * @param   ?string $text   Optional text
+     * @return  array       Array of type and url to embed
+     */
+    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    {
+        return array(
+            'type' => 'undefined',
+            'url' => '',
+        );
     }
 
 

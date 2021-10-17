@@ -3,11 +3,11 @@
  * Class for Mapquest Map provider
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.2.0
- * @since       1.2.0
- * @license     http://opensource.org/licenses/gpl-2.0.php 
+ * @version     v1.2.2
+ * @since       v1.2.0
+ * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
  */
@@ -103,6 +103,26 @@ class mapquest extends \Locator\Mapper
 
 
     /**
+     * Get the URL to a map image.
+     * This is for a simplified URL which does not require the full javascript
+     * initialization.
+     *
+     * @param   float   $lat    Latitude
+     * @param   float   $lng    Longitude
+     * @param   ?string $text   Optional text
+     * @return  array       Array of type and url to embed
+     */
+    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    {
+        $url = "https://www.mapquest.com/embed/{$lat},{$lng}?center={$lat},{$lng}&zoom=15&maptype=map";
+        return array(
+            'type' => 'iframe',
+            'url' => $url,
+        );
+    }
+
+
+    /**
      * Get the coordinates from an address string.
      *
      * @param   string  $address    Address string
@@ -186,5 +206,3 @@ class mapquest extends \Locator\Mapper
     }
 
 }
-
-?>

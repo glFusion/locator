@@ -3,11 +3,11 @@
  * Class for here.com services.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2020 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2020-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.3.0
- * @since       1.3.0
- * @license     http://opensource.org/licenses/gpl-2.0.php 
+ * @version     v1.2.2
+ * @since       v1.2.2
+ * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
  */
@@ -24,7 +24,7 @@ class here extends \Locator\Mapper
 {
     /** The REST API key.
      * @var string */
-    private $rest_api_key = '';
+    private $rest_key = '';
 
     /** The Javascript key.
      * @var string */
@@ -60,7 +60,7 @@ class here extends \Locator\Mapper
     {
         global $_CONF_GEO;
         if (isset($_CONF_GEO['here_rest_key'])) {
-            $this->rest_api_key = $_CONF_GEO['here_rest_key'];
+            $this->rest_key = $_CONF_GEO['here_rest_key'];
         }
         if (isset($_CONF_GEO['here_js_key'])) {
             $this->js_key = $_CONF_GEO['here_js_key'];
@@ -80,8 +80,9 @@ class here extends \Locator\Mapper
     {
         $cache_key = $this->getName() . '_geocode_' . md5($address);
         $data = Cache::get($cache_key);
+        $data = NULL;
         if ($data === NULL) {
-            $url = sprintf(self::GEOCODE_URL, urlencode($address), $this->rest_api_key);
+            $url = sprintf(self::GEOCODE_URL, urlencode($address), $this->rest_key);
             $json = self::getUrl($url);
             $data = json_decode($json, true);
             if (
@@ -93,8 +94,17 @@ class here extends \Locator\Mapper
 
             Cache::set($cache_key, $data);
         }
-        $loc = $data['Response']['View'][0]['Result'][0]['Location']['DisplayPosition'];
 
+        $lat = 0;
+        $lng = 0;
+        $loc = $data['Response'];
+        foreach(array('View', 0, 'Result', 0, 'Location', 'DisplayPosition') as $key) {
+            if (array_key_exists($key, $loc)) {
+                $loc = $loc[$key];
+            } else {
+                return -1;
+            }
+        }
         if (!isset($loc['Longitude']) || !isset($loc['Latitude'])) {
             $lat = 0;
             $lng = 0;
@@ -151,6 +161,26 @@ class here extends \Locator\Mapper
 
 
     /**
+     * Get the URL to an embeddable map image or iframe.
+     * This is for a simplified URL which does not require the full javascript
+     * initialization.
+     *
+     * @param   float   $lat    Latitude
+     * @param   float   $lng    Longitude
+     * @param   ?string $text   Optional text
+     * @return  array       Array of type and url to embed
+     */
+    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    {
+        $url = "https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey={$this->rest_key}&lat={$lat}&lon={$lng}&vt=0&z=16&i=1&h=400&w=400";
+        return array(
+            'type' => 'image',
+            'url' => $url,
+        );
+    }
+
+
+    /**
      * Get the URL to map JS and CSS for inclusion in a template.
      * This makes sure the javascript is included only once even if there
      * are multiple maps on the page.
@@ -188,5 +218,3 @@ class here extends \Locator\Mapper
     }
 
 }
-
-?>

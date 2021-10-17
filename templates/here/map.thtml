@@ -48,5 +48,6 @@ var ui = H.ui.UI.createDefault(map, defaultLayers);
 window.onload = function () {
     moveMapToTarget(map);
     addMarkersToMap(map);
+	map.getViewPort().resize();
 }
 </script>

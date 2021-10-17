@@ -3,9 +3,9 @@
  * glFusion API functions for the Locator plugin.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     v1.2.1
+ * @version     v1.2.2
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -1107,6 +1107,16 @@ function service_getMap_locator($args, &$output, &$svc_msg)
     $lng = isset($args['lng']) ? (float)$args['lng'] : 0;
     $text = isset($args['text']) ? $args['text'] : '';
     $output = \Locator\Mapper::getMapper()->showMap($lat, $lng, $text);
+    return PLG_RET_OK;
+}
+
+function service_getEmbeddedMap_locator($args, &$output, &$svc_msg)
+{
+    if (!is_array($args)) return PLG_RET_ERROR;
+    $lat = isset($args['lat']) ? (float)$args['lat'] : 0;
+    $lng = isset($args['lng']) ? (float)$args['lng'] : 0;
+    $text = isset($args['text']) ? $args['text'] : '';
+    $output = \Locator\Mapper::getMapper()->getEmbeddedMap($lat, $lng, $text);
     return PLG_RET_OK;
 }
 

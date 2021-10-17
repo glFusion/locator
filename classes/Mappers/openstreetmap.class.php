@@ -3,10 +3,10 @@
  * Class for OpenStreetMap.org provider
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.2.0
- * @since       1.2.0
+ * @version     v1.2.2
+ * @since       v1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php 
  *              GNU Public License v2 or later
  * @filesource
@@ -43,8 +43,9 @@ class openstreetmap extends \Locator\Mapper
      * @const string */
     const GEOCODE_URL = 'https://nominatim.openstreetmap.org/search?format=json&q=%s';
 
+
     /**
-     * Constructor. Does nothing, not even call the parent constructor.
+     * Set the tile server if used.
      *
      * @param   string  $id     Optional ID of a location to load
      */
@@ -174,6 +175,25 @@ class openstreetmap extends \Locator\Mapper
         return $this;
     }
 
+
+    /**
+     * Get the URL to a map image.
+     * This is for a simplified URL which does not require the full javascript
+     * initialization.
+     *
+     * @param   float   $lat    Latitude
+     * @param   float   $lng    Longitude
+     * @param   ?string $text   Optional text
+     * @return  array       Array of type and url to embed
+     */
+    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    {
+        $url = "https://www.openstreetmap.org/export/embed.html?bbox={$lng}%2C{$lat}%2C{$lng}%2C{$lat}&amp;layer=mapnik&amp;marker={$lat}%2C{$lng}";
+        return array(
+            'type' => 'iframe',
+            'url' => $url,
+        );
+    }
+
 }
 
-?>
