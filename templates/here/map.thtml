@@ -7,12 +7,12 @@
  * @param  {H.Map} map      A HERE Map instance within the application
  */
 function moveMapToTarget(map){
-  map.setCenter({lat:{lat}, lng:{lng} });
-  map.setZoom(14);
+	map.setCenter({lat:{lat}, lng:{lng} });
+	map.setZoom(14);
 }
 function addMarkersToMap(map) {
-    var Marker = new H.map.Marker({lat:{lat}, lng:{lng} });
-    map.addObject(Marker);
+	var Marker = new H.map.Marker({lat:{lat}, lng:{lng} });
+	map.addObject(Marker);
 }
 
 /**
@@ -22,16 +22,16 @@ function addMarkersToMap(map) {
 //Step 1: initialize communication with the platform
 // In your own code, replace variable window.apikey with your own apikey
 var platform = new H.service.Platform({
-  apikey: "{api_key}"
+	apikey: "{api_key}"
 });
 var defaultLayers = platform.createDefaultLayers();
 
 //Step 2: initialize a map - this map is centered over Europe
 var map = new H.Map(document.getElementById('map{canvas_id}'),
-  defaultLayers.vector.normal.map,{
-  center: {lat:{lat}, lng:{lng} },
-  zoom: 4,
-  pixelRatio: window.devicePixelRatio || 1
+	defaultLayers.vector.normal.map,{
+	center: {lat:{lat}, lng:{lng} },
+	zoom: 4,
+	pixelRatio: window.devicePixelRatio || 1
 });
 // add a resize listener to make sure that the map occupies the whole container
 window.addEventListener('resize', () => map.getViewPort().resize());
@@ -46,8 +46,8 @@ var ui = H.ui.UI.createDefault(map, defaultLayers);
 
 // Now use the map as required...
 window.onload = function () {
-    moveMapToTarget(map);
-    addMarkersToMap(map);
+	moveMapToTarget(map);
+	addMarkersToMap(map);
 	map.getViewPort().resize();
 }
 </script>
