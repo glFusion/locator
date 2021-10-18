@@ -21,6 +21,7 @@ Driving directions are always provided by maps.google.com.
 * Google (https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key)
   * Requires API keys and Billing enabled on your account.
   * You should use different API keys for Geocoding and Mapping and restrict them appropriately to your server's address and HTTP Referer, respectively, to prevent &quot;quota theft&quot;.
+  * Static maps for printable pages are not supported. Iframes are used instead.
   * Geocoding: Yes
   * Mapping: Yes
 * MapQuest (https://developer.mapquest.com/documentation/)
@@ -40,6 +41,7 @@ Driving directions are always provided by maps.google.com.
   * Mapping: No
 * OpenStreetMap (https://www.openstreetmap.org)
   * Check the site for terms and conditions, light usage is expected
+  * Static maps for printable pages are not supported. Iframes are used instead.
   * Regions: Worldwide
   * Geocoding: Yes
   * Mapping: Yes
@@ -50,3 +52,10 @@ Driving directions are always provided by maps.google.com.
   * Regions: Worldwide
   * Geocoding: Yes
   * Mapping: Yes
+* Mapbox (https://mapbox.com)
+  * Based on OpenStreetMap data. Can create static map images for printable pages.
+  * 50,000 map loads monthly free
+  * Regions: Worldwide
+  * Geocoding: No
+  * Mapping: Yes
+

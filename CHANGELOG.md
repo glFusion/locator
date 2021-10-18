@@ -2,7 +2,10 @@
 
 ## 1.2.2 (TBD)
   * Add Here.com map provider
+  * Add Mapbox map provider
   * More sanitizing for lat/lng before saving
+  * Fix caching to DB (glFusionl < 2.0) with multibyte chars.
+  * Implement static map image display for printable pages.
 
 ## 1.2.1 (2020-07-09)
   * Remove support for non-uikit themes
