@@ -1,11 +1,11 @@
 <?php
 /**
- * Class to cache DB and web lookup results
+ * Class to cache DB and web lookup results.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.2.0
+ * @version     1.2.2
  * @since       1.2.0
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
@@ -15,7 +15,7 @@ namespace Locator;
 
 /**
  * Class for Locator Cache.
- * If glFusion is version 2.0.0 or higher then the phpFastCache is used.
+ * If glFusion is version 2.0.0 or higher then the phpFastCache is used,
  * Otherwise a database cache table is used.
  * @package locator
  */
@@ -23,8 +23,9 @@ class Cache
 {
     /** Default tag added to all cache entries */
     const TAG = 'locator';
+
     /** Minimum glFusion version that supports caching */
-    const MIN_GVERSION = '2.0.0';
+    const MIN_GVERSION = '2.0.1';
 
     /**
      * Update the cache.
@@ -36,18 +37,19 @@ class Cache
      * @param   integer $cache_mins Cache minutes
      * @return  boolean     True on success, False on error
      */
-    public static function set($key, $data, $tag='', $cache_mins=1440)
+    public static function set(string $key, string $data, ?string $tag='', ?int $cache_mins=1440)
     {
         global $_TABLES;
 
         $key = self::makeKey($key);
+        $ttl = (int)$cache_mins * 60;   // convert to seconds
         if (version_compare(GVERSION, self::MIN_GVERSION, '<')) {
-            $data = DB_escapeString(serialize($data));
-            $sql = "INSERT INTO {$_TABLES['locator_cache']} VALUES ('$key', '$data')
-                ON DUPLICATE KEY UPDATE data = '$data'";
+            $ttl += time();
+            $data = DB_escapeString($data);
+            $sql = "INSERT INTO {$_TABLES['locator_cache']} VALUES ('$key', $ttl, '$data')
+                ON DUPLICATE KEY UPDATE expires = $ttl, data = '$data'";
             DB_query($sql, 1);
         } else {
-            $ttl = (int)$cache_mins * 60;   // convert to seconds
             // Always make sure the base tag is included
             $tags = array(self::TAG);
             if (!empty($tag)) {
@@ -113,14 +115,16 @@ class Cache
      */
     public static function makeKey($key, $incl_sechash = false)
     {
-        if ($incl_sechash) {
-            // Call the parent class function to use the security hash
-            $key = \glFusion\Cache\Cache::getInstance()->createKey(self::TAG . '_' . $key);
-        } else {
-            // Just generate a simple string key
-            $key = self::TAG . '_' . $key;
+        if (version_compare(GVERSION, self::MIN_GVERSION, '>=')) {
+            if ($incl_sechash) {
+                // Call the parent class function to use the security hash
+                $key = \glFusion\Cache\Cache::getInstance()->createKey(self::TAG . '_' . $key);
+            } else {
+                // Just generate a simple string key
+                $key = self::TAG . '_' . $key;
+            }
         }
-        return $key;
+        return substr($key, 0, 127);    // Make sure it fits the DB key field
     }
 
 
@@ -136,9 +140,12 @@ class Cache
 
         $key = self::makeKey($key);
         if (version_compare(GVERSION, self::MIN_GVERSION, '<')) {
-            $data = DB_getItem($_TABLES['locator_cache'], 'data', "cache_id = '$key'");
-            $data = @unserialize($data);
-            return $data ? $data : NULL;
+            $data = DB_getItem(
+                $_TABLES['locator_cache'],
+                'data',
+                "cache_id = '$key' AND expires > UNIX_TIMESTAMP()"
+            );
+            return empty($data) ? $data : NULL;
         } else {
             if (\glFusion\Cache\Cache::getInstance()->has($key)) {
                 return \glFusion\Cache\Cache::getInstance()->get($key);
@@ -148,6 +155,4 @@ class Cache
         }
     }
 
-}   // class Locator\Cache
-
-?>
+}
