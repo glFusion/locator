@@ -1,15 +1,21 @@
 {# begin {templatelocation} #}
 <div class="map_dimension" id="map{canvas_id}" {div_style}></div>
-<script type="text/javascript">
+<script>
     var mymap{canvas_id} = L.map('map{canvas_id}').setView([{lat}, {lng}], 13);
     L.tileLayer('{tileserver_url}', {
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
             '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ',
-        id: 'mapbox.streets'
+        id: 'mapbox.streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
     }).addTo(mymap{canvas_id});
 
     L.marker([{lat}, {lng}]).addTo(mymap{canvas_id})
         .bindPopup("{text}");
+
+	$(document).ready(function() {
+		window.dispatchEvent(new Event('resize'));
+	});
 </script>
 {# end {templatelocation} #}

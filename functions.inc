@@ -179,77 +179,6 @@ function plugin_chkVersion_locator()
 
 
 /**
- * Removes the datastructures for this plugin from the glFusion database.
- * This routine will get called from the Plugin install program if user
- * selects De-Install or if Delete is used in the Plugin Editor.
- * The Plugin Installer will also call this routine upon and install error
- * to remove anything it has created.
- * The Plugin installer will pass the optional parameter which will then
- * double check that plugin has first been disabled.
- *
- * Returns True if all Plugin related data is removed without error
- *
- * @param   string  $installCheck   Defult is blank but if set, check if plugin is disabled first
- * @return  boolean                 True if successful false otherwise
- */
-function plugin_uninstall_locator($installCheck='')
-{
-    global $_TABLES, $LANG_PHOTO;
-
-    $pi_name='locator';
-    $FEATURES = array (
-        'locator.admin',
-        'locator.view',
-        'locator.submit',
-    );
-    $TABLES = array (
-        'locator_markers',
-        'locator_userXorigin',
-        'locator_submission',
-        'locator_userloc',
-        'locator_cache',
-    );
-
-    // Ok to proceed and delete plugin
-
-    // Unregister the plugin with glFusion
-    COM_errorLog('Attempting to unregister the ' . $pi_name . ' plugin from glFusion',1);
-    DB_delete($_TABLES['plugins'], 'pi_name', $pi_name);
-
-    // Drop locator tables
-    foreach($TABLES as $table) {
-        COM_errorLog("Removing Table {$_TABLES[$table]}",1);
-        DB_query("DROP TABLE {$_TABLES[$table]}",1);
-    }
-
-    // Remove Security for this plugin
-    foreach ($FEATURES as $feature) {
-        COM_errorLog("Removing elements of feature $feature");
-        $grp_id = (int)DB_getItem($_TABLES['vars'], 'value', "name = 'locator_gid'");
-        if ($grp_id > 0) {
-            COM_errorLog("Removing $pi_name Admin Group", 1);
-            DB_delete($_TABLES['groups'], 'grp_id', $grp_id);
-            DB_delete($_TABLES['vars'], 'name', 'locator_gid');
-            COM_errorLog("Removing root users from admin of $pi_name");
-            DB_delete($_TABLES['group_assignments'], 'ug_main_grp_id', $grp_id);
-        }
-        // Remove all the associated features -- access rights
-        COM_errorLog("Removing $feature feature and rights to it",1);
-        $feat_id = (int)DB_getItem($_TABLES['features'], 'ft_id', "ft_name = '$feature'");
-        if ($feat_id > 0) {
-            DB_delete($_TABLES['access'], 'acc_ft_id', $feat_id);
-            DB_delete($_TABLES['features'], 'ft_id', $feat_id);
-        }
-    }
-    if (function_exists('CACHE_clear')) {
-        CACHE_clear('locator');
-    }
-    COM_errorLog('...success',1);
-    return true;
-}
-
-
-/**
  * Gets an array of items to be removed during plugin removal.
  *
  * @return  array Array of plugin elements to remove
@@ -267,7 +196,7 @@ function plugin_autouninstall_locator()
             $_CONF_GEO['pi_name']. '_cache',
         ),
         'groups'    => array(
-            $_CONF_GEO['pi_name'] . ' Admin',
+            $_CONF_GEO['pi_name'] . ' Admin',   // legacy
         ),
         'features'  => array(
             $_CONF_GEO['pi_name'] . '.admin',
@@ -275,9 +204,7 @@ function plugin_autouninstall_locator()
             $_CONF_GEO['pi_name'] . '.view',
         ),
         'php_blocks' => array(),
-        'vars'      => array(
-            $_CONF_GEO['pi_name'] . '_gid',
-        ),
+        'vars'      => array(),
     );
     if (function_exists('CACHE_clear')) {
         CACHE_clear('locator');
@@ -1110,13 +1037,22 @@ function service_getMap_locator($args, &$output, &$svc_msg)
     return PLG_RET_OK;
 }
 
-function service_getEmbeddedMap_locator($args, &$output, &$svc_msg)
+
+/**
+ * Get a static map to show on a printable page.
+ *
+ * @param   array   $args       Array of item information
+ * @param   array   &$output    Pointer to output array
+ * @param   array   &$svc_msg   Unused
+ * @return  integer             Status code
+ */
+function service_getStaticMap_locator($args, &$output, &$svc_msg)
 {
     if (!is_array($args)) return PLG_RET_ERROR;
     $lat = isset($args['lat']) ? (float)$args['lat'] : 0;
     $lng = isset($args['lng']) ? (float)$args['lng'] : 0;
     $text = isset($args['text']) ? $args['text'] : '';
-    $output = \Locator\Mapper::getMapper()->getEmbeddedMap($lat, $lng, $text);
+    $output = \Locator\Mapper::getMapper()->getStaticMap($lat, $lng, $text);
     return PLG_RET_OK;
 }
 

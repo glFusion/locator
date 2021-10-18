@@ -124,8 +124,7 @@ class google extends \Locator\Mapper
                 $_CONF['iso_lang'] : 'en';
 
         $this->loadMapJS();
-        $T = new \Template(LOCATOR_PI_PATH . '/templates/' . $this->getName());
-        $T->set_file('page', 'map.thtml');
+        $T = $this->getMapTemplate();
         $T->set_var(array(
             'lat'           => GEO_coord2str($lat, true),
             'lng'           => GEO_coord2str($lng, true),
@@ -149,7 +148,7 @@ class google extends \Locator\Mapper
      * @param   ?string $text   Optional text
      * @return  array       Array of type and url to embed
      */
-    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    public function getStaticMap(float $lat, float $lng, ?string $text = '') : array
     {
         $url = "https://maps.google.com/maps?q={$lat},{$lng}&t=&z=13&ie=UTF8&iwloc=&output=embed";
         return array(
@@ -176,28 +175,26 @@ class google extends \Locator\Mapper
 
         $lat = 0;
         $lng = 0;
-        $cache_key = $this->getName() . '_geocode_' . md5($address);
-        $data = \Locator\Cache::get($cache_key);
-        if ($data === NULL) {
-            $address = urlencode(GEO_AddressToString($address));
-            if (empty($this->geocode_key)) {
-                COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '():  API Key is required');
-                return -1;
-            }
-            $url = self::GEO_GOOG_URL . $address . '&key=' . $this->geocode_key;
-            $json = self::getUrl($url);
-            if ($json == '') {
-                return 0;
-            }
-            $data = json_decode($json, true);
-            if (!is_array($data)) {
-                return -1;
-            } elseif ($data['status'] != 'OK') {
-                COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '(): ' . $data['status'] . ' - ' . $data['error_message']);
-                return -1;
-            }
-            \Locator\Cache::set($cache_key, $data);
+        $address = urlencode(GEO_AddressToString($address));
+        if (empty($this->geocode_key)) {
+            COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '():  API Key is required');
+            return -1;
         }
+
+        $url = self::GEO_GOOG_URL . $address . '&key=' . $this->geocode_key;
+        $json = self::getUrl($url);
+        if ($json == '') {
+            return 0;
+        }
+
+        $data = json_decode($json, true);
+        if (!is_array($data)) {
+            return -1;
+        } elseif ($data['status'] != 'OK') {
+            COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '(): ' . $data['status'] . ' - ' . $data['error_message']);
+            return -1;
+        }
+
         if (isset($data['results'][0]['geometry']['location']) && is_array($data['results'][0]['geometry']['location'])) {
             $lat = $data['results'][0]['geometry']['location']['lat'];
             $lng = $data['results'][0]['geometry']['location']['lng'];

@@ -13,6 +13,7 @@
  */
 namespace Locator\Mappers;
 
+
 /**
  * Provide openstreetmap.org mapping and geocoding services.
  * @package locator
@@ -83,8 +84,7 @@ class openstreetmap extends \Locator\Mapper
         }
 
         $this->loadMapJS();
-        $T = new \Template(LOCATOR_PI_PATH . '/templates/' . $this->getName());
-        $T->set_file('page', 'map.thtml');
+        $T = $this->getMapTemplate();
         $T->set_var(array(
             'lat'           => GEO_coord2str($lat, true),
             'lng'           => GEO_coord2str($lng, true),
@@ -111,18 +111,14 @@ class openstreetmap extends \Locator\Mapper
      */
     public function geoCode($address, &$lat, &$lng)
     {
-        $cache_key = $this->getName() . '_geocode_' . md5($address);
-        $data = \Locator\Cache::get($cache_key);
-        if ($data === NULL) {
-            $url = sprintf(self::GEOCODE_URL, urlencode($address));
-            $json = self::getUrl($url);
-            $data = json_decode($json, true);
-            if (!is_array($data) || !isset($data[0]['place_id'])) {
-                COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '(): Decoding Error - ' . $json);
-                return -1;
-            }
-            \Locator\Cache::set($cache_key, $data);
+        $url = sprintf(self::GEOCODE_URL, urlencode($address));
+        $json = $this->getUrl($url);
+        $data = json_decode($json, true);
+        if (!is_array($data) || !isset($data[0]['place_id'])) {
+            COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '(): Decoding Error - ' . $json);
+            return -1;
         }
+
         // Get the most accurate result
         $acc_code = -1;     // Initialize accuracy code
         $loc = array();
@@ -162,14 +158,11 @@ class openstreetmap extends \Locator\Mapper
         if (!$have_map_js) {
             $have_map_js = true;
             $outputHandle = \outputHandler::getInstance();
-            $outputHandle->addLink(
-                'stylesheet',
-                'https://unpkg.com/leaflet@1.3.4/dist/leaflet.css',
-                'text/css',
-                HEADER_PRIO_NORMAL
+            $outputHandle->addRaw(
+                '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" type="text/css">'
             );
-            $outputHandle->addLinkScript(
-                'https://unpkg.com/leaflet@1.3.4/dist/leaflet.js'
+            $outputHandle->addRaw(
+                '<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>'
             );
         }
         return $this;
@@ -186,7 +179,7 @@ class openstreetmap extends \Locator\Mapper
      * @param   ?string $text   Optional text
      * @return  array       Array of type and url to embed
      */
-    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    public function getStaticMap(float $lat, float $lng, ?string $text = '') : array
     {
         $url = "https://www.openstreetmap.org/export/embed.html?bbox={$lng}%2C{$lat}%2C{$lng}%2C{$lat}&amp;layer=mapnik&amp;marker={$lat}%2C{$lng}";
         return array(

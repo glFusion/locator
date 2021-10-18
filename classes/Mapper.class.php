@@ -139,7 +139,7 @@ class Mapper
      * @param   ?string $text   Optional text
      * @return  array       Array of type and url to embed
      */
-    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    public function getStaticMap(float $lat, float $lng, ?string $text = '') : array
     {
         return array(
             'type' => 'undefined',
@@ -149,29 +149,15 @@ class Mapper
 
 
     /**
-     * Get the URL to an embeddable map image.
-     * This is for a simplified URL which does not require the full javascript
-     * initialization.
-     *
-     * @param   float   $lat    Latitude
-     * @param   float   $lng    Longitude
-     * @param   ?string $text   Optional text
-     * @return  array       Array of type and url to embed
-     */
-    public function getStaticMap(float $lat, float $lng, ?string $text = '') : array
-    {
-    }
-
-
-    /**
      * Get the static map image requested from public function getStaticMap().
      *
      * @param   string  $url    URL from which to retrieve the map
+     * @param   string  $ext    File extension, default = JPG
      * @return  array       Array of (type, url). Type may be image or iframe.
      */
-    protected function _getStaticMap(string $url) : array
+    protected function _getStaticMap(string $url, string $ext='jpg') : array
     {
-        $filename = $this->name . '_' . md5($url) . '.jpg';
+        $filename = $this->name . '_' . md5($url) . '.' . $ext;
         $filepath = self::getImageCacheDir() . $filename;
         if (!is_file($filepath)) {
             $data = self::getUrl($url);

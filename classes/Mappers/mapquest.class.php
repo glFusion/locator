@@ -87,8 +87,7 @@ class mapquest extends \Locator\Mapper
         }
 
         $this->loadMapJS();
-        $T = new \Template(LOCATOR_PI_PATH . '/templates/' . $this->getName());
-        $T->set_file('page', 'map.thtml');
+        $T = $this->getMapTemplate();
         $T->set_var(array(
             'lat'           => GEO_coord2str($lat, true),
             'lng'           => GEO_coord2str($lng, true),
@@ -112,13 +111,10 @@ class mapquest extends \Locator\Mapper
      * @param   ?string $text   Optional text
      * @return  array       Array of type and url to embed
      */
-    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    public function getStaticMap(float $lat, float $lng, ?string $text = '') : array
     {
-        $url = "https://www.mapquest.com/embed/{$lat},{$lng}?center={$lat},{$lng}&zoom=15&maptype=map";
-        return array(
-            'type' => 'iframe',
-            'url' => $url,
-        );
+        $url = "https://www.mapquestapi.com/staticmap/v5/map?key={$this->client_key}&size=200,200@2x&locations={$lat},{$lng}&defaultMarker=marker-ff0000";
+        return self::_getStaticMap($url);
     }
 
 
@@ -132,37 +128,41 @@ class mapquest extends \Locator\Mapper
      */
     public function geoCode($address, &$lat, &$lng)
     {
-        $cache_key = $this->getName() . '_geocode_' . md5($address);
-        $loc = \Locator\Cache::get($cache_key);
-        if ($loc === NULL) {
-            if (empty($this->client_key)) {
-                COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '():  API Key is required');
-                return -1;
-            }
-            $url = sprintf(self::GEOCODE_URL, $this->client_key, urlencode($address));
-            $json = self::getUrl($url);
-            $data = json_decode($json, true);
-            if (!is_array($data) || !isset($data['info']['statuscode']) || $data['info']['statuscode'] != 0) {
-                COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '(): Decoding Error - ' . $json);
-                return -1;
-            }
-            if (!isset($data['results'][0]['locations']) || !is_array($data['results'][0]['locations'])) {
-                return -1;
-            }
+        if (empty($this->client_key)) {
+            COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '():  API Key is required');
+            return -1;
+        }
 
-            // Get the most accurate result based on the last 3 characters of the quality code
-            $conf_code = 'ZZZ';     // Initialize the quality code indicator
-            $loc = NULL;
-            foreach ($data['results'][0]['locations'] as $loc_data) {
-                // Rearrange the quality code to prioritize postal, admin area, then address
-                $qcode = $loc_data['geocodeQualityCode'];
-                $loc_conf_code = $qcode[4] . $qcode[3] . $qcode[2];
-                if ($loc_conf_code < $conf_code) {
-                    $conf_code = $loc_conf_code;
-                    $loc = $loc_data;
-                }
+        $url = sprintf(self::GEOCODE_URL, $this->client_key, urlencode($address));
+        $json = self::getUrl($url);
+        $data = json_decode($json, true);
+        if (
+            !is_array($data) ||
+            !isset($data['info']['statuscode']) ||
+            $data['info']['statuscode'] != 0
+        ) {
+            COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '(): Decoding Error - ' . $json);
+            return -1;
+        }
+        if (
+            !isset(
+                $data['results'][0]['locations']) ||
+                !is_array($data['results'][0]['locations'])
+        ) {
+            return -1;
+        }
+
+        // Get the most accurate result based on the last 3 characters of the quality code
+        $conf_code = 'ZZZ';     // Initialize the quality code indicator
+        $loc = NULL;
+        foreach ($data['results'][0]['locations'] as $loc_data) {
+            // Rearrange the quality code to prioritize postal, admin area, then address
+            $qcode = $loc_data['geocodeQualityCode'];
+            $loc_conf_code = $qcode[4] . $qcode[3] . $qcode[2];
+            if ($loc_conf_code < $conf_code) {
+                $conf_code = $loc_conf_code;
+                $loc = $loc_data;
             }
-            \Locator\Cache::set($cache_key, $loc);
         }
 
         if (!isset($loc['latLng']) || !is_array($loc['latLng'])) {

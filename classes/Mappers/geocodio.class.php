@@ -67,21 +67,16 @@ class geocodio extends \Locator\Mapper
      */
     public function geoCode($address, &$lat, &$lng)
     {
-        $cache_key = $this->getName() . '_geocode_' . md5($address);
-        $data = \Locator\Cache::get($cache_key);
-        if ($data === NULL) {
-            if (empty($this->api_key)) {
-                COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '():  API Key is required');
-                return -1;
-            }
-            $url = sprintf(self::GEOCODE_URL, $this->api_key, urlencode($address));
-            $json = self::getUrl($url);
-            $data = json_decode($json, true);
-            if (!isset($data['results'][0]['location']) || empty($data['results'][0]['location'])) {
-                // Didn't get even one result
-                return -1;
-            }
-            \Locator\Cache::set($cache_key, $data);
+        if (empty($this->api_key)) {
+            COM_errorLog(__CLASS__ . '::' . __FUNCTION__ . '():  API Key is required');
+            return -1;
+        }
+        $url = sprintf(self::GEOCODE_URL, $this->api_key, urlencode($address));
+        $json = $this->getUrl($url);
+        $data = json_decode($json, true);
+        if (!isset($data['results'][0]['location']) || empty($data['results'][0]['location'])) {
+            // Didn't get even one result
+            return -1;
         }
 
         // Get the most accurate result

@@ -57,18 +57,17 @@ class uscensus extends \Locator\Mapper
      */
     public function geoCode($address, &$lat, &$lng)
     {
-        $cache_key = $this->getName() . '_geocode_' . md5($address);
-        $data = \Locator\Cache::get($cache_key);
-        if ($data === NULL) {
-            $url = sprintf(self::GEOCODE_URL, urlencode($address));
-            $json = self::getUrl($url);
-            $data = json_decode($json, true);
-            if (!isset($data['result']['addressMatches']) || empty($data['result']['addressMatches'])) {
-                return -1;
-            }
-
-            \Locator\Cache::set($cache_key, $data);
+        $url = sprintf(self::GEOCODE_URL, urlencode($address));
+        $json = self::getUrl($url);
+        $data = @json_decode($json, true);
+        if (
+            !is_array($data) ||
+            !isset($data['result']['addressMatches']) ||
+            empty($data['result']['addressMatches'])
+        ) {
+            return -1;
         }
+
         $loc = $data['result']['addressMatches'][0]['coordinates'];
 
         if (!isset($loc['x']) || !isset($loc['y'])) {

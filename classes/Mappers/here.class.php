@@ -78,21 +78,14 @@ class here extends \Locator\Mapper
      */
     public function geoCode($address, &$lat, &$lng)
     {
-        $cache_key = $this->getName() . '_geocode_' . md5($address);
-        $data = Cache::get($cache_key);
-        $data = NULL;
-        if ($data === NULL) {
-            $url = sprintf(self::GEOCODE_URL, urlencode($address), $this->rest_key);
-            $json = self::getUrl($url);
-            $data = json_decode($json, true);
-            if (
-                !isset($data['Response']['View'][0]['Result']) ||
-                empty($data['Response']['View'][0]['Result'])
-            ) {
-                return -1;
-            }
-
-            Cache::set($cache_key, $data);
+        $url = sprintf(self::GEOCODE_URL, urlencode($address), $this->rest_key);
+        $json = self::getUrl($url);
+        $data = json_decode($json, true);
+        if (
+            !isset($data['Response']['View'][0]['Result']) ||
+            empty($data['Response']['View'][0]['Result'])
+        ) {
+            return -1;
         }
 
         $lat = 0;
@@ -145,8 +138,7 @@ class here extends \Locator\Mapper
         }
 
         $this->loadMapJS();
-        $T = new \Template(LOCATOR_PI_PATH . '/templates/' . $this->getName());
-        $T->set_file('page', 'map.thtml');
+        $T = $this->getMapTemplate();
         $T->set_var(array(
             'lat'           => GEO_coord2str($lat, true),
             'lng'           => GEO_coord2str($lng, true),
@@ -170,13 +162,10 @@ class here extends \Locator\Mapper
      * @param   ?string $text   Optional text
      * @return  array       Array of type and url to embed
      */
-    public function getEmbeddedMap(float $lat, float $lng, ?string $text = '') : array
+    public function getStaticMap(float $lat, float $lng, ?string $text = '') : array
     {
         $url = "https://image.maps.ls.hereapi.com/mia/1.6/mapview?apiKey={$this->rest_key}&lat={$lat}&lon={$lng}&vt=0&z=16&i=1&h=400&w=400";
-        return array(
-            'type' => 'image',
-            'url' => $url,
-        );
+        return $this->_getStaticMap($url);
     }
 
 
