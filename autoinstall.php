@@ -3,9 +3,9 @@
  * Automatic installation routine for the Locator plugin.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2009-2020 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.2.1
+ * @version     1.2.2
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -68,14 +68,6 @@ $INSTALL_plugin['locator'] = array(
     ),
 
     array(
-        'type' => 'group',
-        'group' => 'locator Admin',
-        'desc' => 'Users in this group can administer the Geo Locator plugin',
-        'variable' => 'admin_group_id',
-        'addroot' => true,
-    ),
-
-    array(
         'type' => 'feature',
         'feature' => 'locator.admin',
         'desc' => 'Locator Admin',
@@ -98,7 +90,7 @@ $INSTALL_plugin['locator'] = array(
 
     array(
         'type' => 'mapping',
-        'group' => 'admin_group_id',
+        'findgroup' => 'Root',
         'feature' => 'admin_feature_id',
         'log' => 'Adding feature to the admin group',
     ),
@@ -112,9 +104,17 @@ $INSTALL_plugin['locator'] = array(
 
     array(
         'type' => 'mapping',
-        'group' => 'admin_group_id',
+        'findgroup' => 'Root',
         'feature' => 'submit_feature_id',
         'log' => 'Adding feature to the admin group',
+    ),
+    array(
+        'type'  => 'mkdir',
+        'dirs'  => array(
+            $_CONF['path_html'] . '/data',
+            $_CONF['path_html'] . '/data/' . $_CONF_GEO['pi_name'],
+            $_CONF['path_html'] . '/data/' . $_CONF_GEO['pi_name'] . '/imgcache',
+        ),
     ),
 );
 
@@ -157,5 +157,3 @@ function plugin_load_configuration_locator()
 
     return plugin_initconfig_locator($group_id);
 }
-
-?>
