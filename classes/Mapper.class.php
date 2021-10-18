@@ -149,14 +149,69 @@ class Mapper
 
 
     /**
+     * Get the URL to an embeddable map image.
+     * This is for a simplified URL which does not require the full javascript
+     * initialization.
+     *
+     * @param   float   $lat    Latitude
+     * @param   float   $lng    Longitude
+     * @param   ?string $text   Optional text
+     * @return  array       Array of type and url to embed
+     */
+    public function getStaticMap(float $lat, float $lng, ?string $text = '') : array
+    {
+    }
+
+
+    /**
+     * Get the static map image requested from public function getStaticMap().
+     *
+     * @param   string  $url    URL from which to retrieve the map
+     * @return  array       Array of (type, url). Type may be image or iframe.
+     */
+    protected function _getStaticMap(string $url) : array
+    {
+        $filename = $this->name . '_' . md5($url) . '.jpg';
+        $filepath = self::getImageCacheDir() . $filename;
+        if (!is_file($filepath)) {
+            $data = self::getUrl($url);
+            if (!empty($data)) {
+                $fp = fopen($filepath, 'wb+');
+                $bytes = fwrite($fp, $data);
+                fclose($fp);
+                if ($bytes = strlen($data)) {
+                    $url = self::getImageCacheUrl($filename);
+                } else {
+                    @unlink($filepath);
+                }
+            }
+        } else {
+            $url = self::getImageCacheUrl($filename);
+        }
+
+        return array(
+            'type' => 'image',
+            'url' => $url,
+        );
+    }
+
+
+    /**
      * Retrieve the contents of a remote URL.
      *
      * @param   string  $url    URL to retrieve
      * @return  string          Raw contents from URL
      */
-    public static function getUrl($url)
+    public function getUrl($url)
     {
-        if (in_array('curl', get_loaded_extensions())) {
+        $cache_key = $this->name . '_' . md5($url);
+        $result = Cache::get($cache_key);
+        if ($result !== NULL) {
+            return $result;
+        }
+
+        $result = '';
+        if (self::have_curl()) {
             $agent = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; ' .
                     'rv:1.9.1) Gecko/20090624 Firefox/3.5 (.NET CLR ' .
                     '3.5.30729)';
@@ -173,11 +228,67 @@ class Mapper
 
             $result = curl_exec($ch);
             curl_close($ch);
+        } elseif (self::have_url_fopen()) {
+            $fp = @fopen($url, 'r');
+            while(is_resource($fp) && $fp && !feof($fp)) {
+                $result .= fread($fp, 1024);
+            }
         } else {
-            $result = '';
             COM_errorLog('LOCATOR: Missing url_fopen and curl support');
         }
+        if (!empty($result)) {
+            Cache::set($cache_key, $result, 'geocode');
+        }
         return $result;
+    }
+
+
+    /**
+     * Check if the CURL extension is available.
+     *
+     * @return  bool    True if Curl is available
+     */
+    public static function have_curl() : bool
+    {
+        return in_array('curl', get_loaded_extensions());
+    }
+
+
+    /**
+     * Check if allow_url_fopen is set.
+     *
+     * @return  bool    True if set
+     */
+    public static function have_url_fopen() : bool
+    {
+        return ini_get('allow_url_fopen');
+    }
+
+
+    /**
+     * Get the publicly-accessible image caching directory.
+     *
+     * @return  string      Path to image cache
+     */
+    public static function getImageCacheDir() : string
+    {
+        global $_CONF;
+
+        return $_CONF['path_html'] . '/data/locator/imgcache/';
+    }
+
+
+    /**
+     * Get the URL to a cached image file.
+     *
+     * @param   string  $filename   Image filename, empty to get directory URL
+     * @return  string      Full url to the file
+     */
+    public static function getImageCacheUrl(?string $filename='') : string
+    {
+        global $_CONF;
+
+        return $_CONF['site_url'] . '/data/locator/imgcache/' . $filename;
     }
 
 
@@ -186,7 +297,7 @@ class Mapper
      *
      * @return  array   Array of objects indexed by name
      */
-    public static function getAll()
+    public static function getAll() :array
     {
         static $A = NULL;
 
@@ -344,6 +455,17 @@ class Mapper
         return $style;
     }
 
-}   // class Mapper
 
-?>
+    /**
+     * Set up a template object for rendering the javascript map.
+     *
+     * @return  object  Template object
+     */
+    protected function getMapTemplate() : object
+    {
+        $T = new \Template(LOCATOR_PI_PATH . '/templates/mappers/' . $this->getName());
+        $T->set_file('page', 'map.thtml');
+        return  $T;
+    }
+
+}
