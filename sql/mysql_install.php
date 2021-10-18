@@ -1,22 +1,22 @@
 <?php
 /**
-*   SQL Commands for the GeoLoc Plugin.
-*
-*   @author     Lee Garner <lee@leegarner.com>
-*   @copyright  Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
-*   @package    locator
-*   @version    1.1.4
-*   @license    http://opensource.org/licenses/gpl-2.0.php 
-*               GNU Public License v2 or later
-*   @filesource
-*/
+ * SQL Commands for the GeoLoc Plugin.
+ *
+ * @author      Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2021 Lee Garner <lee@leegarner.com>
+ * @package     locator
+ * @version     v1.2.2
+ * @license     http://opensource.org/licenses/gpl-2.0.php
+ *              GNU Public License v2 or later
+ * @filesource
+ */
 
 global $_SQL, $_TABLES, $_SQL_UPGRADE;
 /**
-*   Define tables used by the Locator plugin
-*   @global array $_SQL
-*/
-$_SQL['locator_markers'] = 
+ * Define tables used by the Locator plugin.
+ * @global array $_SQL
+ */
+$_SQL['locator_markers'] =
 "CREATE TABLE {$_TABLES['locator_markers']} (
   `id` varchar(20) NOT NULL DEFAULT '',
   `owner_id` mediumint(8) unsigned DEFAULT NULL,
@@ -44,7 +44,7 @@ $_SQL['locator_markers'] =
 ) ENGINE=MyISAM";
 
 /** Marker submission table */
-$_SQL['locator_submission'] = 
+$_SQL['locator_submission'] =
 "CREATE TABLE `{$_TABLES['locator_submission']}` (
   `id` varchar(20) NOT NULL DEFAULT '',
   `owner_id` mediumint(8) unsigned DEFAULT NULL,
@@ -70,7 +70,7 @@ $_SQL['locator_submission'] =
 ) ENGINE=MyISAM";
 
 /** Table to hold user's selected origins. */
-$_SQL['locator_userXorigin'] = 
+$_SQL['locator_userXorigin'] =
 "CREATE TABLE `{$_TABLES['locator_userXorigin']}` (
   `id` mediumint(8) NOT NULL AUTO_INCREMENT,
   `uid` mediumint(8) DEFAULT NULL,
@@ -80,7 +80,7 @@ $_SQL['locator_userXorigin'] =
 ) ENGINE=MyISAM";
 
 /** Cache table to hold coordinates of user locations */
-$_SQL['locator_userloc'] = 
+$_SQL['locator_userloc'] =
 "CREATE TABLE `{$_TABLES['locator_userloc']}` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) unsigned NOT NULL DEFAULT 0,
@@ -95,7 +95,8 @@ $_SQL['locator_userloc'] =
 /** General cache table to hold geocoding lookups */
 $_SQL['locator_cache'] =
 "CREATE TABLE `{$_TABLES['locator_cache']}` (
-  `cache_id` varchar(40) NOT NULL,
+  `cache_id` varchar(128) NOT NULL,
+  `expires` int(11) unsigned NOT NULL DEFAULT 0,
   `data` text DEFAULT NULL,
   PRIMARY KEY (`cache_id`)
 ) ENGINE=MyISAM";
@@ -132,6 +133,9 @@ $_SQL_UPGRADE = array(
     '1.2.1' => array(
         "ALTER TABLE {$_TABLES['locator_markers']} ADD country varchar(3) AFTER postal",
     ),
+    '1.2.2' => array(
+        "ALTER TABLE {$_TABLES['locator_cache']} CHANGE cache_id cache_id varchar(128)",
+        "ALTER TABLE {$_TABLES['locator_cache']} ADD expires int(11) unsigned NOT NULL DEFAULT 0 AFTER cache_id",
+    ),
 );
 
-?>

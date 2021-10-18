@@ -3,9 +3,9 @@
  * Upgrade the plugin.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2009-2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2009-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     v1.1.4
+ * @version     v1.2.2
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
  * @filesource
@@ -105,6 +105,13 @@ function locator_do_upgrade($dvlp=false)
         if (!locator_do_set_version($current_ver)) return false;
     }
 
+    if (!COM_checkVersion($current_ver, '1.2.2')) {
+        $current_ver = '1.2.2';
+        @mkdir($_CONF['path_html'] . '/data/' . $_CONF_GEO['pi_name'] . '/imgcache', 0755, true);
+        if (!locator_do_upgrade_sql($current_ver, $dvlp)) return false;
+        if (!locator_do_set_version($current_ver)) return false;
+    }
+
     // Final version update to catch updates that don't go through
     // any of the update functions, e.g. code-only updates
     if (!COM_checkVersion($current_ver, $code_ver)) {
@@ -192,6 +199,32 @@ function locator_do_set_version($ver)
 
 
 /**
+ * Remove a file, or recursively remove a directory.
+ *
+ * @param   string  $dir    Directory name
+ */
+function LOC_delPath($dir)
+{
+    if (is_dir($dir)) {
+        $objects = scandir($dir);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (is_dir($dir . '/' . $object)) {
+                    self::delPath($dir . '/' . $object);
+                    @rmdir($dir . '/' . $object);
+                } else {
+                    @unlink($dir . '/' . $object);
+                }
+            }
+        }
+        @rmdir($dir);
+    } elseif (is_file($dir)) {
+        @unlink($dir);
+    }
+}
+
+
+/**
  * Remove deprecated files
  * Errors in unlink() and rmdir() are ignored.
  */
@@ -206,6 +239,10 @@ function LOC_remove_old_files()
             'google_lang.inc.php',
             'locator_functions.inc.php',
             'templates/markerform.uikit.thtml',
+            // 1.2.2
+            'templates/openstreetmap',
+            'templates/google',
+            'templates/mapquest',
         ),
         // public_html/locator
         $_CONF['path_html'] . 'locator' => array(
@@ -227,10 +264,8 @@ function LOC_remove_old_files()
 
     foreach ($paths as $path=>$files) {
         foreach ($files as $file) {
-            if (is_file("$path/$file")) {
-                COM_errorLog("removing $path/$file");
-                @unlink("$path/$file");
-            }
+            COM_errorLog("removing $path/$file");
+            LOC_delPath("$path/$file");
         }
     }
 }
@@ -251,5 +286,3 @@ function _LOCtableHasColumn($table, $col_name)
     $res = DB_query("SHOW COLUMNS FROM {$_TABLES[$table]} LIKE '$col_name'");
     return DB_numRows($res) == 0 ? false : true;
 }
-
-?>
