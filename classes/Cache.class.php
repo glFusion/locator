@@ -91,6 +91,11 @@ class Cache
     {
         global $_TABLES;
 
+        // If clearing everything, also purge old static map images.
+        if (empty($tag)) {
+            self::_cleanImageCache();
+        }
+
         if (version_compare(GVERSION, self::MIN_GVERSION, '<')) {
             DB_query("TRUNCATE {$_TABLES['locator_cache']}");
             return DB_error() ? false : true;
@@ -152,6 +157,39 @@ class Cache
             } else {
                 return NULL;
             }
+        }
+    }
+
+
+    /**
+     * Clear old cached static map images.
+     */
+    private static function _cleanImageCache() : void
+    {
+        // TODO: config vars
+        $cache_clean_interval = 900;
+        $cache_max_age = 1440;
+
+        $cachedir = Mapper::getImageCacheDir();
+        $lastCleanFile = $cachedir . '/lastclean.touch';
+
+        //If this is a new timthumb installation we need to create the file
+        if (!is_file($lastCleanFile)) {
+            @touch($lastCleanFile));
+        }
+
+        if (@filemtime($lastCleanFile) < (time() - $cache_clean_interval)) {
+            touch($lastCleanFile);
+            $files = glob($cachedir . '*');
+            if ($files) {
+                $timeAgo = time() - $cache_max_age;
+                foreach ($files as $file) {
+                    if (@filemtime($file) < $timeAgo) {
+                        @unlink($file);
+                    }
+                }
+            }
+            return true;
         }
     }
 
