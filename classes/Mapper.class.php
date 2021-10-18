@@ -158,7 +158,7 @@ class Mapper
     protected function _getStaticMap(string $url, string $ext='jpg') : array
     {
         $filename = $this->name . '_' . md5($url) . '.' . $ext;
-        $filepath = self::getImageCacheDir() . $filename;
+        $filepath = Cache::getImageCacheDir() . $filename;
         if (!is_file($filepath)) {
             $data = self::getUrl($url);
             if (!empty($data)) {
@@ -166,13 +166,13 @@ class Mapper
                 $bytes = fwrite($fp, $data);
                 fclose($fp);
                 if ($bytes = strlen($data)) {
-                    $url = self::getImageCacheUrl($filename);
+                    $url = Cache::getImageCacheUrl($filename);
                 } else {
                     @unlink($filepath);
                 }
             }
         } else {
-            $url = self::getImageCacheUrl($filename);
+            $url = Cache::getImageCacheUrl($filename);
         }
 
         return array(
@@ -248,33 +248,6 @@ class Mapper
     public static function have_url_fopen() : bool
     {
         return ini_get('allow_url_fopen');
-    }
-
-
-    /**
-     * Get the publicly-accessible image caching directory.
-     *
-     * @return  string      Path to image cache
-     */
-    public static function getImageCacheDir() : string
-    {
-        global $_CONF;
-
-        return $_CONF['path_html'] . '/data/locator/imgcache/';
-    }
-
-
-    /**
-     * Get the URL to a cached image file.
-     *
-     * @param   string  $filename   Image filename, empty to get directory URL
-     * @return  string      Full url to the file
-     */
-    public static function getImageCacheUrl(?string $filename='') : string
-    {
-        global $_CONF;
-
-        return $_CONF['site_url'] . '/data/locator/imgcache/' . $filename;
     }
 
 

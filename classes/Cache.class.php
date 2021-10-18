@@ -170,12 +170,12 @@ class Cache
         $cache_clean_interval = 900;
         $cache_max_age = 1440;
 
-        $cachedir = Mapper::getImageCacheDir();
+        $cachedir = self::getImageCacheDir();
         $lastCleanFile = $cachedir . '/lastclean.touch';
 
         //If this is a new timthumb installation we need to create the file
         if (!is_file($lastCleanFile)) {
-            @touch($lastCleanFile));
+            @touch($lastCleanFile);
         }
 
         if (@filemtime($lastCleanFile) < (time() - $cache_clean_interval)) {
@@ -189,8 +189,34 @@ class Cache
                     }
                 }
             }
-            return true;
         }
+    }
+
+
+    /**
+     * Get the publicly-accessible image caching directory.
+     *
+     * @return  string      Path to image cache
+     */
+    public static function getImageCacheDir() : string
+    {
+        global $_CONF;
+
+        return $_CONF['path_html'] . '/data/locator/imgcache/';
+    }
+
+
+    /**
+     * Get the URL to a cached image file.
+     *
+     * @param   string  $filename   Image filename, empty to get directory URL
+     * @return  string      Full url to the file
+     */
+    public static function getImageCacheUrl(?string $filename='') : string
+    {
+        global $_CONF;
+
+        return $_CONF['site_url'] . '/data/locator/imgcache/' . $filename;
     }
 
 }
