@@ -7,9 +7,9 @@
  * Only updates from the previous released version.
  *
  * @author      Lee Garner <lee@leegarner.com>
- * @copyright   Copyright (c) 2018 Lee Garner <lee@leegarner.com>
+ * @copyright   Copyright (c) 2018-2021 Lee Garner <lee@leegarner.com>
  * @package     locator
- * @version     1.1.4
+ * @version     1.2.2
  * @since       1.1.4
  * @license     http://opensource.org/licenses/gpl-2.0.php
  *              GNU Public License v2 or later
@@ -36,11 +36,8 @@ locator_do_upgrade(true);
 if (function_exists('CACHE_clear')) {
     CACHE_clear();
 }
-if (version_compare(GVERSION, '1.8.0', '>=')) {
-    \glFusion\Cache::getInstance()->deleteItemsByTag('locator');
-}
+Locator\Cache::clear();
 
 header('Location: '.$_CONF['site_admin_url'].'/plugins.php?msg=600');
 exit;
 
-?>
