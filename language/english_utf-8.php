@@ -132,6 +132,7 @@ $LANG_confignames['locator'] = array(
     'google_js_key'     => 'Google Maps JS Key',
     'here_js_key'       => 'HERE Javascript Key',
     'here_rest_key'     => 'HERE REST API Key',
+    'mapbox_token'      => 'MapBox Access Token',
 
     'defgrp'            => 'Default Group:',
     'default_permissions' => 'Default Permissions:',

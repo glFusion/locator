@@ -309,6 +309,17 @@ $locatorConfigData = array(
         'set' => true,
         'group' => 'locator',
     ),
+    array(
+        'name' => 'mapbox_token',
+        'default_value' => '',
+        'type' => 'text',
+        'subgroup' => 0,
+        'fieldset' => 10,
+        'selection_array' => 0,
+        'sort' => 110,
+        'set' => true,
+        'group' => 'locator',
+    ),
 
     // Permissions fieldset
     array(
