@@ -210,7 +210,7 @@ function LOC_delPath($dir)
         foreach ($objects as $object) {
             if ($object != "." && $object != "..") {
                 if (is_dir($dir . '/' . $object)) {
-                    self::delPath($dir . '/' . $object);
+                    LOC_delPath($dir . '/' . $object);
                     @rmdir($dir . '/' . $object);
                 } else {
                     @unlink($dir . '/' . $object);
