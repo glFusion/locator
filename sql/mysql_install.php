@@ -16,6 +16,7 @@ global $_SQL, $_TABLES, $_SQL_UPGRADE;
  * Define tables used by the Locator plugin.
  * @global array $_SQL
  */
+$_SQL = array();
 $_SQL['locator_markers'] =
 "CREATE TABLE {$_TABLES['locator_markers']} (
   `id` varchar(20) NOT NULL DEFAULT '',
